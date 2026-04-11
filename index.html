@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Portfolio Analyzer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: #0d1117;
+        color: #e6edf3;
+        display: flex;
+        justify-content: center;
+        padding: 40px 16px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 960px;
+        background: #161b22;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.4);
+        animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 8px;
+        color: #58a6ff;
+        font-size: 32px;
+    }
+
+    .subtitle {
+        text-align: center;
+        margin-bottom: 24px;
+        opacity: 0.8;
+        font-size: 14px;
+    }
+
+    .section-title {
+        margin: 20px 0 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #e6edf3;
+    }
+
+    .input-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .input-row input {
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #30363d;
+        background: #0d1117;
+        color: #e6edf3;
+        font-size: 14px;
+    }
+
+    .input-row input::placeholder {
+        color: #8b949e;
+    }
+
+    .btn {
+        background: #238636;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn.secondary {
+        background: #8250df;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px) scale(1.02);
+        filter: brightness(1.05);
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0 20px;
+        flex-wrap: wrap;
+    }
+
+    .portfolio-list {
+        background: #0d1117;
+        border: 1px solid #30363d;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        min-height: 60px;
+        font-size: 14px;
+    }
+
+    .portfolio-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid #21262d;
+    }
+
+    .portfolio-item:last-child {
+        border-bottom: none;
+    }
+
+    .portfolio-item span.meta {
+        opacity: 0.8;
+        font-size: 12px;
+    }
+
+    .portfolio-empty {
+        opacity: 0.7;
+        font-size: 13px;
+    }
+
+    .results {
+        margin-top: 25px;
+        padding: 20px;
+        background: #0d1117;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .results h2 {
+        color: #58a6ff;
+        margin-top: 0;
+        font-size: 18px;
+    }
+
+    pre {
+        margin: 0;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 30px;
+        opacity: 0.6;
+        font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+        .input-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 480px) {
+        .input-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Portfolio Analyzer</h1>
+    <div class="subtitle">Add your stocks in simple fields — no JSON required.</div>
+
+    <div class="section-title">Add a position</div>
+    <div class="input-row">
+        <input id="ticker" placeholder="Ticker (e.g. AAPL)" />
+        <input id="value" type="number" placeholder="Value (e.g. 5000)" />
+        <input id="sector" placeholder="Sector (e.g. Technology)" />
+        <input id="region" placeholder="Region (e.g. US)" />
+    </div>
+
+    <div class="btn-row">
+        <button class="btn" onclick="addStock()">➕ Add Stock</button>
+        <button class="btn secondary" onclick="loadExample()">📋 Load Example Portfolio</button>
+    </div>
+
+    <div class="section-title">Your portfolio</div>
+    <div class="portfolio-list" id="portfolioList">
+        <div class="portfolio-empty">No positions added yet. Add a stock above to get started.</div>
+    </div>
+
+    <div class="btn-row">
+        <button class="btn" onclick="analyzePortfolio()">📊 Analyze Portfolio</button>
+    </div>
+
+    <div class="results" id="resultsBox">
+        <h2>Analysis Results</h2>
+        <pre id="resultsText"></pre>
+    </div>
+
+    <div class="footer">Portfolio Analyzer • Local backend: http://localhost:4000/analyze</div>
+</div>
+
+<script>
+let portfolio = [];
+
+function renderPortfolio() {
+    const list = document.getElementById("portfolioList");
+    if (portfolio.length === 0) {
+        list.innerHTML = '<div class="portfolio-empty">No positions added yet. Add a stock above to get started.</div>';
+        return;
+    }
+
+    list.innerHTML = portfolio.map((p, index) => `
+        <div class="portfolio-item">
+            <div>
+                <strong>${p.ticker}</strong> — $${p.value.toLocaleString()}
+                <span class="meta">(${p.sector}, ${p.region})</span>
+            </div>
+            <button class="btn" style="padding:4px 10px;font-size:12px;background:#da3633;"
+                    onclick="removeStock(${index})">✕ Remove</button>
+        </div>
+    `).join("");
+}
+
+function addStock() {
+    const ticker = document.getElementById("ticker").value.trim().toUpperCase();
+    const value = Number(document.getElementById("value").value);
+    const sector = document.getElementById("sector").value.trim();
+    const region = document.getElementById("region").value.trim();
+
+    if (!ticker || !value || !sector || !region) {
+        alert("Please fill out all fields before adding a stock.");
+        return;
+    }
+
+    if (value <= 0) {
+        alert("Value must be greater than 0.");
+        return;
+    }
+
+    portfolio.push({ ticker, value, sector, region });
+
+    document.getElementById("ticker").value = "";
+    document.getElementById("value").value = "";
+    document.getElementById("sector").value = "";
+    document.getElementById("region").value = "";
+
+    renderPortfolio();
+}
+
+function removeStock(index) {
+    portfolio.splice(index, 1);
+    renderPortfolio();
+}
+
+function loadExample() {
+    portfolio = [
+        { ticker: "AAPL", value: 5000, sector: "Technology", region: "US" },
+        { ticker: "MSFT", value: 3000, sector: "Technology", region: "US" },
+        { ticker: "VWCE", value: 4000, sector: "Global Equity", region: "Global" }
+    ];
+    renderPortfolio();
+}
+
+async function analyzePortfolio() {
+    if (portfolio.length === 0) {
+        alert("Please add at least one stock before analyzing.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:4000/analyze", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ portfolio })
+        });
+
+        if (!response.ok) {
+            throw new Error("Backend error: " + response.status);
+        }
+
+        const data = await response.json();
+        document.getElementById("resultsText").textContent = JSON.stringify(data, null, 2);
+        document.getElementById("resultsBox").style.display = "block";
+    } catch (err) {
+        alert("Could not reach backend. Is your server running on http://localhost:4000?\n\n" + err.message);
+    }
+}
+
+// initial render
+renderPortfolio();
+</script>
+
+</body>
+</html>
