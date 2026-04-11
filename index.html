@@ -208,10 +208,12 @@
         <pre id="resultsText"></pre>
     </div>
 
-    <div class="footer">Portfolio Analyzer • Local backend: http://localhost:4000/analyze</div>
+    <div class="footer">Portfolio Analyzer • Cloud backend connected</div>
 </div>
 
 <script>
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+
 let portfolio = [];
 
 function renderPortfolio() {
@@ -280,7 +282,7 @@ async function analyzePortfolio() {
     }
 
     try {
-        const response = await fetch("http://localhost:4000/analyze", {
+        const response = await fetch(`${API_BASE}/api/analyze`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ portfolio })
@@ -294,7 +296,7 @@ async function analyzePortfolio() {
         document.getElementById("resultsText").textContent = JSON.stringify(data, null, 2);
         document.getElementById("resultsBox").style.display = "block";
     } catch (err) {
-        alert("Could not reach backend. Is your server running on http://localhost:4000?\n\n" + err.message);
+        alert("Could not reach backend.\n\n" + err.message);
     }
 }
 
