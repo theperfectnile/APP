@@ -522,15 +522,21 @@ async function loadProfile() {
     const badge = document.getElementById("planBadge");
     const pill = document.getElementById("proLockPill");
     if (data.plan === "pro") {
-      badge.textContent = "Pro plan";
-      badge.classList.add("pro");
-      pill.textContent = "Unlocked";
-      pill.style.borderColor = "#238636";
-    } else {
-      badge.textContent = "Free plan";
-      badge.classList.remove("pro");
-      pill.textContent = "Locked";
-      pill.style.borderColor = "#30363d";
+    badge.textContent = "Pro plan";
+    badge.classList.add("pro");
+    pill.textContent = "Unlocked";
+    pill.style.borderColor = "#238636";
+
+    // SHOW portfolio analyzer section
+    document.getElementById("portfolioSection").style.display = "block";
+} else {
+    badge.textContent = "Free plan";
+    badge.classList.remove("pro");
+    pill.textContent = "Locked";
+    pill.style.borderColor = "#30363d";
+
+    // HIDE portfolio analyzer section
+    document.getElementById("portfolioSection").style.display = "none";
     }
   } catch (err) {
     logout();
