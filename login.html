@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultwise – Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .card {
+    background: #161b22;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    width: 100%;
+    max-width: 380px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    text-align: center;
+    color: #58a6ff;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 20px;
+  }
+  label {
+    font-size: 13px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    color: #e6edf3;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  input::placeholder {
+    color: #8b949e;
+  }
+  .btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #238636;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .btn.secondary {
+    background: #8250df;
+    margin-top: 8px;
+  }
+  .btn:hover {
+    filter: brightness(1.05);
+  }
+  .error {
+    color: #f85149;
+    font-size: 13px;
+    margin-top: 8px;
+    min-height: 18px;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Vaultwise</h1>
+  <div class="subtitle">Budget smarter. Unlock Pro portfolio insights.</div>
+
+  <label for="email">Email</label>
+  <input id="email" type="email" placeholder="you@example.com">
+
+  <label for="password">Password</label>
+  <input id="password" type="password" placeholder="••••••••">
+
+  <button class="btn" onclick="login()">Log in</button>
+  <button class="btn secondary" onclick="register()">Create account</button>
+
+  <div class="error" id="errorBox"></div>
+
+  <div class="footer">Vaultwise • Secure personal finance</div>
+</div>
+
+<script>
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+
+function showError(msg) {
+  document.getElementById("errorBox").textContent = msg;
+}
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if (!email || !password) {
+    showError("Please enter email and password.");
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showError(data.error || "Login failed.");
+      return;
+    }
+    localStorage.setItem("vaultwise_token", data.token);
+    window.location.href = "index.html";
+  } catch (err) {
+    showError("Network error. Please try again.");
+  }
+}
+
+async function register() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if (!email || !password) {
+    showError("Please enter email and password.");
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/api/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showError(data.error || "Registration failed.");
+      return;
+    }
+    localStorage.setItem("vaultwise_token", data.token);
+    window.location.href = "index.html";
+  } catch (err) {
+    showError("Network error. Please try again.");
+  }
+}
+</script>
+</body>
+</html>
