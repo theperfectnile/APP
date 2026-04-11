@@ -1,0 +1,539 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultwise – Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 960px;
+    background: #161b22;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 4px;
+    color: #58a6ff;
+    font-size: 30px;
+  }
+
+  .subtitle {
+    text-align: center;
+    margin-bottom: 24px;
+    opacity: 0.8;
+    font-size: 14px;
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 13px;
+    opacity: 0.9;
+  }
+
+  .badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: #23863633;
+    border: 1px solid #238636;
+    color: #c9d1d9;
+  }
+
+  .badge.pro {
+    background: #8250df33;
+    border-color: #8250df;
+  }
+
+  .btn {
+    background: #238636;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn.secondary {
+    background: #8250df;
+  }
+
+  .btn.danger {
+    background: #da3633;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px) scale(1.02);
+    filter: brightness(1.05);
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 20px;
+    flex-wrap: wrap;
+  }
+
+  .section-title {
+    margin: 20px 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    color: #e6edf3;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    color: #8b949e;
+  }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .results {
+    margin-top: 20px;
+    padding: 16px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .insight-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+
+  .insight-title {
+    font-weight: 600;
+    color: #58a6ff;
+    margin-bottom: 6px;
+  }
+
+  .insight-text {
+    font-size: 14px;
+    opacity: 0.9;
+    line-height: 1.5;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 24px;
+    opacity: 0.6;
+    font-size: 12px;
+  }
+
+  .list-box {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    padding: 12px;
+    border-radius: 8px;
+    min-height: 50px;
+    font-size: 14px;
+  }
+
+  .item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid #21262d;
+  }
+
+  .item-row:last-child {
+    border-bottom: none;
+  }
+
+  .item-meta {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    border: 1px solid #30363d;
+    margin-left: 6px;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal {
+    background: #161b22;
+    padding: 24px;
+    border-radius: 12px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+  }
+
+  .modal h2 {
+    margin-top: 0;
+    color: #58a6ff;
+  }
+
+  .modal p {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  .modal-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .input-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div>
+      <span id="userEmail">Vaultwise</span>
+      <span id="planBadge" class="badge">Free plan</span>
+    </div>
+    <button class="btn danger" onclick="logout()">Log out</button>
+  </div>
+
+  <h1>Vaultwise</h1>
+  <div class="subtitle">Automated budgeting & Pro‑level portfolio analysis in one place.</div>
+
+  <!-- Main Buttons -->
+  <div class="btn-row">
+    <button class="btn" onclick="scrollToSection('budgetSection')">📊 Analyze Budget (Free)</button>
+    <button class="btn secondary" onclick="openPortfolio()">
+      📈 Portfolio Analyzer (Pro)
+      <span class="pill" id="proLockPill">Locked</span>
+    </button>
+  </div>
+
+  <!-- Budget Section -->
+  <div id="budgetSection">
+    <div class="section-title">Monthly Budget</div>
+
+    <div class="input-row">
+      <div>
+        <label style="font-size:13px;">Monthly income</label>
+        <input id="income" type="number" placeholder="e.g. 5000" />
+      </div>
+      <div>
+        <label style="font-size:13px;">Expense category</label>
+        <input id="expenseCategory" placeholder="e.g. Rent" />
+      </div>
+      <div>
+        <label style="font-size:13px;">Expense amount</label>
+        <input id="expenseAmount" type="number" placeholder="e.g. 1500" />
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="addExpense()">➕ Add Expense</button>
+      <button class="btn secondary" onclick="analyzeBudget()">📊 Analyze Budget</button>
+    </div>
+
+    <div class="list-box" id="expenseList">
+      <div class="item-meta">No expenses added yet. Add an expense above.</div>
+    </div>
+
+    <div class="results" id="budgetResults"></div>
+  </div>
+
+  <!-- Portfolio Section (Hidden for Free Users) -->
+  <div id="portfolioSection" style="margin-top:32px; display:none;">
+    <div class="section-title">Portfolio Analyzer (Pro)</div>
+
+    <div class="input-row">
+      <input id="ticker" placeholder="Ticker (e.g. AAPL)" />
+      <input id="value" type="number" placeholder="Value (e.g. 5000)" />
+      <input id="sector" placeholder="Sector (e.g. Technology)" />
+      <input id="region" placeholder="Region (e.g. US)" />
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="addStock()">➕ Add Position</button>
+      <button class="btn secondary" onclick="loadExamplePortfolio()">📋 Load Example Portfolio</button>
+      <button class="btn" onclick="analyzePortfolio()">📈 Analyze Portfolio</button>
+    </div>
+
+    <div class="list-box" id="portfolioList">
+      <div class="item-meta">No positions added yet. Add a position above.</div>
+    </div>
+
+    <div class="results" id="portfolioResults"></div>
+  </div>
+
+  <div class="footer">Vaultwise • Budgeting (Free) • Portfolio Analyzer (Pro)</div>
+</div>
+
+<!-- Upgrade Modal -->
+<div class="modal-backdrop" id="upgradeModal">
+  <div class="modal">
+    <h2>Unlock Portfolio Analyzer</h2>
+    <p>Portfolio Analyzer is a <strong>Pro feature</strong>. Upgrade your Vaultwise account to access:</p>
+    <ul>
+      <li>Sector & region diversification analysis</li>
+      <li>Concentration risk detection</li>
+      <li>Portfolio health insights</li>
+    </ul>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeUpgradeModal()">Not now</button>
+      <button class="btn secondary" onclick="upgradeToPro()">Upgrade to Pro</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+let token = localStorage.getItem("vaultwise_token");
+let currentPlan = "free";
+
+let expenses = [];
+let portfolio = [];
+
+/* ---------------- AUTH ---------------- */
+
+function requireAuth() {
+  if (!token) window.location.href = "login.html";
+}
+
+function logout() {
+  localStorage.removeItem("vaultwise_token");
+  window.location.href = "login.html";
+}
+
+/* ---------------- UI HELPERS ---------------- */
+
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+}
+
+/* ---------------- EXPENSES ---------------- */
+
+function renderExpenses() {
+  const list = document.getElementById("expenseList");
+  if (expenses.length === 0) {
+    list.innerHTML = '<div class="item-meta">No expenses added yet. Add an expense above.</div>';
+    return;
+  }
+  list.innerHTML = expenses.map((e, i) => `
+    <div class="item-row">
+      <div><strong>${e.category}</strong> — $${e.amount.toLocaleString()}</div>
+      <button class="btn danger" style="padding:4px 10px;font-size:12px;" onclick="removeExpense(${i})">✕</button>
+    </div>
+  `).join("");
+}
+
+function addExpense() {
+  const incomeVal = Number(document.getElementById("income").value);
+  const category = document.getElementById("expenseCategory").value.trim();
+  const amount = Number(document.getElementById("expenseAmount").value);
+
+  if (!incomeVal || incomeVal <= 0) return alert("Enter a valid monthly income first.");
+  if (!category || !amount || amount <= 0) return alert("Enter a valid expense category and amount.");
+
+  expenses.push({ category, amount });
+  document.getElementById("expenseCategory").value = "";
+  document.getElementById("expenseAmount").value = "";
+  renderExpenses();
+}
+
+function removeExpense(index) {
+  expenses.splice(index, 1);
+  renderExpenses();
+}
+
+/* ---------------- BUDGET ANALYSIS ---------------- */
+
+async function analyzeBudget() {
+  const incomeVal = Number(document.getElementById("income").value);
+  if (!incomeVal || incomeVal <= 0) return alert("Enter a valid monthly income.");
+
+  try {
+    const res = await fetch(`${API_BASE}/api/budget`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ income: incomeVal, expenses })
+    });
+
+    const data = await res.json();
+    if (!res.ok) return alert(data.error || "Budget analysis failed.");
+
+    const results = document.getElementById("budgetResults");
+    results.style.display = "block";
+
+    results.innerHTML = `
+      <div class="insight-card">
+        <div class="insight-title">💰 Monthly Summary</div>
+        <div class="insight-text">
+          Income: $${data.income.toLocaleString()}<br>
+          Expenses: $${data.totalExpenses.toLocaleString()}<br>
+          Savings: $${data.savings.toLocaleString()} (${data.savingsRate}%)
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-title">📊 Spending Breakdown</div>
+        <div class="insight-text">
+          ${data.categories.map(c => `
+            • ${c.category}: ${c.percent}% of income<br>
+          `).join("")}
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-title">💡 Insights & Suggestions</div>
+        <div class="insight-text">
+          ${data.insights.map(i => `• ${i}<br>`).join("")}
+        </div>
+      </div>
+    `;
+  } catch {
+    alert("Could not reach backend.");
+  }
+}
+
+/* ---------------- PORTFOLIO ---------------- */
+
+function renderPortfolio() {
+  const list = document.getElementById("portfolioList");
+  if (portfolio.length === 0) {
+    list.innerHTML = '<div class="item-meta">No positions added yet.</div>';
+    return;
+  }
+  list.innerHTML = portfolio.map((p, i) => `
+    <div class="item-row">
+      <div><strong>${p.ticker}</strong> — $${p.value.toLocaleString()} <span class="item-meta">(${p.sector}, ${p.region})</span></div>
+      <button class="btn danger" style="padding:4px 10px;font-size:12px;" onclick="removeStock(${i})">✕</button>
+    </div>
+  `).join("");
+}
+
+function addStock() {
+  const ticker = document.getElementById("ticker").value.trim().toUpperCase();
+  const value = Number(document.getElementById("value").value);
+  const sector = document.getElementById("sector").value.trim();
+  const region = document.getElementById("region").value.trim();
+
+  if (!ticker || !value || !sector || !region) return alert("Fill out all fields.");
+  if (value <= 0) return alert("Value must be greater than 0.");
+
+  portfolio.push({ ticker, value, sector, region });
+  document.getElementById("ticker").value = "";
+  document.getElementById("value").value = "";
+  document.getElementById("sector").value = "";
+  document.getElementById("region").value = "";
+  renderPortfolio();
+}
+
+function removeStock(index) {
+  portfolio.splice(index, 1);
+  renderPortfolio();
+}
+
+function loadExamplePortfolio() {
+  portfolio = [
+    { ticker: "AAPL", value: 5000, sector: "Technology", region: "US" },
+    { ticker: "MSFT", value: 3000, sector: "Technology", region: "US" },
+    { ticker: "VWCE", value: 4000, sector: "Global Equity", region: "Global" }
+  ];
+  renderPortfolio();
+}
+
+/* ---------------- PORTFOLIO ANALYSIS ---------------- */
+
+function openPortfolio() {
+  if (currentPlan !== "pro") return openUpgradeModal();
+  scrollToSection("portfolioSection");
+}
+
+async function analyzePortfolio() {
+  if (currentPlan !== "pro") return openUpgradeModal();
+  if (portfolio.length === 0) return alert("Add at least one position.");
+
+  try {
+    const res = await fetch(`${API_BASE}/api/analyze`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ portfolio })
+    });
+
+    const data = await res.json();
+    if (!res.ok) return alert(data.error || "Portfolio analysis failed.");
+
+    const results = document.getElementById("portfolioResults");
+    results.style.display = "block";
+
+    results.innerHTML = `
+      <div class="insight-card">
+        <div class="insight-title">💼 Portfolio Summary</div>
+        <div class="insight-text">
+          Total Value: $${data.totalValue.toLocaleString()}
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-title">📊 Sector Allocation</div>
+        <div class="insight-text">
+          ${data.sectors.map(s => `• ${s.sector}: ${s.percent}%<br>`).join("")}
+        </div>
+      </div>
+
+      <div class="
