@@ -1,92 +1,30 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
 dotenv.config();
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret';
-
-// In-memory “DB”
-const users = [];
-const portfolios = [];
-
-// ---------- Auth middleware ----------
-function auth(req, res, next) {
-  const header = req.headers.authorization;
-  if (!header) return res.status(401).json({ error: 'No token' });
-  const token = header.split(' ')[1];
-  try {
-    req.user = jwt.verify(token, JWT_SECRET);
-    next();
-  } catch {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-}
-
-// ---------- Auth routes ----------
-app.post('/api/register', (req, res) => {
-  const { email, password } = req.body;
-  if (users.find(u => u.email === email)) {
-    return res.status(400).json({ error: 'Email already exists' });
-  }
-  const user = { id: users.length + 1, email, password, plan: 'free' };
-  users.push(user);
-  const token = jwt.sign({ id: user.id, email: user.email, plan: user.plan }, JWT_SECRET);
-  res.json({ token });
-});
-
-app.post('/api/login', (req, res) => {
-  const { email, password } = req.body;
-  const user = users.find(u => u.email === email && u.password === password);
-  if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-  const token = jwt.sign({ id: user.id, email: user.email, plan: user.plan }, JWT_SECRET);
-  res.json({ token });
-});
-
-// ---------- Portfolio routes ----------
-
-// Save / replace current portfolio
-app.post('/api/portfolio', auth, (req, res) => {
-  const { assets } = req.body;
-  if (!Array.isArray(assets) || assets.length === 0) {
-    return res.status(400).json({ error: 'Assets array required' });
-  }
-
-  // Remove old portfolios for this user
-  for (let i = portfolios.length - 1; i >= 0; i--) {
-    if (portfolios[i].userId === req.user.id) portfolios.splice(i, 1);
-  }
-
-  const portfolio = {
-    id: portfolios.length + 1,
-    userId: req.user.id,
-    assets,
-    createdAt: new Date()
-  };
-  portfolios.push(portfolio);
-  res.json({ message: 'Portfolio saved', portfolio });
-});
 
 // ---------- Root route ----------
 app.get("/", (req, res) => {
   res.send("Backend is running on Render!");
 });
 
-// ---------- Analyze portfolio ----------
-app.get("/api/analyze", auth, (req, res) => {
-  const portfolio = portfolios.find(p => p.userId === req.user.id);
-  if (!portfolio) {
-    return res.status(404).json({ error: "No portfolio found" });
+// ---------- Analyze portfolio (no auth) ----------
+app.post("/api/analyze", (req, res) => {
+  const { portfolio } = req.body;
+
+  if (!Array.isArray(portfolio) || portfolio.length === 0) {
+    return res.status(400).json({ error: "Portfolio array is required" });
   }
 
-  const assets = portfolio.assets;
+  const assets = portfolio;
   const totalValue = assets.reduce((sum, a) => sum + (a.value || 0), 0);
 
-  // Sector allocation
+  // Sector & region allocation
   const sectorMap = {};
   const regionMap = {};
   assets.forEach(a => {
@@ -111,15 +49,23 @@ app.get("/api/analyze", auth, (req, res) => {
 
   const insights = [];
   if (largestPct > 25) {
-    insights.push('Your largest position is over 25% of your portfolio. Consider reducing concentration risk.');
+    insights.push(
+      "Your largest position is over 25% of your portfolio. Consider reducing concentration risk."
+    );
   } else {
-    insights.push('Your largest position is reasonably sized; concentration risk looks moderate.');
+    insights.push(
+      "Your largest position is reasonably sized; concentration risk looks moderate."
+    );
   }
   if (sectors.length === 1) {
-    insights.push('All your assets are in one sector. Diversifying across sectors can reduce risk.');
+    insights.push(
+      "All your assets are in one sector. Diversifying across sectors can reduce risk."
+    );
   }
   if (regions.length === 1) {
-    insights.push('All your assets are in one region. Global diversification may improve resilience.');
+    insights.push(
+      "All your assets are in one region. Global diversification may improve resilience."
+    );
   }
 
   res.json({
@@ -130,15 +76,8 @@ app.get("/api/analyze", auth, (req, res) => {
   });
 });
 
-// ---------- Upgrade route ----------
-app.post('/api/upgrade', auth, (req, res) => {
-  const user = users.find(u => u.id === req.user.id);
-  user.plan = 'pro';
-  res.json({ message: 'Upgraded to Pro (placeholder)', plan: user.plan });
-});
-
-// ---------- Render-compatible listen ----------
+// ---------- Start server (Render-compatible) ----------
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, "0.0.0.0", () =>
-  console.log(`Portfolio Analyzer running on port ${PORT}`)
-);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Portfolio Analyzer running on port ${PORT}`);
+});
