@@ -56,7 +56,7 @@ app.post('/api/portfolio', auth, (req, res) => {
     return res.status(400).json({ error: 'Assets array required' });
   }
 
-  // Remove old portfolios for this user (simple version)
+  // Remove old portfolios for this user
   for (let i = portfolios.length - 1; i >= 0; i--) {
     if (portfolios[i].userId === req.user.id) portfolios.splice(i, 1);
   }
@@ -71,21 +71,17 @@ app.post('/api/portfolio', auth, (req, res) => {
   res.json({ message: 'Portfolio saved', portfolio });
 });
 
-// Analyze portfolio
+// ---------- Root route ----------
 app.get("/", (req, res) => {
   res.send("Backend is running on Render!");
 });
 
-// Analyze portfolio (protected route)
+// ---------- Analyze portfolio ----------
 app.get("/api/analyze", auth, (req, res) => {
   const portfolio = portfolios.find(p => p.userId === req.user.id);
   if (!portfolio) {
     return res.status(404).json({ error: "No portfolio found" });
   }
-
-  res.json({ portfolio });
-});
-
 
   const assets = portfolio.assets;
   const totalValue = assets.reduce((sum, a) => sum + (a.value || 0), 0);
@@ -134,12 +130,15 @@ app.get("/api/analyze", auth, (req, res) => {
   });
 });
 
-// Placeholder upgrade route (connect Stripe later)
+// ---------- Upgrade route ----------
 app.post('/api/upgrade', auth, (req, res) => {
   const user = users.find(u => u.id === req.user.id);
   user.plan = 'pro';
   res.json({ message: 'Upgraded to Pro (placeholder)', plan: user.plan });
 });
 
+// ---------- Render-compatible listen ----------
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, "0.0.0.0", () => console.log(`Portfolio Analyzer running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Portfolio Analyzer running on port ${PORT}`)
+);
