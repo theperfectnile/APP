@@ -72,9 +72,20 @@ app.post('/api/portfolio', auth, (req, res) => {
 });
 
 // Analyze portfolio
-app.get('/api/analyze', auth, (req, res) => {
+app.get("/", (req, res) => {
+  res.send("Backend is running on Render!");
+});
+
+// Analyze portfolio (protected route)
+app.get("/api/analyze", auth, (req, res) => {
   const portfolio = portfolios.find(p => p.userId === req.user.id);
-  if (!portfolio) return res.status(404).json({ error: 'No portfolio found' });
+  if (!portfolio) {
+    return res.status(404).json({ error: "No portfolio found" });
+  }
+
+  res.json({ portfolio });
+});
+
 
   const assets = portfolio.assets;
   const totalValue = assets.reduce((sum, a) => sum + (a.value || 0), 0);
