@@ -1,316 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vaultwise Dashboard</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaultwise Dashboard</title>
 
-    <!-- Futuristic Cyberpunk Blue Theme -->
-    <style>
-        body {
-            margin: 0;
-            font-family: "Inter", sans-serif;
-            background: radial-gradient(circle at top, #0a0f1f, #02040a 60%);
-            color: #d9e6ff;
-            display: flex;
-            overflow-x: hidden;
-        }
+<!-- Chart.js (Edge‑safe version) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* Sidebar */
-        #sidebar {
-            width: 260px;
-            background: rgba(5, 10, 25, 0.9);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid rgba(0, 140, 255, 0.3);
-            padding: 25px;
-            height: 100vh;
-            position: fixed;
-            box-shadow: 0 0 25px rgba(0, 140, 255, 0.2);
-        }
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0d0f17;
+        color: white;
+        display: flex;
+    }
 
-        #sidebar h2 {
-            font-size: 24px;
-            margin-bottom: 25px;
-            background: linear-gradient(90deg, #00aaff, #00eaff);
-            -webkit-background-clip: text;
-            color: transparent;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
+    /* Sidebar */
+    .sidebar {
+        width: 240px;
+        background: #11131c;
+        height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        border-right: 1px solid #222;
+    }
 
-        .nav-btn {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 12px;
-            background: rgba(0, 40, 80, 0.4);
-            border: 1px solid rgba(0, 140, 255, 0.4);
-            border-radius: 10px;
-            color: #d9e6ff;
-            cursor: pointer;
-            transition: 0.25s;
-            font-size: 15px;
-        }
+    .sidebar h2 {
+        margin-top: 0;
+        color: #6ab0ff;
+        text-align: center;
+    }
 
-        .nav-btn:hover {
-            background: rgba(0, 140, 255, 0.7);
-            box-shadow: 0 0 12px rgba(0, 140, 255, 0.8);
-        }
+    .nav-item {
+        padding: 12px;
+        margin: 10px 0;
+        background: #1a1d29;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
 
-        /* Main Content */
-        #main {
-            margin-left: 260px;
-            padding: 40px;
-            width: calc(100% - 260px);
-        }
+    .nav-item:hover {
+        background: #232738;
+    }
 
-        .section {
-            display: none;
-            animation: fadeIn 0.45s ease-in-out;
-        }
+    /* Main content */
+    .content {
+        flex: 1;
+        padding: 30px;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .section {
+        display: none;
+    }
 
-        h1 {
-            font-size: 30px;
-            margin-bottom: 20px;
-            color: #e8f1ff;
-            text-shadow: 0 0 10px rgba(0, 140, 255, 0.6);
-        }
+    .active {
+        display: block;
+    }
 
-        .card {
-            background: rgba(10, 20, 40, 0.6);
-            border: 1px solid rgba(0, 140, 255, 0.3);
-            padding: 25px;
-            border-radius: 14px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 18px rgba(0, 140, 255, 0.15);
-            backdrop-filter: blur(10px);
-        }
+    .card {
+        background: #1a1d29;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
 
-        .input-field {
-            width: 100%;
-            padding: 14px;
-            margin-top: 12px;
-            background: rgba(0, 20, 40, 0.7);
-            border: 1px solid rgba(0, 140, 255, 0.4);
-            border-radius: 10px;
-            color: #d9e6ff;
-            font-size: 15px;
-        }
+    input, select, button {
+        padding: 10px;
+        margin: 8px 0;
+        width: 100%;
+        border-radius: 6px;
+        border: none;
+    }
 
-        .input-field:focus {
-            outline: none;
-            border-color: #00eaff;
-            box-shadow: 0 0 10px rgba(0, 234, 255, 0.6);
-        }
+    button {
+        background: #6ab0ff;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+    }
 
-        .action-btn {
-            margin-top: 18px;
-            padding: 14px 20px;
-            background: linear-gradient(90deg, #007bff, #00eaff);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-            font-size: 15px;
-            transition: 0.25s;
-        }
-
-        .action-btn:hover {
-            box-shadow: 0 0 15px rgba(0, 234, 255, 0.8);
-            transform: translateY(-2px);
-        }
-
-        .chart-container {
-            width: 100%;
-            height: 330px;
-        }
-    </style>
-
-    <!-- Chart.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    button:hover {
+        background: #8bc3ff;
+    }
+</style>
 </head>
 
 <body>
 
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <h2>VAULTWISE</h2>
-        <button class="nav-btn" onclick="showSection('profileSection')">Profile</button>
-        <button class="nav-btn" onclick="showSection('budgetSection')">Budget Analyzer</button>
-        <button class="nav-btn" onclick="showSection('portfolioSection')">Portfolio Analyzer</button>
-        <button class="nav-btn" onclick="showSection('insightsSection')">AI Insights</button>
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Vaultwise</h2>
+    <div class="nav-item" onclick="showSection('profile')">Profile</div>
+    <div class="nav-item" onclick="showSection('budget')">Budget Analyzer</div>
+    <div class="nav-item" onclick="showSection('portfolio')">Portfolio Analyzer</div>
+    <div class="nav-item" onclick="showSection('insights')">AI Insights</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+    <!-- PROFILE -->
+    <div id="profile" class="section active">
+        <h2>Your Profile</h2>
+        <div class="card">
+            <p><strong>Email:</strong> <span id="p-email">Loading...</span></p>
+            <p><strong>Plan:</strong> <span id="p-plan">Loading...</span></p>
+            <p><strong>Trial Start:</strong> <span id="p-trial">Loading...</span></p>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div id="main">
-
-        <!-- Profile Section -->
-        <div id="profileSection" class="section">
-            <h1>Profile</h1>
-            <div class="card">
-                <p><strong>Name:</strong> <span id="profileName">Loading...</span></p>
-                <p><strong>Email:</strong> <span id="profileEmail">Loading...</span></p>
-                <p><strong>Account Created:</strong> <span id="profileCreated">Loading...</span></p>
-                <p><strong>Last Login:</strong> <span id="profileLastLogin">Loading...</span></p>
-            </div>
+    <!-- BUDGET -->
+    <div id="budget" class="section">
+        <h2>Budget Analyzer</h2>
+        <div class="card">
+            <input type="number" id="income" placeholder="Monthly Income" />
+            <textarea id="expenses" placeholder='Expenses (JSON format):
+[
+  {"category":"Rent","amount":1200},
+  {"category":"Food","amount":300}
+]'></textarea>
+            <button onclick="runBudget()">Analyze Budget</button>
         </div>
-
-        <!-- Budget Analyzer -->
-        <div id="budgetSection" class="section">
-            <h1>Budget Analyzer</h1>
-
-            <div class="card">
-                <label>Monthly Income</label>
-                <input id="budgetIncome" class="input-field" type="number">
-
-                <label>Monthly Expenses</label>
-                <input id="budgetExpensesOut" class="input-field" type="number">
-
-                <button class="action-btn" onclick="analyzeBudget()">Analyze</button>
-            </div>
-
-            <div class="card">
-                <p><strong>Savings:</strong> <span id="budgetSavingsOut">$0</span></p>
-                <p><strong>Savings Rate:</strong> <span id="budgetRateOut">0%</span></p>
-                <p><strong>Categories:</strong></p>
-                <div id="budgetCategories"></div>
-                <p><strong>Insights:</strong></p>
-                <div id="budgetInsights"></div>
-            </div>
-
-            <div class="card chart-container">
-                <canvas id="budgetChart"></canvas>
-            </div>
+        <div class="card">
+            <canvas id="budgetChart"></canvas>
         </div>
-
-        <!-- Portfolio Analyzer -->
-        <div id="portfolioSection" class="section">
-            <h1>Portfolio Analyzer</h1>
-
-            <div class="card">
-                <label>Enter Portfolio JSON</label>
-                <textarea id="portfolioInput" class="input-field" rows="6"></textarea>
-                <button class="action-btn" onclick="analyzePortfolio()">Analyze</button>
-            </div>
-
-            <div class="card">
-                <p><strong>Total Value:</strong> <span id="portfolioResult">$0</span></p>
-                <p><strong>Sectors:</strong></p>
-                <div id="sectorBreakdown"></div>
-                <p><strong>Regions:</strong></p>
-                <div id="regionBreakdown"></div>
-                <p><strong>Insights:</strong></p>
-                <div id="portfolioInsights"></div>
-            </div>
-
-            <div class="card chart-container">
-                <canvas id="portfolioChart"></canvas>
-            </div>
+        <div class="card">
+            <h3>Insights</h3>
+            <ul id="budgetInsights"></ul>
         </div>
-
-        <!-- Insights Section -->
-        <div id="insightsSection" class="section">
-            <h1>AI Insights</h1>
-            <div class="card">
-                <p id="insightsOutput">Your insights will appear here.</p>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Your JavaScript (unchanged) -->
-    <script>
-        const API_BASE = "https://portfolio-god-99rv.onrender.com";
+    <!-- PORTFOLIO -->
+    <div id="portfolio" class="section">
+        <h2>Portfolio Analyzer</h2>
+        <div class="card">
+            <textarea id="portfolioInput" placeholder='Portfolio (JSON format):
+[
+  {"name":"AAPL","value":5000,"sector":"Tech","region":"USA"},
+  {"name":"TSLA","value":3000,"sector":"Auto","region":"USA"}
+]'></textarea>
+            <button onclick="runPortfolio()">Analyze Portfolio</button>
+        </div>
+        <div class="card">
+            <canvas id="sectorChart"></canvas>
+        </div>
+        <div class="card">
+            <canvas id="regionChart"></canvas>
+        </div>
+        <div class="card">
+            <h3>Insights</h3>
+            <ul id="portfolioInsights"></ul>
+        </div>
+    </div>
 
-        function showSection(id) {
-            document.querySelectorAll(".section").forEach(sec => sec.style.display = "none");
-            document.getElementById(id).style.display = "block";
-        }
+    <!-- INSIGHTS -->
+    <div id="insights" class="section">
+        <h2>AI Insights</h2>
+        <div class="card">
+            <p>Coming soon...</p>
+        </div>
+    </div>
 
-        showSection("profileSection");
+</div>
 
-        async function loadProfile() {
-            const token = localStorage.getItem("token");
-            if (!token) return;
+<script>
+/* ------------------ CONFIG ------------------ */
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+const API_KEY = "vaultwise123"; // replace with your real key
+const token = localStorage.getItem("token");
 
-            const res = await fetch(API_BASE + "/api/profile")
-                headers: { "Authorization": token }
-            });
+/* ------------------ NAVIGATION ------------------ */
+function showSection(id) {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
 
-            const data = await res.json();
+/* ------------------ LOAD PROFILE ------------------ */
+async function loadProfile() {
+    try {
+        const res = await fetch(API_BASE + "/api/profile", {
+            headers: {
+                "Authorization": "Bearer " + token,
+                "x-api-key": API_KEY
+            }
+        });
 
-            document.getElementById("profileName").textContent = data.name || "N/A";
-            document.getElementById("profileEmail").textContent = data.email;
-            document.getElementById("profileCreated").textContent = data.createdAt || "N/A";
-            document.getElementById("profileLastLogin").textContent = data.lastLogin || "N/A";
-        }
+        const data = await res.json();
 
-        loadProfile();
+        document.getElementById("p-email").textContent = data.email;
+        document.getElementById("p-plan").textContent = data.plan;
+        document.getElementById("p-trial").textContent = data.trialStart || "None";
 
-        async function analyzeBudget() {
-            const income = Number(document.getElementById("budgetIncome").value);
-            const expenses = Number(document.getElementById("budgetExpensesOut").value);
+    } catch (err) {
+        console.error("Profile error:", err);
+    }
+}
 
-            const res = await fetch(API_BASE + "/api/budget")
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ income, expenses })
-            });
+/* ------------------ BUDGET ANALYZER ------------------ */
+async function runBudget() {
+    try {
+        const income = Number(document.getElementById("income").value);
+        const expenses = JSON.parse(document.getElementById("expenses").value);
 
-            const data = await res.json();
+        const res = await fetch(API_BASE + "/api/budget", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+                "x-api-key": API_KEY
+            },
+            body: JSON.stringify({ income, expenses })
+        });
 
-            document.getElementById("budgetSavingsOut").textContent = "$" + data.savings;
-            document.getElementById("budgetRateOut").textContent = data.savingsRate + "%";
-            document.getElementById("budgetCategories").textContent = data.categories.join(", ");
-            document.getElementById("budgetInsights").textContent = data.insights;
+        const data = await res.json();
 
-            new Chart(document.getElementById("budgetChart"), {
-                type: "pie",
-                data: {
-                    labels: ["Income", "Expenses"],
-                    datasets: [{
-                        data: [income, expenses],
-                        backgroundColor: ["#007bff", "#00eaff"]
-                    }]
-                }
-            });
-        }
+        // Chart
+        new Chart(document.getElementById("budgetChart"), {
+            type: "pie",
+            data: {
+                labels: data.categories.map(c => c.category),
+                datasets: [{
+                    data: data.categories.map(c => c.percent),
+                    backgroundColor: ["#6ab0ff", "#8bc3ff", "#4f8cff", "#3a6fd9"]
+                }]
+            }
+        });
 
-        async function analyzePortfolio() {
-            const portfolio = document.getElementById("portfolioInput").value;
+        // Insights
+        const list = document.getElementById("budgetInsights");
+        list.innerHTML = "";
+        data.insights.forEach(i => {
+            const li = document.createElement("li");
+            li.textContent = i;
+            list.appendChild(li);
+        });
 
-            const res = await fetch(API_BASE + "/api/analyze")
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: portfolio
-            });
+    } catch (err) {
+        console.error("Budget error:", err);
+    }
+}
 
-            const data = await res.json();
+/* ------------------ PORTFOLIO ANALYZER ------------------ */
+async function runPortfolio() {
+    try {
+        const portfolio = JSON.parse(document.getElementById("portfolioInput").value);
 
-            document.getElementById("portfolioResult").textContent = "$" + data.totalValue;
-            document.getElementById("sectorBreakdown").textContent = JSON.stringify(data.sectors);
-            document.getElementById("regionBreakdown").textContent = JSON.stringify(data.regions);
-            document.getElementById("portfolioInsights").textContent = data.insights;
+        const res = await fetch(API_BASE + "/api/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+                "x-api-key": API_KEY
+            },
+            body: JSON.stringify({ portfolio })
+        });
 
-            new Chart(document.getElementById("portfolioChart"), {
-                type: "bar",
-                data: {
-                    labels: Object.keys(data.sectors),
-                    datasets: [{
-                        label: "Sector Allocation",
-                        data: Object.values(data.sectors),
-                        backgroundColor: "#00eaff"
-                    }]
-                }
-            });
-        }
-    </script>
+        const data = await res.json();
+
+        // Sector chart
+        new Chart(document.getElementById("sectorChart"), {
+            type: "bar",
+            data: {
+                labels: data.sectors.map(s => s.sector),
+                datasets: [{
+                    label: "Sector %",
+                    data: data.sectors.map(s => s.percent),
+                    backgroundColor: "#6ab0ff"
+                }]
+            }
+        });
+
+        // Region chart
+        new Chart(document.getElementById("regionChart"), {
+            type: "bar",
+            data: {
+                labels: data.regions.map(r => r.region),
+                datasets: [{
+                    label: "Region %",
+                    data: data.regions.map(r => r.percent),
+                    backgroundColor: "#8bc3ff"
+                }]
+            }
+        });
+
+        // Insights
+        const list = document.getElementById("portfolioInsights");
+        list.innerHTML = "";
+        data.insights.forEach(i => {
+            const li = document.createElement("li");
+            li.textContent = i;
+            list.appendChild(li);
+        });
+
+    } catch (err) {
+        console.error("Portfolio error:", err);
+    }
+}
+
+/* ------------------ INIT ------------------ */
+loadProfile();
+</script>
 
 </body>
 </html>
-<!--rebuild-->
