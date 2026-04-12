@@ -1,708 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vaultwise Dashboard</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaultwise Dashboard</title>
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
+<style>
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #050712;
-      color: #f5f7ff;
-      display: flex;
-      min-height: 100vh;
+        margin: 0;
+        font-family: "Inter", system-ui, sans-serif;
+        background: #0d1117;
+        color: #e6edf3;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
     }
 
     /* Sidebar */
     .sidebar {
-      width: 240px;
-      background: radial-gradient(circle at top, #1b2340, #050712);
-      border-right: 1px solid #1b1f33;
-      padding: 24px 18px;
+        width: 240px;
+        background: #161b22;
+        border-right: 1px solid #30363d;
+        padding: 24px 18px;
+        display: flex;
+        flex-direction: column;
     }
 
     .logo {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #7cc4ff;
-      margin-bottom: 24px;
-      text-align: center;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #58a6ff;
+        margin-bottom: 24px;
+        text-align: center;
     }
 
     .nav-item {
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      color: #c3c7ff;
-      font-size: 0.95rem;
-      transition: background 0.15s, transform 0.1s;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        color: #c9d1d9;
+        font-size: 0.95rem;
+        transition: 0.2s;
     }
 
     .nav-item:hover {
-      background: #1b2340;
-      transform: translateX(2px);
+        background: #21262d;
     }
 
-    .nav-item.active-nav {
-      background: linear-gradient(90deg, #3b82f6, #22c1c3);
-      color: #050712;
-      font-weight: 600;
+    .active-nav {
+        background: #238636;
+        color: white;
+        font-weight: 600;
     }
 
     /* Main content */
     .content {
-      flex: 1;
-      padding: 24px 28px;
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
     }
 
     h2 {
-      margin-top: 0;
-      margin-bottom: 16px;
-      font-size: 1.4rem;
+        margin-top: 0;
+        font-size: 1.6rem;
+        margin-bottom: 16px;
     }
 
     .section {
-      display: none;
+        display: none;
     }
 
     .section.active {
-      display: block;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 18px;
+        display: block;
     }
 
     .card {
-      background: #0c1020;
-      border-radius: 12px;
-      padding: 18px 16px;
-      border: 1px solid #1b1f33;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 1.05rem;
-    }
-
-    label {
-      font-size: 0.85rem;
-      color: #a5a9d8;
-      display: block;
-      margin-bottom: 4px;
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
     input, textarea, button {
-      width: 100%;
-      border-radius: 8px;
-      border: none;
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 0.9rem;
-      font-family: inherit;
-    }
-
-    input, textarea {
-      background: #050712;
-      color: #f5f7ff;
-      border: 1px solid #1b1f33;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #30363d;
+        background: #0d1117;
+        color: #e6edf3;
+        font-size: 0.95rem;
+        margin-bottom: 12px;
     }
 
     textarea {
-      min-height: 120px;
-      resize: vertical;
-      white-space: pre;
+        min-height: 120px;
+        resize: vertical;
     }
 
     button {
-      background: linear-gradient(90deg, #3b82f6, #22c1c3);
-      color: #050712;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
+        background: #238636;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
     }
 
     button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-      opacity: 0.95;
+        background: #2ea043;
     }
 
-    button:disabled {
-      opacity: 0.5;
-      cursor: default;
-      box-shadow: none;
-      transform: none;
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
     }
 
     ul {
-      padding-left: 18px;
-      margin: 0;
+        padding-left: 20px;
     }
 
     li {
-      margin-bottom: 4px;
-      font-size: 0.9rem;
+        margin-bottom: 6px;
     }
 
-    .pill {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      background: #111827;
-      border: 1px solid #1f2937;
-      color: #9ca3af;
-      margin-right: 6px;
+    .top-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
     }
 
-    .pill.pro {
-      background: rgba(34, 197, 94, 0.1);
-      border-color: #22c55e;
-      color: #bbf7d0;
+    .danger {
+        background: #da3633 !important;
     }
 
-    .pill.trial {
-      background: rgba(59, 130, 246, 0.1);
-      border-color: #3b82f6;
-      color: #bfdbfe;
+    .danger:hover {
+        background: #f85149 !important;
     }
-
-    .pill.free {
-      background: rgba(148, 163, 184, 0.1);
-      border-color: #64748b;
-      color: #e5e7eb;
-    }
-
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .top-row-right button {
-      width: auto;
-      padding-inline: 14px;
-      margin-bottom: 0;
-    }
-
-    .error-text {
-      color: #fca5a5;
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
-
-    .success-text {
-      color: #bbf7d0;
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
-
-    canvas {
-      max-width: 100%;
-    }
-  </style>
+</style>
 </head>
+
 <body>
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
+<!-- SIDEBAR -->
+<div class="sidebar">
     <div class="logo">Vaultwise</div>
     <div class="nav-item active-nav" data-target="profile">Profile</div>
     <div class="nav-item" data-target="budget">Budget Analyzer</div>
     <div class="nav-item" data-target="portfolio">Portfolio Analyzer</div>
     <div class="nav-item" data-target="insights">AI Insights</div>
-  </div>
+</div>
 
-  <!-- MAIN CONTENT -->
-  <div class="content">
+<!-- MAIN CONTENT -->
+<div class="content">
 
-    <!-- PROFILE SECTION -->
+    <!-- PROFILE -->
     <div id="profile" class="section active">
-      <div class="top-row">
         <h2>Your Profile</h2>
-        <div class="top-row-right">
-          <button id="startTrialBtn">Start 7‑Day Trial</button>
-          <button id="upgradeBtn">Upgrade to Pro</button>
-          <button id="logoutBtn" style="background:#ef4444;color:#fef2f2;">Logout</button>
-        </div>
-      </div>
 
-      <div class="grid">
-        <div class="card">
-          <h3>Account</h3>
-          <p><strong>Email:</strong> <span id="p-email">Loading...</span></p>
-          <p>
-            <strong>Plan:</strong>
-            <span id="p-plan-pill" class="pill">...</span>
-          </p>
-          <p><strong>Trial Start:</strong> <span id="p-trial">Loading...</span></p>
-          <div id="profileMessage"></div>
+        <div class="top-actions">
+            <button id="startTrialBtn">Start Trial</button>
+            <button id="upgradeBtn">Upgrade</button>
+            <button id="logoutBtn" class="danger">Logout</button>
         </div>
 
-        <div class="card">
-          <h3>What you have access to</h3>
-          <ul id="accessList">
-            <li>Loading...</li>
-          </ul>
+        <div class="grid">
+            <div class="card">
+                <h3>Account</h3>
+                <p><strong>Email:</strong> <span id="p-email">Loading...</span></p>
+                <p><strong>Plan:</strong> <span id="p-plan">Loading...</span></p>
+                <p><strong>Trial Start:</strong> <span id="p-trial">Loading...</span></p>
+            </div>
+
+            <div class="card">
+                <h3>What You Have Access To</h3>
+                <ul id="accessList"></ul>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- BUDGET SECTION -->
+    <!-- BUDGET -->
     <div id="budget" class="section">
-      <h2>Budget Analyzer</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Inputs</h3>
-          <label for="income">Monthly Income</label>
-          <input type="number" id="income" placeholder="e.g. 5000" />
+        <h2>Budget Analyzer</h2>
 
-          <label for="expenses">Expenses (JSON)</label>
-          <textarea id="expenses">[
+        <div class="grid">
+            <div class="card">
+                <h3>Inputs</h3>
+                <input type="number" id="income" placeholder="Monthly Income" />
+                <textarea id="expenses">[
   {"category":"Rent","amount":1500},
-  {"category":"Food","amount":400},
-  {"category":"Transport","amount":200},
-  {"category":"Entertainment","amount":250}
+  {"category":"Food","amount":400}
 ]</textarea>
+                <button id="runBudgetBtn">Analyze Budget</button>
+            </div>
 
-          <button id="runBudgetBtn">Analyze Budget</button>
-          <div id="budgetStatus"></div>
-        </div>
+            <div class="card">
+                <h3>Spending Breakdown</h3>
+                <canvas id="budgetChart"></canvas>
+            </div>
 
-        <div class="card">
-          <h3>Spending Breakdown</h3>
-          <canvas id="budgetChart"></canvas>
+            <div class="card">
+                <h3>Insights</h3>
+                <ul id="budgetInsights"></ul>
+            </div>
         </div>
-
-        <div class="card">
-          <h3>Insights</h3>
-          <ul id="budgetInsights"></ul>
-        </div>
-      </div>
     </div>
 
-    <!-- PORTFOLIO SECTION -->
+    <!-- PORTFOLIO -->
     <div id="portfolio" class="section">
-      <h2>Portfolio Analyzer</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Inputs</h3>
-          <label for="portfolioInput">Portfolio (JSON)</label>
-          <textarea id="portfolioInput">[
+        <h2>Portfolio Analyzer</h2>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Inputs</h3>
+                <textarea id="portfolioInput">[
   {"name":"AAPL","value":5000,"sector":"Tech","region":"USA"},
-  {"name":"TSLA","value":3000,"sector":"Auto","region":"USA"},
-  {"name":"VUSA","value":4000,"sector":"Index","region":"Global"}
+  {"name":"TSLA","value":3000,"sector":"Auto","region":"USA"}
 ]</textarea>
+                <button id="runPortfolioBtn">Analyze Portfolio</button>
+            </div>
 
-          <button id="runPortfolioBtn">Analyze Portfolio</button>
-          <div id="portfolioStatus"></div>
-        </div>
+            <div class="card">
+                <h3>By Sector</h3>
+                <canvas id="sectorChart"></canvas>
+            </div>
 
-        <div class="card">
-          <h3>By Sector</h3>
-          <canvas id="sectorChart"></canvas>
-        </div>
+            <div class="card">
+                <h3>By Region</h3>
+                <canvas id="regionChart"></canvas>
+            </div>
 
-        <div class="card">
-          <h3>By Region</h3>
-          <canvas id="regionChart"></canvas>
+            <div class="card">
+                <h3>Insights</h3>
+                <ul id="portfolioInsights"></ul>
+            </div>
         </div>
-
-        <div class="card">
-          <h3>Insights</h3>
-          <ul id="portfolioInsights"></ul>
-        </div>
-      </div>
     </div>
 
-    <!-- INSIGHTS SECTION -->
+    <!-- INSIGHTS -->
     <div id="insights" class="section">
-      <h2>AI Insights</h2>
-      <div class="card">
-        <p>This area can later call an LLM or summarizer using your budget + portfolio data.</p>
-        <p>For now, use the Budget and Portfolio sections to generate structured insights.</p>
-      </div>
+        <h2>AI Insights</h2>
+        <div class="card">
+            <p>Coming soon...</p>
+        </div>
     </div>
 
-  </div>
+</div>
 
-  <script>
-    /* ------------------ CONFIG ------------------ */
-    const API_BASE = "https://portfolio-god-99rv.onrender.com";
+<script>
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+const token = localStorage.getItem("token");
 
-    function getToken() {
-      return localStorage.getItem("token");
-    }
-
-    function ensureAuthOrRedirect() {
-      const t = getToken();
-      if (!t) {
-        window.location.href = "login.html";
-      }
-    }
-
-    /* ------------------ NAVIGATION ------------------ */
-    const navItems = document.querySelectorAll(".nav-item");
-    const sections = document.querySelectorAll(".section");
-
-    navItems.forEach(item => {
-      item.addEventListener("click", () => {
-        navItems.forEach(n => n.classList.remove("active-nav"));
+/* Navigation */
+document.querySelectorAll(".nav-item").forEach(item => {
+    item.addEventListener("click", () => {
+        document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active-nav"));
         item.classList.add("active-nav");
 
         const target = item.getAttribute("data-target");
-        sections.forEach(s => {
-          s.classList.toggle("active", s.id === target);
+        document.querySelectorAll(".section").forEach(s => {
+            s.classList.toggle("active", s.id === target);
         });
-      });
+    });
+});
+
+/* Load Profile */
+async function loadProfile() {
+    const res = await fetch(API_BASE + "/api/profile", {
+        headers: { "Authorization": "Bearer " + token }
     });
 
-    /* ------------------ PROFILE ------------------ */
-    async function loadProfile() {
-      const token = getToken();
-      if (!token) return;
+    const data = await res.json();
 
-      const profileMessage = document.getElementById("profileMessage");
-      profileMessage.textContent = "";
+    document.getElementById("p-email").textContent = data.email;
+    document.getElementById("p-plan").textContent = data.plan;
+    document.getElementById("p-trial").textContent = data.trialStart || "None";
 
-      try {
-        const res = await fetch(API_BASE + "/api/profile", {
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
+    const access = document.getElementById("accessList");
+    access.innerHTML = "";
+    ["Secure account", "Budget analyzer", "Portfolio analyzer"].forEach(i => {
+        const li = document.createElement("li");
+        li.textContent = i;
+        access.appendChild(li);
+    });
+}
 
-        if (!res.ok) {
-          if (res.status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = "login.html";
-            return;
-          }
-          profileMessage.innerHTML = '<p class="error-text">Failed to load profile.</p>';
-          return;
-        }
+/* Budget Analyzer */
+document.getElementById("runBudgetBtn").onclick = async () => {
+    const income = Number(document.getElementById("income").value);
+    const expenses = JSON.parse(document.getElementById("expenses").value);
 
-        const data = await res.json();
-
-        document.getElementById("p-email").textContent = data.email || "Unknown";
-        document.getElementById("p-trial").textContent = data.trialStart
-          ? new Date(data.trialStart).toLocaleString()
-          : "None";
-
-        const pill = document.getElementById("p-plan-pill");
-        pill.textContent = data.plan || "free";
-        pill.classList.remove("pro", "trial", "free");
-        if (data.plan === "pro") pill.classList.add("pro");
-        else if (data.plan === "trial") pill.classList.add("trial");
-        else pill.classList.add("free");
-
-        const accessList = document.getElementById("accessList");
-        accessList.innerHTML = "";
-
-        const baseItems = [
-          "Secure account with JWT auth",
-          "Budget analyzer",
-          "Portfolio analyzer"
-        ];
-
-        baseItems.forEach(t => {
-          const li = document.createElement("li");
-          li.textContent = t;
-          accessList.appendChild(li);
-        });
-
-        if (data.plan === "trial") {
-          const li = document.createElement("li");
-          li.textContent = "Full Pro access during trial period.";
-          accessList.appendChild(li);
-        }
-
-        if (data.plan === "pro") {
-          const li = document.createElement("li");
-          li.textContent = "Unlimited Pro access.";
-          accessList.appendChild(li);
-        }
-
-      } catch (err) {
-        console.error("Profile error:", err);
-        profileMessage.innerHTML = '<p class="error-text">Error loading profile.</p>';
-      }
-    }
-
-    async function startTrial() {
-      const token = getToken();
-      if (!token) return;
-
-      const btn = document.getElementById("startTrialBtn");
-      const profileMessage = document.getElementById("profileMessage");
-      profileMessage.textContent = "";
-      btn.disabled = true;
-
-      try {
-        const res = await fetch(API_BASE + "/api/start-trial", {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          profileMessage.innerHTML = '<p class="error-text">' + (data.error || "Could not start trial.") + '</p>';
-        } else {
-          if (data.token) {
-            localStorage.setItem("token", data.token);
-          }
-          profileMessage.innerHTML = '<p class="success-text">' + (data.message || "Trial started.") + '</p>';
-          await loadProfile();
-        }
-      } catch (err) {
-        console.error("Start trial error:", err);
-        profileMessage.innerHTML = '<p class="error-text">Error starting trial.</p>';
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    async function upgradeToPro() {
-      const token = getToken();
-      if (!token) return;
-
-      const btn = document.getElementById("upgradeBtn");
-      const profileMessage = document.getElementById("profileMessage");
-      profileMessage.textContent = "";
-      btn.disabled = true;
-
-      try {
-        const res = await fetch(API_BASE + "/api/upgrade", {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          profileMessage.innerHTML = '<p class="error-text">' + (data.error || "Could not upgrade.") + '</p>';
-        } else {
-          if (data.token) {
-            localStorage.setItem("token", data.token);
-          }
-          profileMessage.innerHTML = '<p class="success-text">' + (data.message || "Upgraded to Pro.") + '</p>';
-          await loadProfile();
-        }
-      } catch (err) {
-        console.error("Upgrade error:", err);
-        profileMessage.innerHTML = '<p class="error-text">Error upgrading.</p>';
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    /* ------------------ BUDGET ANALYZER ------------------ */
-    let budgetChartInstance = null;
-
-    async function runBudget() {
-      const token = getToken();
-      if (!token) return;
-
-      const status = document.getElementById("budgetStatus");
-      status.textContent = "";
-      const btn = document.getElementById("runBudgetBtn");
-      btn.disabled = true;
-
-      try {
-        const income = Number(document.getElementById("income").value);
-        let expenses;
-        try {
-          expenses = JSON.parse(document.getElementById("expenses").value);
-        } catch {
-          status.innerHTML = '<p class="error-text">Expenses must be valid JSON.</p>';
-          return;
-        }
-
-        const res = await fetch(API_BASE + "/api/budget", {
-          method: "POST",
-          headers: {
+    const res = await fetch(API_BASE + "/api/budget", {
+        method: "POST",
+        headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify({ income, expenses })
-        });
+        },
+        body: JSON.stringify({ income, expenses })
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!res.ok) {
-          status.innerHTML = '<p class="error-text">' + (data.error || "Budget analysis failed.") + '</p>';
-          return;
-        }
-
-        status.innerHTML = '<p class="success-text">Budget analyzed successfully.</p>';
-
-        // Chart
-        const ctx = document.getElementById("budgetChart").getContext("2d");
-        if (budgetChartInstance) budgetChartInstance.destroy();
-        budgetChartInstance = new Chart(ctx, {
-          type: "pie",
-          data: {
+    new Chart(document.getElementById("budgetChart"), {
+        type: "pie",
+        data: {
             labels: data.categories.map(c => c.category),
             datasets: [{
-              data: data.categories.map(c => Number(c.percent)),
-              backgroundColor: ["#3b82f6", "#22c55e", "#f97316", "#e11d48", "#a855f7", "#14b8a6"]
+                data: data.categories.map(c => c.percent),
+                backgroundColor: ["#58a6ff", "#238636", "#da3633", "#f0883e"]
             }]
-          }
-        });
-
-        // Insights
-        const list = document.getElementById("budgetInsights");
-        list.innerHTML = "";
-        data.insights.forEach(i => {
-          const li = document.createElement("li");
-          li.textContent = i;
-          list.appendChild(li);
-        });
-
-      } catch (err) {
-        console.error("Budget error:", err);
-        status.innerHTML = '<p class="error-text">Error running budget analyzer.</p>';
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    /* ------------------ PORTFOLIO ANALYZER ------------------ */
-    let sectorChartInstance = null;
-    let regionChartInstance = null;
-
-    async function runPortfolio() {
-      const token = getToken();
-      if (!token) return;
-
-      const status = document.getElementById("portfolioStatus");
-      status.textContent = "";
-      const btn = document.getElementById("runPortfolioBtn");
-      btn.disabled = true;
-
-      try {
-        let portfolio;
-        try {
-          portfolio = JSON.parse(document.getElementById("portfolioInput").value);
-        } catch {
-          status.innerHTML = '<p class="error-text">Portfolio must be valid JSON.</p>';
-          return;
         }
+    });
 
-        const res = await fetch(API_BASE + "/api/analyze", {
-          method: "POST",
-          headers: {
+    const list = document.getElementById("budgetInsights");
+    list.innerHTML = "";
+    data.insights.forEach(i => {
+        const li = document.createElement("li");
+        li.textContent = i;
+        list.appendChild(li);
+    });
+};
+
+/* Portfolio Analyzer */
+document.getElementById("runPortfolioBtn").onclick = async () => {
+    const portfolio = JSON.parse(document.getElementById("portfolioInput").value);
+
+    const res = await fetch(API_BASE + "/api/analyze", {
+        method: "POST",
+        headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify({ portfolio })
-        });
+        },
+        body: JSON.stringify({ portfolio })
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!res.ok) {
-          status.innerHTML = '<p class="error-text">' + (data.error || "Portfolio analysis failed.") + '</p>';
-          return;
-        }
-
-        status.innerHTML = '<p class="success-text">Portfolio analyzed successfully.</p>';
-
-        // Sector chart
-        const sctx = document.getElementById("sectorChart").getContext("2d");
-        if (sectorChartInstance) sectorChartInstance.destroy();
-        sectorChartInstance = new Chart(sctx, {
-          type: "bar",
-          data: {
+    new Chart(document.getElementById("sectorChart"), {
+        type: "bar",
+        data: {
             labels: data.sectors.map(s => s.sector),
             datasets: [{
-              label: "Sector %",
-              data: data.sectors.map(s => Number(s.percent)),
-              backgroundColor: "#3b82f6"
+                label: "Sector %",
+                data: data.sectors.map(s => s.percent),
+                backgroundColor: "#58a6ff"
             }]
-          },
-          options: {
-            scales: {
-              y: { beginAtZero: true, max: 100 }
-            }
-          }
-        });
+        }
+    });
 
-        // Region chart
-        const rctx = document.getElementById("regionChart").getContext("2d");
-        if (regionChartInstance) regionChartInstance.destroy();
-        regionChartInstance = new Chart(rctx, {
-          type: "bar",
-          data: {
+    new Chart(document.getElementById("regionChart"), {
+        type: "bar",
+        data: {
             labels: data.regions.map(r => r.region),
             datasets: [{
-              label: "Region %",
-              data: data.regions.map(r => Number(r.percent)),
-              backgroundColor: "#22c55e"
+                label: "Region %",
+                data: data.regions.map(r => r.percent),
+                backgroundColor: "#238636"
             }]
-          },
-          options: {
-            scales: {
-              y: { beginAtZero: true, max: 100 }
-            }
-          }
-        });
+        }
+    });
 
-        // Insights
-        const list = document.getElementById("portfolioInsights");
-        list.innerHTML = "";
-        data.insights.forEach(i => {
-          const li = document.createElement("li");
-          li.textContent = i;
-          list.appendChild(li);
-        });
+    const list = document.getElementById("portfolioInsights");
+    list.innerHTML = "";
+    data.insights.forEach(i => {
+        const li = document.createElement("li");
+        li.textContent = i;
+        list.appendChild(li);
+    });
+};
 
-      } catch (err) {
-        console.error("Portfolio error:", err);
-        status.innerHTML = '<p class="error-text">Error running portfolio analyzer.</p>';
-      } finally {
-        btn.disabled = false;
-      }
-    }
+/* Logout */
+document.getElementById("logoutBtn").onclick = () => {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+};
 
-    /* ------------------ LOGOUT ------------------ */
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "login.html";
-    }
+loadProfile();
+</script>
 
-    /* ------------------ WIRE UP BUTTONS ------------------ */
-    document.getElementById("startTrialBtn").addEventListener("click", startTrial);
-    document.getElementById("upgradeBtn").addEventListener("click", upgradeToPro);
-    document.getElementById("runBudgetBtn").addEventListener("click", runBudget);
-    document.getElementById("runPortfolioBtn").addEventListener("click", runPortfolio);
-    document.getElementById("logoutBtn").addEventListener("click", logout);
-
-    /* ------------------ INIT ------------------ */
-    ensureAuthOrRedirect();
-    loadProfile();
-  </script>
 </body>
 </html>
