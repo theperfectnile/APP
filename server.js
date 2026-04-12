@@ -5,8 +5,10 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import rateLimit from "express-rate-limit";
-import helmet from "helmet"; // ✅ Security headers
+import helmet from "helmet";
 import { z } from "zod";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
@@ -14,10 +16,9 @@ const app = express();
 
 /* ------------------ SECURITY HEADERS ------------------ */
 
-// Helmet adds 11+ security headers automatically
 app.use(
   helmet({
-    contentSecurityPolicy: false, // disable CSP for APIs (optional)
+    contentSecurityPolicy: false,
   })
 );
 
@@ -34,16 +35,20 @@ app.use((req, res, next) => {
 
 /* ------------------ CORS ------------------ */
 
-import cors from "cors";
+app.use(
+  cors({
+    origin: "https://theperfectnile.github.io",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-app.use(cors({
-  origin: "https://theperfectnile.github.io",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
 app.use(express.json());
 
+/* ------------------ API KEY MIDDLEWARE ------------------ */
+
 const JWT_SECRET = process.env.JWT_SECRET;
+
 function requireApiKey(req, res, next) {
   const key = req.headers["x-api-key"];
   if (!key || key !== process.env.API_KEY) {
@@ -51,6 +56,7 @@ function requireApiKey(req, res, next) {
   }
   next();
 }
+
 /* ------------------ MONGODB CONNECTION ------------------ */
 
 mongoose
@@ -65,10 +71,8 @@ const userSchema = new mongoose.Schema({
   password: String,
   plan: { type: String, default: "free" },
   trialStart: { type: Date, default: null },
-
-  // 🔐 Password reset fields
   resetToken: { type: String, default: null },
-  resetTokenExpiry: { type: Date, default: null }
+  resetTokenExpiry: { type: Date, default: null },
 });
 
 const User = mongoose.model("User", userSchema);
@@ -166,11 +170,8 @@ async function auth(req, res, next) {
   }
 }
 
-/* ------------------ AUTH ROUTES ------------------ */
-import crypto from "crypto";
-import nodemailer from "nodemailer";
+/* ------------------ EMAIL TRANSPORT ------------------ */
 
-/* Email transporter */
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -190,16 +191,14 @@ app.post("/api/request-password-reset", requireApiKey, async (req, res) => {
   if (!user)
     return res.json({ message: "If that email exists, a reset link was sent." });
 
-  // Generate token
   const token = crypto.randomBytes(32).toString("hex");
 
   user.resetToken = token;
-  user.resetTokenExpiry = Date.now() + 1000 * 60 * 15; // 15 minutes
+  user.resetTokenExpiry = Date.now() + 1000 * 60 * 15;
   await user.save();
 
   const resetLink = `https://theperfectnile.github.io/vaultwise/reset-password?token=${token}`;
 
-  // Send email
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: email,
@@ -231,11 +230,9 @@ app.post("/api/reset-password", requireApiKey, async (req, res) => {
   if (!user)
     return res.status(400).json({ error: "Invalid or expired token" });
 
-  // Update password
   const hashed = await bcrypt.hash(newPassword, 10);
   user.password = hashed;
 
-  // Invalidate token
   user.resetToken = null;
   user.resetTokenExpiry = null;
 
@@ -273,6 +270,9 @@ app.post("/api/recover-email", requireApiKey, async (req, res) => {
 
   res.json({ matches: masked });
 });
+
+/* ------------------ REGISTER ------------------ */
+
 app.post("/api/register", async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);
   if (!parsed.success)
@@ -295,6 +295,8 @@ app.post("/api/register", async (req, res) => {
   const token = issueToken(user);
   res.json({ token });
 });
+
+/* ------------------ LOGIN ------------------ */
 
 app.post("/api/login", loginLimiter, async (req, res) => {
   const parsed = loginSchema.safeParse(req.body);
