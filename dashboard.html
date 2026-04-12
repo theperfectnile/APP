@@ -256,7 +256,7 @@
             const income = Number(document.getElementById("budgetIncome").value);
             const expenses = Number(document.getElementById("budgetExpensesOut").value);
 
-            const res = await fetch(API_BASE + "/analyze-budget", {
+            const res = await fetch(API_BASE + "/api/budget")
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ income, expenses })
