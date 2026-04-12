@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ mongoose
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
-  plan: { type: String, default: "free" }, // free | trial | pro
+  plan: { type: String, default: "free" },
   trialStart: { type: Date, default: null }
 });
 
@@ -99,9 +100,12 @@ app.post("/api/register", async (req, res) => {
   const exists = await User.findOne({ email });
   if (exists) return res.status(400).json({ error: "Email already exists" });
 
+  // 🔐 HASH PASSWORD
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const user = await User.create({
     email,
-    password,
+    password: hashedPassword,
     plan: "free",
     trialStart: null
   });
@@ -113,8 +117,12 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email, password });
+  const user = await User.findOne({ email });
   if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
+  // 🔐 COMPARE HASHED PASSWORD
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
   applyTrialExpiry(user);
   await user.save();
