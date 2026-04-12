@@ -3,8 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs"; // using bcryptjs
-import rateLimit from "express-rate-limit"; // rate limiting
+import bcrypt from "bcryptjs";
+import rateLimit from "express-rate-limit";
+import { z } from "zod"; // ✅ Input validation
 
 dotenv.config();
 
@@ -18,7 +19,6 @@ app.use(cors({
 
 app.use(express.json());
 
-// MUST be set in Render environment variables
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /* ------------------ MONGODB CONNECTION ------------------ */
@@ -50,7 +50,7 @@ function issueToken(user) {
       trialStart: user.trialStart
     },
     JWT_SECRET,
-    { expiresIn: "2h" } // safer expiration
+    { expiresIn: "2h" }
   );
 }
 
@@ -69,11 +69,43 @@ function applyTrialExpiry(user) {
 
 /* ------------------ RATE LIMITING ------------------ */
 
-// Limit login attempts to prevent brute-force attacks
 const loginLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
+  windowMs: 60 * 1000,
   max: 5,
   message: { error: "Too many login attempts. Try again in 1 minute." }
+});
+
+/* ------------------ VALIDATION SCHEMAS ------------------ */
+
+const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6)
+});
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1)
+});
+
+const budgetSchema = z.object({
+  income: z.number().positive(),
+  expenses: z.array(
+    z.object({
+      category: z.string(),
+      amount: z.number().nonnegative()
+    })
+  )
+});
+
+const portfolioSchema = z.object({
+  portfolio: z.array(
+    z.object({
+      name: z.string(),
+      value: z.number().positive(),
+      sector: z.string(),
+      region: z.string()
+    })
+  )
 });
 
 /* ------------------ AUTH MIDDLEWARE ------------------ */
@@ -103,15 +135,15 @@ async function auth(req, res, next) {
 /* ------------------ AUTH ROUTES ------------------ */
 
 app.post("/api/register", async (req, res) => {
-  const { email, password } = req.body;
+  const parsed = registerSchema.safeParse(req.body);
+  if (!parsed.success)
+    return res.status(400).json({ error: "Invalid input" });
 
-  if (!email || !password)
-    return res.status(400).json({ error: "Email and password required" });
+  const { email, password } = parsed.data;
 
   const exists = await User.findOne({ email });
   if (exists) return res.status(400).json({ error: "Email already exists" });
 
-  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
@@ -126,12 +158,15 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/login", loginLimiter, async (req, res) => {
-  const { email, password } = req.body;
+  const parsed = loginSchema.safeParse(req.body);
+  if (!parsed.success)
+    return res.status(400).json({ error: "Invalid input" });
+
+  const { email, password } = parsed.data;
 
   const user = await User.findOne({ email });
   if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
-  // Compare hashed password
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
@@ -195,13 +230,14 @@ app.post("/api/upgrade", auth, async (req, res) => {
 /* ------------------ BUDGET ------------------ */
 
 app.post("/api/budget", auth, (req, res) => {
-  const { income, expenses } = req.body;
+  const parsed = budgetSchema.safeParse(req.body);
+  if (!parsed.success)
+    return res.status(400).json({ error: "Invalid input" });
 
-  if (!income || income <= 0)
-    return res.status(400).json({ error: "Valid income required" });
+  const { income, expenses } = parsed.data;
 
   const totalExpenses = expenses.reduce(
-    (sum, e) => sum + (e.amount || 0),
+    (sum, e) => sum + e.amount,
     0
   );
 
@@ -211,7 +247,7 @@ app.post("/api/budget", auth, (req, res) => {
   const categoryMap = {};
   expenses.forEach(e => {
     categoryMap[e.category] =
-      (categoryMap[e.category] || 0) + (e.amount || 0);
+      (categoryMap[e.category] || 0) + e.amount;
   });
 
   const categories = Object.entries(categoryMap).map(([cat, val]) => ({
@@ -237,17 +273,14 @@ app.post("/api/budget", auth, (req, res) => {
 /* ------------------ PORTFOLIO ------------------ */
 
 app.post("/api/analyze", auth, (req, res) => {
-  const user = req.user;
+  const parsed = portfolioSchema.safeParse(req.body);
+  if (!parsed.success)
+    return res.status(400).json({ error: "Invalid input" });
 
-  if (user.plan === "free")
-    return res.status(403).json({
-      error: "Portfolio Analyzer requires Trial or Pro"
-    });
-
-  const { portfolio } = req.body;
+  const { portfolio } = parsed.data;
 
   const totalValue = portfolio.reduce(
-    (sum, a) => sum + (a.value || 0),
+    (sum, a) => sum + a.value,
     0
   );
 
