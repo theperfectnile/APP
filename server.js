@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs"; // ✅ FIXED: using bcryptjs
 
 dotenv.config();
 
@@ -17,7 +17,8 @@ app.use(cors({
 
 app.use(express.json());
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
+// ❗ MUST be set in Render environment variables
+const JWT_SECRET = process.env.JWT_SECRET;
 
 /* ------------------ MONGODB CONNECTION ------------------ */
 
@@ -48,7 +49,7 @@ function issueToken(user) {
       trialStart: user.trialStart
     },
     JWT_SECRET,
-    { expiresIn: "24h" }
+    { expiresIn: "2h" } // ✅ safer expiration
   );
 }
 
@@ -100,7 +101,7 @@ app.post("/api/register", async (req, res) => {
   const exists = await User.findOne({ email });
   if (exists) return res.status(400).json({ error: "Email already exists" });
 
-  // 🔐 HASH PASSWORD
+  // 🔐 HASH PASSWORD (bcryptjs)
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
@@ -120,7 +121,7 @@ app.post("/api/login", async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
-  // 🔐 COMPARE HASHED PASSWORD
+  // 🔐 COMPARE HASHED PASSWORD (bcryptjs)
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
