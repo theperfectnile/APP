@@ -7,7 +7,13 @@ import mongoose from "mongoose";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+import cors from "cors";
+
+app.use(cors({
+  origin: "https://theperfectnile.github.io",
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
