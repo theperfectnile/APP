@@ -486,108 +486,86 @@ function formatDate(dateStr) {
     return d.toLocaleDateString();
 }
 
+/* ---------------- PROFILE ---------------- */
+
 async function loadProfile() {
     try {
         const res = await fetch(API_BASE + "/api/profile", {
             headers: {
-                "Authorization": "Bearer " + token,
-                "x-api-key": API_KEY
+                "Authorization": "Bearer " + token
             }
         });
+
         const data = await res.json();
+
         if (!res.ok) {
-            document.getElementById("profileError").textContent = data.error || "Could not load profile.";
+            document.getElementById("profileError").textContent =
+                data.error || "Could not load profile.";
             document.getElementById("topbarSub").textContent = "Profile unavailable.";
             return;
         }
 
-        setText("profileName", data.name || "—");
-        setText("profileEmail", data.email || "—");
-        setText("profileCreated", formatDate(data.createdAt));
-        setText("profileLastLogin", formatDate(data.lastLogin));
+        // Your backend returns: email, plan, trialStart
+        const username = data.email?.split("@")[0] || "User";
 
-        document.getElementById("topbarSub").textContent = "Welcome back, " + (data.name || "there") + ".";
+        setText("profileName", username);
+        setText("profileEmail", data.email || "—");
+        setText("profileCreated", formatDate(data.trialStart));
+        setText("profileLastLogin", "—"); // backend does not provide this
+
+        document.getElementById("topbarSub").textContent =
+            "Welcome back, " + username + ".";
+
         document.getElementById("sidebarUser").textContent = data.email || "Signed in";
         document.getElementById("avatarInitials").textContent =
-            (data.name || data.email || "V").charAt(0).toUpperCase();
+            username.charAt(0).toUpperCase();
+
     } catch (err) {
-        document.getElementById("profileError").textContent = "Network error loading profile.";
+        document.getElementById("profileError").textContent =
+            "Network error loading profile.";
         document.getElementById("topbarSub").textContent = "Network error.";
     }
 }
 
+/* ---------------- FINANCE (placeholder) ---------------- */
+
 async function loadFinance() {
-    try {
-        const res = await fetch(API_BASE + "/api/finance", {
-            headers: {
-                "Authorization": "Bearer " + token,
-                "x-api-key": API_KEY
-            }
-        });
-        const data = await res.json();
-        if (!res.ok) {
-            document.getElementById("financeError").textContent = data.error || "Could not load finance data.";
-            document.getElementById("pillStatus").textContent = "Sync issue";
-            return;
-        }
+    // Your backend does NOT have /api/finance.
+    // So we show placeholder values instead of errors.
 
-        setText("netWorth", data.netWorth != null ? "$" + data.netWorth.toLocaleString() : "$—");
-        setText("netWorthChange", data.netWorthChange || "—");
-
-        setText("spending", data.spending != null ? "$" + data.spending.toLocaleString() : "$—");
-        setText("spendingChange", data.spendingChange || "—");
-
-        setText("savingsRate", data.savingsRate != null ? data.savingsRate + "%" : "—%");
-        setText("savingsTag", data.savingsTag || "—");
-
-        document.getElementById("pillStatus").textContent = "Synced · " + (data.period || "This month");
-    } catch (err) {
-        document.getElementById("financeError").textContent = "Network error loading finance data.";
-        document.getElementById("pillStatus").textContent = "Network error";
-    }
+    setText("netWorth", "$—");
+    setText("netWorthChange", "—");
+    setText("spending", "$—");
+    setText("spendingChange", "—");
+    setText("savingsRate", "—%");
+    setText("savingsTag", "—");
+    document.getElementById("pillStatus").textContent = "No finance data available";
 }
+
+/* ---------------- INSIGHTS (placeholder) ---------------- */
 
 async function loadInsights() {
-    try {
-        const res = await fetch(API_BASE + "/api/insights", {
-            headers: {
-                "Authorization": "Bearer " + token,
-                "x-api-key": API_KEY
-            }
-        });
-        const data = await res.json();
-        if (!res.ok) {
-            document.getElementById("insightsError").textContent = data.error || "Could not load insights.";
-            return;
-        }
+    // Your backend does NOT have /api/insights.
+    // So we show placeholder items.
 
-        const list = document.getElementById("insightsList");
-        list.innerHTML = "";
-        (data.insights || []).forEach((item, idx) => {
-            const div = document.createElement("div");
-            div.className = "insight-item";
-            div.innerHTML = `
-                <div class="insight-label">${item.label || "Insight " + (idx + 1)}</div>
-                <div class="insight-text">${item.text || ""}</div>
-            `;
-            list.appendChild(div);
-        });
+    const list = document.getElementById("insightsList");
+    list.innerHTML = `
+        <div class="insight-item">
+            <div class="insight-label">No insights available</div>
+            <div class="insight-text">Add insights API to enable this section.</div>
+        </div>
+    `;
 
-        const actions = document.getElementById("actionsList");
-        actions.innerHTML = "";
-        (data.actions || []).forEach((item, idx) => {
-            const div = document.createElement("div");
-            div.className = "insight-item";
-            div.innerHTML = `
-                <div class="insight-label">${item.label || "Action " + (idx + 1)}</div>
-                <div class="insight-text">${item.text || ""}</div>
-            `;
-            actions.appendChild(div);
-        });
-    } catch (err) {
-        document.getElementById("insightsError").textContent = "Network error loading insights.";
-    }
+    const actions = document.getElementById("actionsList");
+    actions.innerHTML = `
+        <div class="insight-item">
+            <div class="insight-label">No actions available</div>
+            <div class="insight-text">Add insights API to enable this section.</div>
+        </div>
+    `;
 }
+
+/* ---------------- INIT ---------------- */
 
 loadProfile();
 loadFinance();
