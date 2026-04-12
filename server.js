@@ -34,14 +34,13 @@ app.use((req, res, next) => {
 
 /* ------------------ CORS ------------------ */
 
-app.use(
-  cors({
-    origin: "https://theperfectnile.github.io",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+import cors from "cors";
 
+app.use(cors({
+  origin: "https://theperfectnile.github.io",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET;
