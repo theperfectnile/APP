@@ -499,6 +499,90 @@ async function loadInsights() {
 }
 
 <script>
+/* ---------------- CONFIG ---------------- */
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return "—";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString();
+}
+
+/* ---------------- PROFILE ---------------- */
+async function loadProfile() {
+    try {
+        const res = await fetch(API_BASE + "/api/profile", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            setText("profileError", data.error || "Could not load profile.");
+            setText("topbarSub", "Profile unavailable.");
+            return;
+        }
+
+        const username = data.email?.split("@")[0] || "User";
+
+        setText("profileName", username);
+        setText("profileEmail", data.email);
+        setText("profileCreated", formatDate(data.trialStart));
+        setText("profileLastLogin", "—");
+
+        setText("topbarSub", "Welcome back, " + username + ".");
+        setText("sidebarUser", data.email);
+        setText("avatarInitials", username.charAt(0).toUpperCase());
+
+    } catch (err) {
+        setText("profileError", "Network error loading profile.");
+        setText("topbarSub", "Network error.");
+    }
+}
+
+/* ---------------- FINANCE PLACEHOLDER ---------------- */
+async function loadFinance() {
+    setText("netWorth", "$—");
+    setText("netWorthChange", "—");
+    setText("spending", "$—");
+    setText("spendingChange", "—");
+    setText("savingsRate", "—%");
+    setText("savingsTag", "—");
+    setText("pillStatus", "No finance data available");
+}
+
+/* ---------------- INSIGHTS PLACEHOLDER ---------------- */
+async function loadInsights() {
+    document.getElementById("insightsList").innerHTML = `
+        <div class="insight-item">
+            <div class="insight-label">No insights available</div>
+            <div class="insight-text">Add insights API to enable this section.</div>
+        </div>
+    `;
+
+    document.getElementById("actionsList").innerHTML = `
+        <div class="insight-item">
+            <div class="insight-label">No actions available</div>
+            <div class="insight-text">Add insights API to enable this section.</div>
+        </div>
+    `;
+}
 
 /* ---------------- INIT ---------------- */
 loadProfile();
@@ -513,12 +597,9 @@ function showSection(id) {
 
 /* ---------------- BUDGET ANALYZER ---------------- */
 async function analyzeBudget() {
-    const token = localStorage.getItem("token");
-
     const income = Number(document.getElementById("budgetIncome").value);
 
     const rows = [...document.querySelectorAll(".expense-row")];
-
     const expenses = rows.map(row => ({
         category: row.querySelector(".exp-category").value,
         amount: Number(row.querySelector(".exp-amount").value)
@@ -545,17 +626,10 @@ async function analyzeBudget() {
 }
 
 function renderBudgetResults(data) {
-    document.getElementById("budgetIncomeOut").textContent =
-        "$" + data.income.toLocaleString();
-
-    document.getElementById("budgetExpensesOut").textContent =
-        "$" + data.totalExpenses.toLocaleString();
-
-    document.getElementById("budgetSavingsOut").textContent =
-        "$" + data.savings.toLocaleString();
-
-    document.getElementById("budgetRateOut").textContent =
-        data.savingsRate + "%";
+    setText("budgetIncomeOut", "$" + data.income.toLocaleString());
+    setText("budgetExpensesOut", "$" + data.totalExpenses.toLocaleString());
+    setText("budgetSavingsOut", "$" + data.savings.toLocaleString());
+    setText("budgetRateOut", data.savingsRate + "%");
 
     document.getElementById("budgetCategories").innerHTML =
         data.categories.map(c => `
@@ -572,8 +646,7 @@ function renderBudgetResults(data) {
 }
 
 function addExpenseRow() {
-    const container = document.getElementById("expenseList");
-    container.insertAdjacentHTML("beforeend", `
+    document.getElementById("expenseList").insertAdjacentHTML("beforeend", `
         <div class="expense-row">
             <input class="exp-category" type="text" placeholder="Category">
             <input class="exp-amount" type="number" placeholder="Amount">
@@ -583,8 +656,6 @@ function addExpenseRow() {
 
 /* ---------------- PORTFOLIO ANALYZER ---------------- */
 async function analyzePortfolio() {
-    const token = localStorage.getItem("token");
-
     const rows = [...document.querySelectorAll(".portfolio-row")];
 
     const portfolio = rows.map(row => ({
@@ -614,8 +685,7 @@ async function analyzePortfolio() {
 }
 
 function renderPortfolioResults(data) {
-    document.getElementById("totalPortfolioValue").textContent =
-        "$" + data.totalValue.toLocaleString();
+    setText("totalPortfolioValue", "$" + data.totalValue.toLocaleString());
 
     document.getElementById("sectorBreakdown").innerHTML =
         data.sectors.map(s => `
@@ -642,9 +712,7 @@ function renderPortfolioResults(data) {
 /* ---------------- TAB CLICK HANDLERS ---------------- */
 document.getElementById("tabBudget").onclick = () => showSection("budgetSection");
 document.getElementById("tabPortfolio").onclick = () => showSection("portfolioSection");
-
 </script>
-
 </body>
 </html>
 
