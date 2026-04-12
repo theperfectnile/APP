@@ -3,7 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs"; // ✅ FIXED: using bcryptjs
+import bcrypt from "bcryptjs"; // using bcryptjs
+import rateLimit from "express-rate-limit"; // rate limiting
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// ❗ MUST be set in Render environment variables
+// MUST be set in Render environment variables
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /* ------------------ MONGODB CONNECTION ------------------ */
@@ -49,7 +50,7 @@ function issueToken(user) {
       trialStart: user.trialStart
     },
     JWT_SECRET,
-    { expiresIn: "2h" } // ✅ safer expiration
+    { expiresIn: "2h" } // safer expiration
   );
 }
 
@@ -65,6 +66,15 @@ function applyTrialExpiry(user) {
     }
   }
 }
+
+/* ------------------ RATE LIMITING ------------------ */
+
+// Limit login attempts to prevent brute-force attacks
+const loginLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5,
+  message: { error: "Too many login attempts. Try again in 1 minute." }
+});
 
 /* ------------------ AUTH MIDDLEWARE ------------------ */
 
@@ -101,7 +111,7 @@ app.post("/api/register", async (req, res) => {
   const exists = await User.findOne({ email });
   if (exists) return res.status(400).json({ error: "Email already exists" });
 
-  // 🔐 HASH PASSWORD (bcryptjs)
+  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
@@ -115,13 +125,13 @@ app.post("/api/register", async (req, res) => {
   res.json({ token });
 });
 
-app.post("/api/login", async (req, res) => {
+app.post("/api/login", loginLimiter, async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
-  // 🔐 COMPARE HASHED PASSWORD (bcryptjs)
+  // Compare hashed password
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
