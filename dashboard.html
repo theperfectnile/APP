@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vaultwise Dashboard</title>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart.js (SAFE CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <style>
     body {
@@ -19,7 +19,6 @@
         overflow: hidden;
     }
 
-    /* Sidebar */
     .sidebar {
         width: 240px;
         background: #161b22;
@@ -57,7 +56,6 @@
         font-weight: 600;
     }
 
-    /* Main content */
     .content {
         flex: 1;
         padding: 28px;
@@ -147,7 +145,6 @@
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
     <div class="logo">Vaultwise</div>
     <div class="nav-item active-nav" data-target="profile">Profile</div>
@@ -156,10 +153,8 @@
     <div class="nav-item" data-target="insights">AI Insights</div>
 </div>
 
-<!-- MAIN CONTENT -->
 <div class="content">
 
-    <!-- PROFILE -->
     <div id="profile" class="section active">
         <h2>Your Profile</h2>
 
@@ -184,7 +179,6 @@
         </div>
     </div>
 
-    <!-- BUDGET -->
     <div id="budget" class="section">
         <h2>Budget Analyzer</h2>
 
@@ -211,7 +205,6 @@
         </div>
     </div>
 
-    <!-- PORTFOLIO -->
     <div id="portfolio" class="section">
         <h2>Portfolio Analyzer</h2>
 
@@ -242,7 +235,6 @@
         </div>
     </div>
 
-    <!-- INSIGHTS -->
     <div id="insights" class="section">
         <h2>AI Insights</h2>
         <div class="card">
@@ -256,7 +248,6 @@
 const API_BASE = "https://portfolio-god-99rv.onrender.com";
 const token = localStorage.getItem("token");
 
-/* Navigation */
 document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", () => {
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active-nav"));
@@ -269,7 +260,6 @@ document.querySelectorAll(".nav-item").forEach(item => {
     });
 });
 
-/* Load Profile */
 async function loadProfile() {
     const res = await fetch(API_BASE + "/api/profile", {
         headers: { "Authorization": "Bearer " + token }
@@ -290,7 +280,6 @@ async function loadProfile() {
     });
 }
 
-/* Budget Analyzer */
 document.getElementById("runBudgetBtn").onclick = async () => {
     const income = Number(document.getElementById("income").value);
     const expenses = JSON.parse(document.getElementById("expenses").value);
@@ -326,7 +315,6 @@ document.getElementById("runBudgetBtn").onclick = async () => {
     });
 };
 
-/* Portfolio Analyzer */
 document.getElementById("runPortfolioBtn").onclick = async () => {
     const portfolio = JSON.parse(document.getElementById("portfolioInput").value);
 
@@ -374,7 +362,6 @@ document.getElementById("runPortfolioBtn").onclick = async () => {
     });
 };
 
-/* Logout */
 document.getElementById("logoutBtn").onclick = () => {
     localStorage.removeItem("token");
     window.location.href = "login.html";
