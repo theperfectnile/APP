@@ -5,17 +5,42 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import rateLimit from "express-rate-limit";
-import { z } from "zod"; // ✅ Input validation
+import helmet from "helmet"; // ✅ Security headers
+import { z } from "zod";
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: "https://theperfectnile.github.io",
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+/* ------------------ SECURITY HEADERS ------------------ */
+
+// Helmet adds 11+ security headers automatically
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // disable CSP for APIs (optional)
+  })
+);
+
+// Force HTTPS in production (Render)
+app.use((req, res, next) => {
+  if (
+    process.env.NODE_ENV === "production" &&
+    req.headers["x-forwarded-proto"] !== "https"
+  ) {
+    return res.redirect("https://" + req.headers.host + req.url);
+  }
+  next();
+});
+
+/* ------------------ CORS ------------------ */
+
+app.use(
+  cors({
+    origin: "https://theperfectnile.github.io",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use(express.json());
 
@@ -26,7 +51,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 mongoose
   .connect(process.env.MONGO_URI, { dbName: "vaultwise" })
   .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error("MongoDB error:", err));
+  .catch((err) => console.error("MongoDB error:", err));
 
 /* ------------------ USER MODEL ------------------ */
 
@@ -34,7 +59,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   plan: { type: String, default: "free" },
-  trialStart: { type: Date, default: null }
+  trialStart: { type: Date, default: null },
 });
 
 const User = mongoose.model("User", userSchema);
@@ -47,7 +72,7 @@ function issueToken(user) {
       id: user._id,
       email: user.email,
       plan: user.plan,
-      trialStart: user.trialStart
+      trialStart: user.trialStart,
     },
     JWT_SECRET,
     { expiresIn: "2h" }
@@ -72,19 +97,19 @@ function applyTrialExpiry(user) {
 const loginLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 5,
-  message: { error: "Too many login attempts. Try again in 1 minute." }
+  message: { error: "Too many login attempts. Try again in 1 minute." },
 });
 
 /* ------------------ VALIDATION SCHEMAS ------------------ */
 
 const registerSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6)
+  password: z.string().min(6),
 });
 
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(1)
+  password: z.string().min(1),
 });
 
 const budgetSchema = z.object({
@@ -92,9 +117,9 @@ const budgetSchema = z.object({
   expenses: z.array(
     z.object({
       category: z.string(),
-      amount: z.number().nonnegative()
+      amount: z.number().nonnegative(),
     })
-  )
+  ),
 });
 
 const portfolioSchema = z.object({
@@ -103,9 +128,9 @@ const portfolioSchema = z.object({
       name: z.string(),
       value: z.number().positive(),
       sector: z.string(),
-      region: z.string()
+      region: z.string(),
     })
-  )
+  ),
 });
 
 /* ------------------ AUTH MIDDLEWARE ------------------ */
@@ -150,7 +175,7 @@ app.post("/api/register", async (req, res) => {
     email,
     password: hashedPassword,
     plan: "free",
-    trialStart: null
+    trialStart: null,
   });
 
   const token = issueToken(user);
@@ -184,7 +209,7 @@ app.get("/api/profile", auth, (req, res) => {
   res.json({
     email: user.email,
     plan: user.plan,
-    trialStart: user.trialStart
+    trialStart: user.trialStart,
   });
 });
 
@@ -209,7 +234,7 @@ app.post("/api/start-trial", auth, async (req, res) => {
     message: "Trial started",
     plan: user.plan,
     trialStart: user.trialStart,
-    token
+    token,
   });
 });
 
@@ -236,23 +261,20 @@ app.post("/api/budget", auth, (req, res) => {
 
   const { income, expenses } = parsed.data;
 
-  const totalExpenses = expenses.reduce(
-    (sum, e) => sum + e.amount,
-    0
-  );
+  const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
 
   const savings = income - totalExpenses;
   const savingsRate = ((savings / income) * 100).toFixed(2);
 
   const categoryMap = {};
-  expenses.forEach(e => {
+  expenses.forEach((e) => {
     categoryMap[e.category] =
       (categoryMap[e.category] || 0) + e.amount;
   });
 
   const categories = Object.entries(categoryMap).map(([cat, val]) => ({
     category: cat,
-    percent: ((val / income) * 100).toFixed(2)
+    percent: ((val / income) * 100).toFixed(2),
   }));
 
   const insights = [];
@@ -266,7 +288,7 @@ app.post("/api/budget", auth, (req, res) => {
     savings,
     savingsRate,
     categories,
-    insights
+    insights,
   });
 });
 
@@ -279,31 +301,28 @@ app.post("/api/analyze", auth, (req, res) => {
 
   const { portfolio } = parsed.data;
 
-  const totalValue = portfolio.reduce(
-    (sum, a) => sum + a.value,
-    0
-  );
+  const totalValue = portfolio.reduce((sum, a) => sum + a.value, 0);
 
   const sectorMap = {};
   const regionMap = {};
 
-  portfolio.forEach(a => {
+  portfolio.forEach((a) => {
     sectorMap[a.sector] = (sectorMap[a.sector] || 0) + a.value;
     regionMap[a.region] = (regionMap[a.region] || 0) + a.value;
   });
 
   const sectors = Object.entries(sectorMap).map(([s, v]) => ({
     sector: s,
-    percent: ((v / totalValue) * 100).toFixed(2)
+    percent: ((v / totalValue) * 100).toFixed(2),
   }));
 
   const regions = Object.entries(regionMap).map(([r, v]) => ({
     region: r,
-    percent: ((v / totalValue) * 100).toFixed(2)
+    percent: ((v / totalValue) * 100).toFixed(2),
   }));
 
   const insights = [];
-  const largest = Math.max(...portfolio.map(a => a.value));
+  const largest = Math.max(...portfolio.map((a) => a.value));
   if ((largest / totalValue) * 100 > 25)
     insights.push("High concentration risk.");
 
@@ -311,14 +330,14 @@ app.post("/api/analyze", auth, (req, res) => {
     totalValue,
     sectors,
     regions,
-    insights
+    insights,
   });
 });
 
 /* ------------------ ROOT ------------------ */
 
 app.get("/", (req, res) => {
-  res.send("Vaultwise backend running with MongoDB");
+  res.send("Vaultwise backend running with MongoDB + Security Headers");
 });
 
 const PORT = process.env.PORT || 4000;
