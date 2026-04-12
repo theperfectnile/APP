@@ -395,112 +395,6 @@
 
 <script>
 const API_BASE = "https://portfolio-god-99rv.onrender.com";
-const API_KEY = "my-super-secret-key-123";
-
-const token = localStorage.getItem("token");
-if (!token) {
-    window.location.href = "login.html";
-}
-
-/* ---------------- LOGOUT ---------------- */
-
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
-}
-
-/* ---------------- HELPERS ---------------- */
-
-function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-}
-
-function formatDate(dateStr) {
-    if (!dateStr) return "—";
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return "—";
-    return d.toLocaleDateString();
-}
-
-/* ---------------- PROFILE ---------------- */
-
-async function loadProfile() {
-    try {
-        const res = await fetch(API_BASE + "/api/profile", {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            setText("profileError", data.error || "Could not load profile.");
-            setText("topbarSub", "Profile unavailable.");
-            return;
-        }
-
-        const username = data.email?.split("@")[0] || "User";
-
-        setText("profileName", username);
-        setText("profileEmail", data.email || "—");
-        setText("profileCreated", formatDate(data.trialStart));
-        setText("profileLastLogin", "—");
-
-        setText("topbarSub", "Welcome back, " + username + ".");
-        setText("sidebarUser", data.email || "Signed in");
-
-        const avatar = document.getElementById("avatarInitials");
-        if (avatar) avatar.textContent = username.charAt(0).toUpperCase();
-
-    } catch (err) {
-        setText("profileError", "Network error loading profile.");
-        setText("topbarSub", "Network error.");
-    }
-}
-
-/* ---------------- FINANCE (placeholder) ---------------- */
-
-async function loadFinance() {
-    setText("netWorth", "$—");
-    setText("netWorthChange", "—");
-    setText("spending", "$—");
-    setText("spendingChange", "—");
-    setText("savingsRate", "—%");
-    setText("savingsTag", "—");
-
-    const pill = document.getElementById("pillStatus");
-    if (pill) pill.textContent = "No finance data available";
-}
-
-/* ---------------- INSIGHTS (placeholder) ---------------- */
-
-async function loadInsights() {
-    const list = document.getElementById("insightsList");
-    if (list) {
-        list.innerHTML = `
-            <div class="insight-item">
-                <div class="insight-label">No insights available</div>
-                <div class="insight-text">Add insights API to enable this section.</div>
-            </div>
-        `;
-    }
-
-    const actions = document.getElementById("actionsList");
-    if (actions) {
-        actions.innerHTML = `
-            <div class="insight-item">
-                <div class="insight-label">No actions available</div>
-                <div class="insight-text">Add insights API to enable this section.</div>
-            </div>
-        `;
-    }
-}
-
-<script>
-/* ---------------- CONFIG ---------------- */
-const API_BASE = "https://portfolio-god-99rv.onrender.com";
 const token = localStorage.getItem("token");
 
 if (!token) {
@@ -548,7 +442,9 @@ async function loadProfile() {
 
         setText("topbarSub", "Welcome back, " + username + ".");
         setText("sidebarUser", data.email);
-        setText("avatarInitials", username.charAt(0).toUpperCase());
+
+        const avatar = document.getElementById("avatarInitials");
+        if (avatar) avatar.textContent = username.charAt(0).toUpperCase();
 
     } catch (err) {
         setText("profileError", "Network error loading profile.");
@@ -564,24 +460,32 @@ async function loadFinance() {
     setText("spendingChange", "—");
     setText("savingsRate", "—%");
     setText("savingsTag", "—");
-    setText("pillStatus", "No finance data available");
+
+    const pill = document.getElementById("pillStatus");
+    if (pill) pill.textContent = "No finance data available";
 }
 
 /* ---------------- INSIGHTS PLACEHOLDER ---------------- */
 async function loadInsights() {
-    document.getElementById("insightsList").innerHTML = `
-        <div class="insight-item">
-            <div class="insight-label">No insights available</div>
-            <div class="insight-text">Add insights API to enable this section.</div>
-        </div>
-    `;
+    const list = document.getElementById("insightsList");
+    if (list) {
+        list.innerHTML = `
+            <div class="insight-item">
+                <div class="insight-label">No insights available</div>
+                <div class="insight-text">Add insights API to enable this section.</div>
+            </div>
+        `;
+    }
 
-    document.getElementById("actionsList").innerHTML = `
-        <div class="insight-item">
-            <div class="insight-label">No actions available</div>
-            <div class="insight-text">Add insights API to enable this section.</div>
-        </div>
-    `;
+    const actions = document.getElementById("actionsList");
+    if (actions) {
+        actions.innerHTML = `
+            <div class="insight-item">
+                <div class="insight-label">No actions available</div>
+                <div class="insight-text">Add insights API to enable this section.</div>
+            </div>
+        `;
+    }
 }
 
 /* ---------------- INIT ---------------- */
@@ -715,5 +619,8 @@ document.getElementById("tabPortfolio").onclick = () => showSection("portfolioSe
 </script>
 </body>
 </html>
+
+
+
 
 
