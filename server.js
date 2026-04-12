@@ -162,7 +162,112 @@ async function auth(req, res, next) {
 }
 
 /* ------------------ AUTH ROUTES ------------------ */
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
+/* Email transporter */
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+/* ------------------ REQUEST PASSWORD RESET ------------------ */
+
+app.post("/api/request-password-reset", requireApiKey, async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ error: "Email required" });
+
+  const user = await User.findOne({ email });
+  if (!user)
+    return res.json({ message: "If that email exists, a reset link was sent." });
+
+  // Generate token
+  const token = crypto.randomBytes(32).toString("hex");
+
+  user.resetToken = token;
+  user.resetTokenExpiry = Date.now() + 1000 * 60 * 15; // 15 minutes
+  await user.save();
+
+  const resetLink = `https://theperfectnile.github.io/vaultwise/reset-password?token=${token}`;
+
+  // Send email
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Vaultwise Password Reset",
+    html: `
+      <h2>Password Reset Request</h2>
+      <p>Click the link below to reset your password:</p>
+      <a href="${resetLink}">${resetLink}</a>
+      <p>This link expires in 15 minutes.</p>
+    `,
+  });
+
+  res.json({ message: "If that email exists, a reset link was sent." });
+});
+
+/* ------------------ RESET PASSWORD ------------------ */
+
+app.post("/api/reset-password", requireApiKey, async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword)
+    return res.status(400).json({ error: "Missing fields" });
+
+  const user = await User.findOne({
+    resetToken: token,
+    resetTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (!user)
+    return res.status(400).json({ error: "Invalid or expired token" });
+
+  // Update password
+  const hashed = await bcrypt.hash(newPassword, 10);
+  user.password = hashed;
+
+  // Invalidate token
+  user.resetToken = null;
+  user.resetTokenExpiry = null;
+
+  await user.save();
+
+  res.json({ message: "Password reset successful" });
+});
+
+/* ------------------ EMAIL RECOVERY ------------------ */
+
+app.post("/api/recover-email", requireApiKey, async (req, res) => {
+  const { partial } = req.body;
+
+  if (!partial)
+    return res.status(400).json({ error: "Partial email required" });
+
+  const users = await User.find({
+    email: { $regex: partial, $options: "i" },
+  });
+
+  if (users.length === 0)
+    return res.json({ message: "No matching accounts found" });
+
+  const masked = users.map((u) => {
+    const [name, domain] = u.email.split("@");
+    return (
+      name[0] +
+      "***" +
+      name[name.length - 1] +
+      "@" +
+      domain[0] +
+      "***"
+    );
+  });
+
+  res.json({ matches: masked });
+});
 app.post("/api/register", async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);
   if (!parsed.success)
