@@ -469,10 +469,14 @@ if (!token) {
     window.location.href = "login.html";
 }
 
+/* ---------------- LOGOUT ---------------- */
+
 function logout() {
     localStorage.removeItem("token");
     window.location.href = "login.html";
 }
+
+/* ---------------- HELPERS ---------------- */
 
 function setText(id, value) {
     const el = document.getElementById(id);
@@ -499,70 +503,66 @@ async function loadProfile() {
         const data = await res.json();
 
         if (!res.ok) {
-            document.getElementById("profileError").textContent =
-                data.error || "Could not load profile.";
-            document.getElementById("topbarSub").textContent = "Profile unavailable.";
+            setText("profileError", data.error || "Could not load profile.");
+            setText("topbarSub", "Profile unavailable.");
             return;
         }
 
-        // Your backend returns: email, plan, trialStart
         const username = data.email?.split("@")[0] || "User";
 
         setText("profileName", username);
         setText("profileEmail", data.email || "—");
         setText("profileCreated", formatDate(data.trialStart));
-        setText("profileLastLogin", "—"); // backend does not provide this
+        setText("profileLastLogin", "—");
 
-        document.getElementById("topbarSub").textContent =
-            "Welcome back, " + username + ".";
+        setText("topbarSub", "Welcome back, " + username + ".");
+        setText("sidebarUser", data.email || "Signed in");
 
-        document.getElementById("sidebarUser").textContent = data.email || "Signed in";
-        document.getElementById("avatarInitials").textContent =
-            username.charAt(0).toUpperCase();
+        const avatar = document.getElementById("avatarInitials");
+        if (avatar) avatar.textContent = username.charAt(0).toUpperCase();
 
     } catch (err) {
-        document.getElementById("profileError").textContent =
-            "Network error loading profile.";
-        document.getElementById("topbarSub").textContent = "Network error.";
+        setText("profileError", "Network error loading profile.");
+        setText("topbarSub", "Network error.");
     }
 }
 
 /* ---------------- FINANCE (placeholder) ---------------- */
 
 async function loadFinance() {
-    // Your backend does NOT have /api/finance.
-    // So we show placeholder values instead of errors.
-
     setText("netWorth", "$—");
     setText("netWorthChange", "—");
     setText("spending", "$—");
     setText("spendingChange", "—");
     setText("savingsRate", "—%");
     setText("savingsTag", "—");
-    document.getElementById("pillStatus").textContent = "No finance data available";
+
+    const pill = document.getElementById("pillStatus");
+    if (pill) pill.textContent = "No finance data available";
 }
 
 /* ---------------- INSIGHTS (placeholder) ---------------- */
 
 async function loadInsights() {
-    // Your backend does NOT have /api/insights.
-    // So we show placeholder items.
-
     const list = document.getElementById("insightsList");
-    list.innerHTML = `
-        <div class="insight-item">
-            <div class="insight-label">No insights available</div>
-            <div class="insight-text">Add insights API to enable this section.</div>
-        </div>
-    `;
+    if (list) {
+        list.innerHTML = `
+            <div class="insight-item">
+                <div class="insight-label">No insights available</div>
+                <div class="insight-text">Add insights API to enable this section.</div>
+            </div>
+        `;
+    }
 
     const actions = document.getElementById("actionsList");
-    actions.innerHTML = `
-        <div class="insight-item">
-            <div class="insight-label">No actions available</div>
-            <div class="insight-text">Add insights API to enable this section.</div>
-        </div>
-    `;
+    if (actions) {
+        actions.innerHTML = `
+            <div class="insight-item">
+                <div class="insight-label">No actions available</div>
+                <div class="insight-text">Add insights API to enable this section.</div>
+            </div>
+        `;
+    }
 }
 
 /* ---------------- INIT ---------------- */
@@ -570,7 +570,6 @@ async function loadInsights() {
 loadProfile();
 loadFinance();
 loadInsights();
-</script>
 
 </body>
 </html>
