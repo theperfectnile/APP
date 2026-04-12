@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema({
   password: String,
   plan: { type: String, default: "free" },
   trialStart: { type: Date, default: null },
+
+  // 🔐 Password reset fields
+  resetToken: { type: String, default: null },
+  resetTokenExpiry: { type: Date, default: null }
 });
 
 const User = mongoose.model("User", userSchema);
