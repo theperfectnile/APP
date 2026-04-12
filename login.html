@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultwise Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    background: #161b22;
+    padding: 32px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 380px;
+    border: 1px solid #30363d;
+  }
+  h2 {
+    text-align: center;
+    color: #58a6ff;
+  }
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    color: #e6edf3;
+    margin-bottom: 14px;
+  }
+  .btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #238636;
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  .toggle {
+    text-align: center;
+    margin-top: 14px;
+    cursor: pointer;
+    color: #58a6ff;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2 id="formTitle">Login</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button class="btn" onclick="submitForm()">Continue</button>
+
+  <div class="toggle" onclick="toggleMode()">
+    Don't have an account? Create one
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+let isLogin = true;
+
+function toggleMode() {
+  isLogin = !isLogin;
+  document.getElementById("formTitle").textContent = isLogin ? "Login" : "Create Account";
+  document.querySelector(".toggle").textContent = isLogin
+    ? "Don't have an account? Create one"
+    : "Already have an account? Login";
+}
+
+async function submitForm() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    alert("Please enter email and password.");
+    return;
+  }
+
+  const endpoint = isLogin ? "/api/login" : "/api/register";
+
+  const res = await fetch(API_BASE + endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.error || "Something went wrong.");
+    return;
+  }
+
+  // Save token for this session only
+  sessionStorage.setItem("vaultwise_token", data.token);
+
+  // Redirect to dashboard
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
