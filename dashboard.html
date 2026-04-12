@@ -284,7 +284,7 @@
         async function analyzePortfolio() {
             const portfolio = document.getElementById("portfolioInput").value;
 
-            const res = await fetch(API_BASE + "/analyze-portfolio", {
+            const res = await fetch(API_BASE + "/api/analyze")
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: portfolio
