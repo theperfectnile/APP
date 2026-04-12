@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign up – Vaultwise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root {
+        --bg: #050816;
+        --card: #0b1020;
+        --accent: #7c3aed;
+        --accent2: #22d3ee;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --danger: #f97373;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #1d1b3f 0, #050816 40%, #020617 100%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .shell {
+        width: 100%;
+        max-width: 420px;
+        background: radial-gradient(circle at top, rgba(34, 211, 238, 0.18), transparent 55%),
+                    #020617;
+        border-radius: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        padding: 26px 24px 22px;
+        box-shadow: 0 0 40px rgba(15, 23, 42, 0.9);
+        position: relative;
+        overflow: hidden;
+    }
+    .glow {
+        position: absolute;
+        inset: -40%;
+        background: radial-gradient(circle at top, rgba(124, 58, 237, 0.18), transparent 60%);
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    .shell-inner {
+        position: relative;
+        z-index: 1;
+    }
+    .logo-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    .logo-badge {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: conic-gradient(from 180deg, #22d3ee, #7c3aed, #22c55e, #22d3ee);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: #020617;
+        font-weight: 800;
+    }
+    .logo-text {
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+    h2 {
+        margin-top: 6px;
+        font-size: 1.4rem;
+        margin-bottom: 4px;
+    }
+    .subtitle {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 18px;
+    }
+    label {
+        display: block;
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+        color: var(--muted);
+    }
+    input {
+        width: 100%;
+        padding: 9px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(55, 65, 81, 0.9);
+        background: #020617;
+        color: var(--text);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        outline: none;
+        transition: 0.15s;
+    }
+    input:focus {
+        border-color: var(--accent2);
+        box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.4);
+    }
+    button {
+        width: 100%;
+        padding: 9px 10px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 500;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #020617;
+        box-shadow: 0 0 25px rgba(124, 58, 237, 0.5);
+        margin-top: 4px;
+        transition: 0.15s;
+    }
+    button:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+    }
+    .error {
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: var(--danger);
+        min-height: 16px;
+    }
+    .foot {
+        margin-top: 14px;
+        font-size: 0.8rem;
+        color: var(--muted);
+        text-align: center;
+    }
+    .foot a {
+        color: var(--accent2);
+        text-decoration: none;
+    }
+    .foot a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<div class="shell">
+    <div class="glow"></div>
+    <div class="shell-inner">
+        <div class="logo-row">
+            <div class="logo-badge">V</div>
+            <div class="logo-text">Vaultwise</div>
+        </div>
+        <h2>Create your account</h2>
+        <div class="subtitle">Set up Vaultwise in under a minute and start seeing your money clearly.</div>
+
+        <label for="name">Name</label>
+        <input id="name" type="text" placeholder="Your name">
+
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="you@example.com">
+
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="At least 8 characters">
+
+        <button onclick="registerUser()">Create account</button>
+
+        <div id="errorBox" class="error"></div>
+
+        <div class="foot">
+            Already have an account?
+            <a href="login.html">Log in</a>
+        </div>
+    </div>
+</div>
+
+<script>
+const API_BASE = "https://portfolio-god-99rv.onrender.com";
+const API_KEY = "my-super-secret-key-123";
+
+async function registerUser() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorBox = document.getElementById("errorBox");
+    errorBox.textContent = "";
+
+    if (!name || !email || !password) {
+        errorBox.textContent = "Please fill in all fields.";
+        return;
+    }
+
+    try {
+        const res = await fetch(API_BASE + "/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-api-key": API_KEY
+            },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            errorBox.textContent = data.error || "Could not create account.";
+            return;
+        }
+
+        // After successful registration, send them to login
+        window.location.href = "login.html";
+    } catch (err) {
+        errorBox.textContent = "Network error. Please try again.";
+    }
+}
+</script>
+
+</body>
+</html>
