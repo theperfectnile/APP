@@ -2,350 +2,392 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vaultwise Dashboard</title>
+<title>Vaultwise – Smart Finance & Insights</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: #0d1117;
-    color: #e6edf3;
-  }
-  header {
-    background: #161b22;
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #30363d;
-  }
-  .logo {
-    font-size: 22px;
-    font-weight: bold;
-    color: #58a6ff;
-  }
-  .plan-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: #30363d;
-    font-size: 13px;
-  }
-  .plan-badge.pro {
-    background: #238636;
-  }
-  .btn {
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: #238636;
-    color: white;
-    margin-top: 10px;
-  }
-  .btn.secondary {
-    background: #8250df;
-  }
-  .btn.danger {
-    background: #f85149;
-  }
-  .section {
-    padding: 24px;
-    border-bottom: 1px solid #30363d;
-  }
-  h2 {
-    margin-top: 0;
-    color: #58a6ff;
-  }
-  input, select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #30363d;
-    background: #0d1117;
-    color: #e6edf3;
-    margin-bottom: 12px;
-  }
-  .card {
-    background: #161b22;
-    padding: 16px;
-    border-radius: 10px;
-    margin-top: 12px;
-    border: 1px solid #30363d;
-  }
-  .modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-  }
-  .modal-content {
-    background: #161b22;
-    padding: 24px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 420px;
-    border: 1px solid #30363d;
-  }
+    :root {
+        --bg: #050816;
+        --card: #0b1020;
+        --accent: #7c3aed;
+        --accent2: #22d3ee;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --danger: #f97373;
+        --success: #22c55e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #1d1b3f 0, #050816 40%, #020617 100%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 8%;
+    }
+    .logo {
+        font-weight: 700;
+        font-size: 1.3rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .logo-badge {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: conic-gradient(from 180deg, #22d3ee, #7c3aed, #22c55e, #22d3ee);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: #020617;
+        font-weight: 800;
+    }
+    nav {
+        display: flex;
+        gap: 14px;
+    }
+    nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        padding: 6px 10px;
+        border-radius: 999px;
+        transition: 0.2s;
+    }
+    nav a:hover {
+        color: var(--text);
+        background: rgba(148, 163, 184, 0.15);
+    }
+    .btn {
+        border-radius: 999px;
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+    .btn-outline {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+    .btn-outline:hover {
+        background: rgba(148, 163, 184, 0.15);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #020617;
+        border: none;
+        box-shadow: 0 0 25px rgba(124, 58, 237, 0.4);
+    }
+    .btn-primary:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+    }
+    main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: 40px 8%;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    .hero {
+        flex: 1 1 320px;
+        max-width: 520px;
+    }
+    .hero-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-bottom: 14px;
+    }
+    .hero-kicker span {
+        display: inline-flex;
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: radial-gradient(circle, #22c55e, #16a34a);
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+    }
+    h1 {
+        font-size: clamp(2.2rem, 4vw, 3.1rem);
+        line-height: 1.1;
+        margin-bottom: 14px;
+    }
+    h1 span {
+        background: linear-gradient(135deg, #22d3ee, #7c3aed);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+    .hero-sub {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 22px;
+    }
+    .hero-cta {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+    .hero-footnote {
+        font-size: 0.75rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .hero-footnote span {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: rgba(34, 197, 94, 0.15);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--success);
+        font-size: 0.8rem;
+    }
+    .hero-visual {
+        flex: 1 1 320px;
+        max-width: 520px;
+        position: relative;
+        min-height: 260px;
+    }
+    .orb {
+        position: absolute;
+        inset: 0;
+        border-radius: 30px;
+        background: radial-gradient(circle at top left, rgba(34, 211, 238, 0.25), transparent 55%),
+                    radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.35), transparent 55%),
+                    linear-gradient(145deg, #020617, #020617);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        box-shadow: 0 0 60px rgba(15, 23, 42, 0.9);
+        overflow: hidden;
+    }
+    .orb-inner {
+        position: absolute;
+        inset: 1px;
+        border-radius: 28px;
+        background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .orb-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+    .pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        font-size: 0.7rem;
+    }
+    .metric-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+    }
+    .metric-card {
+        flex: 1;
+        background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6));
+        border-radius: 14px;
+        padding: 10px;
+        border: 1px solid rgba(31, 41, 55, 0.9);
+        font-size: 0.75rem;
+    }
+    .metric-label {
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+    .metric-value {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    .metric-tag {
+        font-size: 0.7rem;
+        margin-top: 4px;
+        color: var(--success);
+    }
+    .chart {
+        margin-top: 8px;
+        height: 80px;
+        border-radius: 10px;
+        background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 60%);
+        position: relative;
+        overflow: hidden;
+    }
+    .chart-line {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.1), rgba(124, 58, 237, 0.4));
+        mask-image: linear-gradient(135deg, transparent 0, black 20%, black 80%, transparent 100%);
+        opacity: 0.9;
+    }
+    .chart-pulse {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #22d3ee;
+        box-shadow: 0 0 18px rgba(34, 211, 238, 0.9);
+        animation: pulse 2.4s infinite ease-in-out;
+        top: 40%;
+        left: 65%;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.4); opacity: 0.4; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    footer {
+        padding: 16px 8%;
+        font-size: 0.75rem;
+        color: var(--muted);
+        border-top: 1px solid rgba(15, 23, 42, 0.9);
+        background: radial-gradient(circle at bottom, rgba(15, 23, 42, 0.9), #020617);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    footer a {
+        color: var(--muted);
+        text-decoration: none;
+    }
+    footer a:hover {
+        color: var(--text);
+    }
+    @media (max-width: 768px) {
+        main {
+            padding-top: 10px;
+        }
+        header {
+            padding: 14px 6%;
+        }
+        footer {
+            padding: 12px 6%;
+        }
+    }
 </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">Vaultwise</div>
-  <div>
-    <span id="planBadge" class="plan-badge">Free plan</span>
-    <button class="btn danger" onclick="logout()">Log out</button>
-  </div>
+    <div class="logo">
+        <div class="logo-badge">V</div>
+        Vaultwise
+    </div>
+    <nav>
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <button class="btn btn-outline" onclick="goLogin()">Log in</button>
+        <button class="btn btn-primary" onclick="goRegister()">Get started</button>
+    </nav>
 </header>
 
-<!-- Budget Section -->
-<div class="section">
-  <h2>Budget Analyzer</h2>
-  <input id="income" type="number" placeholder="Monthly income">
-  <div id="expenses"></div>
-  <button class="btn secondary" onclick="addExpense()">Add Expense</button>
-  <button class="btn" onclick="analyzeBudget()">Analyze Budget</button>
+<main>
+    <section class="hero">
+        <div class="hero-kicker">
+            <span></span>
+            Live insights from your financial life
+        </div>
+        <h1>See your <span>money, habits, and future</span> in one intelligent dashboard.</h1>
+        <p class="hero-sub">
+            Vaultwise blends account data, spending patterns, and smart insights to help you make better decisions—
+            without spreadsheets, guesswork, or overwhelm.
+        </p>
+        <div class="hero-cta">
+            <button class="btn btn-primary" onclick="goRegister()">Create free account</button>
+            <button class="btn btn-outline" onclick="goLogin()">I already have an account</button>
+        </div>
+        <div class="hero-footnote">
+            <span>✓</span>
+            No credit card required. Your data stays encrypted on the server.
+        </div>
+    </section>
 
-  <div id="budgetResults"></div>
-</div>
+    <section class="hero-visual">
+        <div class="orb">
+            <div class="orb-inner">
+                <div class="orb-header">
+                    <div>Today’s snapshot</div>
+                    <div class="pill">AI‑assisted insights</div>
+                </div>
+                <div class="metric-row">
+                    <div class="metric-card">
+                        <div class="metric-label">Net worth</div>
+                        <div class="metric-value">$124,920</div>
+                        <div class="metric-tag">+ $2,340 this month</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Spending</div>
+                        <div class="metric-value">$1,870</div>
+                        <div class="metric-tag" style="color: var(--danger);">12% above typical</div>
+                    </div>
+                </div>
+                <div class="metric-row">
+                    <div class="metric-card">
+                        <div class="metric-label">Savings rate</div>
+                        <div class="metric-value">21.4%</div>
+                        <div class="metric-tag">On track for your goal</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">AI insight</div>
+                        <div class="metric-tag" style="color: var(--accent2);">
+                            Cutting food delivery by 15% saves $1,080/year.
+                        </div>
+                    </div>
+                </div>
+                <div class="chart">
+                    <div class="chart-line"></div>
+                    <div class="chart-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 
-<!-- Portfolio Section -->
-<div class="section">
-  <h2>
-    Portfolio Analyzer
-    <span id="proLockPill" style="font-size:12px; padding:4px 8px; border:1px solid #30363d; border-radius:6px; margin-left:8px;">
-      Locked
-    </span>
-  </h2>
-
-  <div id="portfolioSection" style="display:none;">
-    <div id="portfolio"></div>
-    <button class="btn secondary" onclick="addAsset()">Add Asset</button>
-    <button class="btn" onclick="analyzePortfolio()">Analyze Portfolio</button>
-    <div id="portfolioResults"></div>
-  </div>
-
-  <button class="btn" onclick="openPortfolio()">Open Portfolio Analyzer</button>
-</div>
-
-<!-- Trial Modal -->
-<div id="upgradeModal" class="modal">
-  <div class="modal-content">
-    <h2>Unlock Portfolio Analyzer</h2>
-    <p>Start your <strong>7‑day free trial</strong> of Vaultwise Pro.</p>
-    <p>No charge during the trial.</p>
-
-    <button class="btn secondary" onclick="startTrial()">Start 7‑day Trial</button>
-    <button class="btn danger" onclick="closeUpgradeModal()">Cancel</button>
-  </div>
-</div>
+<footer>
+    <div>© <span id="year"></span> Vaultwise. Built for clarity, not chaos.</div>
+    <div>
+        <a href="login.html">Log in</a> ·
+        <a href="register.html">Sign up</a>
+    </div>
+</footer>
 
 <script>
-const API_BASE = "https://portfolio-god-99rv.onrender.com";
-let token = sessionStorage.getItem("vaultwise_token");
-let currentPlan = "free";
-
-/* ---------- AUTH ---------- */
-
-function requireAuth() {
-  if (!token) {
+function goLogin() {
     window.location.href = "login.html";
-  }
 }
-
-function logout() {
-  sessionStorage.removeItem("vaultwise_token");
-  window.location.href = "login.html";
+function goRegister() {
+    window.location.href = "register.html";
 }
-
-/* ---------- PROFILE ---------- */
-
-async function loadProfile() {
-  try {
-    const res = await fetch(`${API_BASE}/api/profile`, {
-      headers: { "Authorization": "Bearer " + token }
-    });
-
-    const data = await res.json();
-    if (!res.ok) return logout();
-
-    currentPlan = data.plan;
-
-    const badge = document.getElementById("planBadge");
-    const pill = document.getElementById("proLockPill");
-    const portfolioSection = document.getElementById("portfolioSection");
-
-    if (data.plan === "pro") {
-      badge.textContent = "Pro plan";
-      badge.classList.add("pro");
-      pill.textContent = "Unlocked";
-      pill.style.borderColor = "#238636";
-      portfolioSection.style.display = "block";
-    } else if (data.plan === "trial") {
-      badge.textContent = "Trial (7 days)";
-      badge.classList.add("pro");
-      pill.textContent = "Unlocked (Trial)";
-      pill.style.borderColor = "#f2cc60";
-      portfolioSection.style.display = "block";
-    } else {
-      badge.textContent = "Free plan";
-      badge.classList.remove("pro");
-      pill.textContent = "Locked";
-      pill.style.borderColor = "#30363d";
-      portfolioSection.style.display = "none";
-    }
-
-  } catch {
-    logout();
-  }
-}
-
-/* ---------- TRIAL MODAL ---------- */
-
-function openUpgradeModal() {
-  document.getElementById("upgradeModal").style.display = "flex";
-}
-
-function closeUpgradeModal() {
-  document.getElementById("upgradeModal").style.display = "none";
-}
-
-function openPortfolio() {
-  if (currentPlan === "free") {
-    openUpgradeModal();
-    return;
-  }
-  document.getElementById("portfolioSection").scrollIntoView({ behavior: "smooth" });
-}
-
-async function startTrial() {
-  const res = await fetch(`${API_BASE}/api/start-trial`, {
-    method: "POST",
-    headers: { "Authorization": "Bearer " + token }
-  });
-
-  const data = await res.json();
-  if (!res.ok) {
-    alert(data.error || "Could not start trial.");
-    return;
-  }
-
-  token = data.token;
-  sessionStorage.setItem("vaultwise_token", token);
-
-  closeUpgradeModal();
-  await loadProfile();
-  alert("Your 7‑day trial has started!");
-}
-
-/* ---------- BUDGET ---------- */
-
-function addExpense() {
-  const container = document.getElementById("expenses");
-  const div = document.createElement("div");
-  div.innerHTML = `
-    <input type="text" placeholder="Category">
-    <input type="number" placeholder="Amount">
-  `;
-  container.appendChild(div);
-}
-
-async function analyzeBudget() {
-  const income = Number(document.getElementById("income").value);
-  const expenseInputs = document.querySelectorAll("#expenses div");
-
-  const expenses = [];
-  expenseInputs.forEach(div => {
-    const [cat, amt] = div.querySelectorAll("input");
-    if (cat.value && amt.value) {
-      expenses.push({ category: cat.value, amount: Number(amt.value) });
-    }
-  });
-
-  const res = await fetch(`${API_BASE}/api/budget`, {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + token,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ income, expenses })
-  });
-
-  const data = await res.json();
-  if (!res.ok) return alert(data.error);
-
-  const out = document.getElementById("budgetResults");
-  out.innerHTML = `
-    <div class="card"><strong>Total Expenses:</strong> $${data.totalExpenses}</div>
-    <div class="card"><strong>Savings:</strong> $${data.savings}</div>
-    <div class="card"><strong>Savings Rate:</strong> ${data.savingsRate}%</div>
-    <h3>Insights</h3>
-    ${data.insights.map(i => `<div class="card">${i}</div>`).join("")}
-  `;
-}
-
-/* ---------- PORTFOLIO ---------- */
-
-function addAsset() {
-  const container = document.getElementById("portfolio");
-  const div = document.createElement("div");
-  div.innerHTML = `
-    <input type="text" placeholder="Asset name">
-    <input type="number" placeholder="Value">
-    <input type="text" placeholder="Sector">
-    <input type="text" placeholder="Region">
-  `;
-  container.appendChild(div);
-}
-
-async function analyzePortfolio() {
-  const assetDivs = document.querySelectorAll("#portfolio div");
-  const portfolio = [];
-
-  assetDivs.forEach(div => {
-    const [name, value, sector, region] = div.querySelectorAll("input");
-    if (name.value && value.value) {
-      portfolio.push({
-        name: name.value,
-        value: Number(value.value),
-        sector: sector.value || "Unknown",
-        region: region.value || "Unknown"
-      });
-    }
-  });
-
-  const res = await fetch(`${API_BASE}/api/analyze`, {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + token,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ portfolio })
-  });
-
-  const data = await res.json();
-  if (!res.ok) return alert(data.error);
-
-  const out = document.getElementById("portfolioResults");
-  out.innerHTML = `
-    <div class="card"><strong>Total Value:</strong> $${data.totalValue}</div>
-    <h3>Sectors</h3>
-    ${data.sectors.map(s => `<div class="card">${s.sector}: ${s.percent}%</div>`).join("")}
-    <h3>Regions</h3>
-    ${data.regions.map(r => `<div class="card">${r.region}: ${r.percent}%</div>`).join("")}
-    <h3>Insights</h3>
-    ${data.insights.map(i => `<div class="card">${i}</div>`).join("")}
-  `;
-}
-
-/* ---------- INIT ---------- */
-
-requireAuth();
-loadProfile();
+document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 
 </body>
