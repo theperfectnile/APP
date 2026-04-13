@@ -54,9 +54,15 @@ async function registerUser(email, password) {
 // ===============================
 // LOGIN
 // ===============================
-async function loginUser(event) {
-  event.preventDefault();
+async function loginUser(email, password) {
+  const res = await fetch(`${API}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
 
+  return res.json();
+}
   const email = document.querySelector("#email").value.trim();
   const password = document.querySelector("#password").value.trim();
 
