@@ -1,378 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vaultwise Dashboard</title>
+  <meta charset="UTF-8" />
+  <title>Vaultwise Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- Chart.js (SAFE CDN) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<style>
-    body {
-        margin: 0;
-        font-family: "Inter", system-ui, sans-serif;
-        background: #0d1117;
-        color: #e6edf3;
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
+  <style>
+    :root {
+      --bg: #020617;
+      --accent: #4f46e5;
+      --accent-2: #22c55e;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.82);
+      --border: rgba(148, 163, 184, 0.25);
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --shadow: 0 26px 70px rgba(0, 0, 0, 0.65);
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
     }
 
-    .sidebar {
-        width: 240px;
-        background: #161b22;
-        border-right: 1px solid #30363d;
-        padding: 24px 18px;
-        display: flex;
-        flex-direction: column;
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background:
+        radial-gradient(circle at 0% 0%, #1d283a 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, #4f46e5 0, transparent 55%),
+        radial-gradient(circle at 0% 100%, #0f766e 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #020617 0, #000 55%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Floating background orbs */
+    .orb {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(50px);
+      opacity: 0.45;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      animation: float 18s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .orb--1 { width: 420px; height: 420px; background: #6366f1; top: -80px; right: -40px; }
+    .orb--2 { width: 360px; height: 360px; background: #22c55e; bottom: -120px; left: -40px; animation-delay: -8s; }
+    .orb--3 { width: 260px; height: 260px; background: #ec4899; top: 40%; left: 55%; animation-delay: -13s; }
+
+    @keyframes float {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(20px,-30px,0) scale(1.05); }
+      100% { transform: translate3d(-30px,20px,0) scale(0.98); }
+    }
+
+    /* Layout */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(15, 23, 42, 0.75);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .logo {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #58a6ff;
-        margin-bottom: 24px;
-        text-align: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #a5b4fc, #4f46e5 60%, #1d1b4b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.7);
     }
 
-    .nav-item {
-        padding: 12px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #c9d1d9;
-        font-size: 0.95rem;
-        transition: 0.2s;
+    .brand span {
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
-    .nav-item:hover {
-        background: #21262d;
+    .nav {
+      display: flex;
+      gap: 20px;
     }
 
-    .active-nav {
-        background: #238636;
-        color: white;
-        font-weight: 600;
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.15s ease;
     }
 
-    .content {
-        flex: 1;
-        padding: 28px;
-        overflow-y: auto;
+    .nav a:hover,
+    .nav a.active {
+      color: var(--text);
     }
 
-    h2 {
-        margin-top: 0;
-        font-size: 1.6rem;
-        margin-bottom: 16px;
+    .actions {
+      display: flex;
+      gap: 10px;
     }
 
-    .section {
-        display: none;
+    .btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: 0.15s ease;
     }
 
-    .section.active {
-        display: block;
+    .btn:hover {
+      background: rgba(15, 23, 42, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #6366f1);
+      border: none;
+      box-shadow: 0 18px 40px rgba(79, 70, 229, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 55px rgba(79, 70, 229, 0.8);
+    }
+
+    main {
+      padding: 30px;
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
     }
 
     .card {
-        background: #161b22;
-        border: 1px solid #30363d;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+      animation: fadeIn 0.7s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
     }
 
-    input, textarea, button {
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #30363d;
-        background: #0d1117;
-        color: #e6edf3;
-        font-size: 0.95rem;
-        margin-bottom: 12px;
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    textarea {
-        min-height: 120px;
-        resize: vertical;
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
     }
 
-    button {
-        background: #238636;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s;
+    .pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      margin: 4px;
+      display: inline-block;
     }
 
-    button:hover {
-        background: #2ea043;
+    .chart {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
 
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
     }
-
-    ul {
-        padding-left: 20px;
-    }
-
-    li {
-        margin-bottom: 6px;
-    }
-
-    .top-actions {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .danger {
-        background: #da3633 !important;
-    }
-
-    .danger:hover {
-        background: #f85149 !important;
-    }
-</style>
+  </style>
 </head>
 
 <body>
+  <!-- animated background -->
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
 
-<div class="sidebar">
-    <div class="logo">Vaultwise</div>
-    <div class="nav-item active-nav" data-target="profile">Profile</div>
-    <div class="nav-item" data-target="budget">Budget Analyzer</div>
-    <div class="nav-item" data-target="portfolio">Portfolio Analyzer</div>
-    <div class="nav-item" data-target="insights">AI Insights</div>
-</div>
-
-<div class="content">
-
-    <div id="profile" class="section active">
-        <h2>Your Profile</h2>
-
-        <div class="top-actions">
-            <button id="startTrialBtn">Start Trial</button>
-            <button id="upgradeBtn">Upgrade</button>
-            <button id="logoutBtn" class="danger">Logout</button>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <h3>Account</h3>
-                <p><strong>Email:</strong> <span id="p-email">Loading...</span></p>
-                <p><strong>Plan:</strong> <span id="p-plan">Loading...</span></p>
-                <p><strong>Trial Start:</strong> <span id="p-trial">Loading...</span></p>
-            </div>
-
-            <div class="card">
-                <h3>What You Have Access To</h3>
-                <ul id="accessList"></ul>
-            </div>
-        </div>
+  <header>
+    <div class="brand">
+      <div class="logo">V</div>
+      <span>Vaultwise</span>
     </div>
 
-    <div id="budget" class="section">
-        <h2>Budget Analyzer</h2>
+    <nav class="nav">
+      <a class="active">Dashboard</a>
+      <a>Profile</a>
+      <a>Settings</a>
+    </nav>
 
-        <div class="grid">
-            <div class="card">
-                <h3>Inputs</h3>
-                <input type="number" id="income" placeholder="Monthly Income" />
-                <textarea id="expenses">[
-  {"category":"Rent","amount":1500},
-  {"category":"Food","amount":400}
-]</textarea>
-                <button id="runBudgetBtn">Analyze Budget</button>
-            </div>
+    <div class="actions">
+      <button class="btn">Start Trial</button>
+      <button class="btn">Upgrade</button>
+      <button class="btn" onclick="location.href='login.html'">Logout</button>
+    </div>
+  </header>
 
-            <div class="card">
-                <h3>Spending Breakdown</h3>
-                <canvas id="budgetChart"></canvas>
-            </div>
-
-            <div class="card">
-                <h3>Insights</h3>
-                <ul id="budgetInsights"></ul>
-            </div>
-        </div>
+  <main>
+    <!-- Profile -->
+    <div class="card">
+      <h2>Your Profile</h2>
+      <p><strong>Email:</strong> user@example.com</p>
+      <p><strong>Plan:</strong> Free Trial</p>
+      <p><strong>Trial Start:</strong> 2026‑04‑12</p>
     </div>
 
-    <div id="portfolio" class="section">
-        <h2>Portfolio Analyzer</h2>
-
-        <div class="grid">
-            <div class="card">
-                <h3>Inputs</h3>
-                <textarea id="portfolioInput">[
-  {"name":"AAPL","value":5000,"sector":"Tech","region":"USA"},
-  {"name":"TSLA","value":3000,"sector":"Auto","region":"USA"}
-]</textarea>
-                <button id="runPortfolioBtn">Analyze Portfolio</button>
-            </div>
-
-            <div class="card">
-                <h3>By Sector</h3>
-                <canvas id="sectorChart"></canvas>
-            </div>
-
-            <div class="card">
-                <h3>By Region</h3>
-                <canvas id="regionChart"></canvas>
-            </div>
-
-            <div class="card">
-                <h3>Insights</h3>
-                <ul id="portfolioInsights"></ul>
-            </div>
-        </div>
+    <!-- Budget Analyzer -->
+    <div class="card">
+      <h2>Budget Analyzer</h2>
+      <div id="budgetPills"></div>
+      <div class="chart">Your spending breakdown will appear here.</div>
     </div>
 
-    <div id="insights" class="section">
-        <h2>AI Insights</h2>
-        <div class="card">
-            <p>Coming soon...</p>
-        </div>
+    <!-- Portfolio Analyzer -->
+    <div class="card">
+      <h2>Portfolio Analyzer</h2>
+      <div id="portfolioPills"></div>
+      <div class="chart">Your portfolio distribution will appear here.</div>
     </div>
 
-</div>
-
-<script>
-const API_BASE = "https://portfolio-god-99rv.onrender.com";
-const token = localStorage.getItem("token");
-
-document.querySelectorAll(".nav-item").forEach(item => {
-    item.addEventListener("click", () => {
-        document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active-nav"));
-        item.classList.add("active-nav");
-
-        const target = item.getAttribute("data-target");
-        document.querySelectorAll(".section").forEach(s => {
-            s.classList.toggle("active", s.id === target);
-        });
-    });
-});
-
-async function loadProfile() {
-    const res = await fetch(API_BASE + "/api/profile", {
-        headers: { "Authorization": "Bearer " + token }
-    });
-
-    const data = await res.json();
-
-    document.getElementById("p-email").textContent = data.email;
-    document.getElementById("p-plan").textContent = data.plan;
-    document.getElementById("p-trial").textContent = data.trialStart || "None";
-
-    const access = document.getElementById("accessList");
-    access.innerHTML = "";
-    ["Secure account", "Budget analyzer", "Portfolio analyzer"].forEach(i => {
-        const li = document.createElement("li");
-        li.textContent = i;
-        access.appendChild(li);
-    });
-}
-
-document.getElementById("runBudgetBtn").onclick = async () => {
-    const income = Number(document.getElementById("income").value);
-    const expenses = JSON.parse(document.getElementById("expenses").value);
-
-    const res = await fetch(API_BASE + "/api/budget", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({ income, expenses })
-    });
-
-    const data = await res.json();
-
-    new Chart(document.getElementById("budgetChart"), {
-        type: "pie",
-        data: {
-            labels: data.categories.map(c => c.category),
-            datasets: [{
-                data: data.categories.map(c => c.percent),
-                backgroundColor: ["#58a6ff", "#238636", "#da3633", "#f0883e"]
-            }]
-        }
-    });
-
-    const list = document.getElementById("budgetInsights");
-    list.innerHTML = "";
-    data.insights.forEach(i => {
-        const li = document.createElement("li");
-        li.textContent = i;
-        list.appendChild(li);
-    });
-};
-
-document.getElementById("runPortfolioBtn").onclick = async () => {
-    const portfolio = JSON.parse(document.getElementById("portfolioInput").value);
-
-    const res = await fetch(API_BASE + "/api/analyze", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({ portfolio })
-    });
-
-    const data = await res.json();
-
-    new Chart(document.getElementById("sectorChart"), {
-        type: "bar",
-        data: {
-            labels: data.sectors.map(s => s.sector),
-            datasets: [{
-                label: "Sector %",
-                data: data.sectors.map(s => s.percent),
-                backgroundColor: "#58a6ff"
-            }]
-        }
-    });
-
-    new Chart(document.getElementById("regionChart"), {
-        type: "bar",
-        data: {
-            labels: data.regions.map(r => r.region),
-            datasets: [{
-                label: "Region %",
-                data: data.regions.map(r => r.percent),
-                backgroundColor: "#238636"
-            }]
-        }
-    });
-
-    const list = document.getElementById("portfolioInsights");
-    list.innerHTML = "";
-    data.insights.forEach(i => {
-        const li = document.createElement("li");
-        li.textContent = i;
-        list.appendChild(li);
-    });
-};
-
-document.getElementById("logoutBtn").onclick = () => {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
-};
-
-loadProfile();
-</script>
-
+    <!-- AI Insights -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <h2>AI Insights</h2>
+      <p class="text-muted">Coming soon — this area will surface patterns from your budget and portfolio automatically.</p>
+    </div>
+  </main>
 </body>
 </html>
-
-
-
-
