@@ -31,24 +31,23 @@ async function registerUser(email, password) {
 
   return res.json();
 }
-  const email = document.querySelector("#email").value.trim();
-  const password = document.querySelector("#password").value.trim();
 
-  const res = await fetch(`${API}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+if (document.querySelector("#registerForm")) {
+  document.querySelector("#registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.querySelector("#email").value.trim();
+    const password = document.querySelector("#password").value.trim();
+
+    const data = await registerUser(email, password);
+
+    if (data.success) {
+      alert("Account created!");
+      window.location.href = "login.html";
+    } else {
+      alert(data.message || "Registration failed");
+    }
   });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    alert(data.error || "Registration failed");
-    return;
-  }
-
-  alert("Account created successfully");
-  window.location.href = "login.html";
 }
 
 // ===============================
@@ -63,24 +62,24 @@ async function loginUser(email, password) {
 
   return res.json();
 }
-  const email = document.querySelector("#email").value.trim();
-  const password = document.querySelector("#password").value.trim();
 
-  const res = await fetch(`${API}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+if (document.querySelector("#loginForm")) {
+  document.querySelector("#loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.querySelector("#email").value.trim();
+    const password = document.querySelector("#password").value.trim();
+
+    const data = await loginUser(email, password);
+
+    if (!data.success) {
+      alert(data.message || "Login failed");
+      return;
+    }
+
+    saveUser(data.user);
+    window.location.href = "dashboard.html";
   });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    alert(data.error || "Login failed");
-    return;
-  }
-
-  saveUser(data);
-  window.location.href = "dashboard.html";
 }
 
 // ===============================
@@ -94,8 +93,12 @@ async function loadDashboard() {
   }
 
   document.querySelector("#user-email").textContent = user.email;
-  document.querySelector("#user-plan").textContent = user.plan;
-  document.querySelector("#trial-start").textContent = user.trialStart;
+  document.querySelector("#user-plan").textContent = user.plan || "Free";
+  document.querySelector("#trial-start").textContent = user.trialStart || "N/A";
+}
+
+if (document.body.id === "dashboard") {
+  loadDashboard();
 }
 
 // ===============================
@@ -106,7 +109,7 @@ async function sendReset(event) {
 
   const email = document.querySelector("#email").value.trim();
 
-  const res = await fetch(`${API}/forgot-password`, {
+  const res = await fetch(`${API}/api/auth/forgot-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
@@ -115,12 +118,12 @@ async function sendReset(event) {
   const data = await res.json();
 
   if (!res.ok) {
-    alert(data.error || "Email not found");
+    alert(data.message || "Email not found");
     return;
   }
 
   localStorage.setItem("resetEmail", email);
-  alert("Reset request accepted");
+  alert("Reset link sent!");
   window.location.href = "reset-password.html";
 }
 
@@ -138,7 +141,7 @@ async function resetPassword(event) {
     return;
   }
 
-  const res = await fetch(`${API}/reset-password`, {
+  const res = await fetch(`${API}/api/auth/reset-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, newPassword })
@@ -147,11 +150,11 @@ async function resetPassword(event) {
   const data = await res.json();
 
   if (!res.ok) {
-    alert(data.error || "Reset failed");
+    alert(data.message || "Reset failed");
     return;
   }
 
   localStorage.removeItem("resetEmail");
-  alert("Password updated");
+  alert("Password updated!");
   window.location.href = "login.html";
 }
