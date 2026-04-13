@@ -1,362 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Vaultwise Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <style>
-    :root {
-      --bg: #020617;
-      --accent: #4f46e5;
-      --accent-2: #22c55e;
-      --text: #f9fafb;
-      --text-muted: #9ca3af;
-      --card-bg: rgba(15, 23, 42, 0.82);
-      --border: rgba(148, 163, 184, 0.25);
-      --radius-lg: 22px;
-      --radius-md: 14px;
-      --shadow: 0 26px 70px rgba(0, 0, 0, 0.65);
-      --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: var(--font);
-      background:
-        radial-gradient(circle at 0% 0%, #1d283a 0, transparent 55%),
-        radial-gradient(circle at 100% 0%, #4f46e5 0, transparent 55%),
-        radial-gradient(circle at 0% 100%, #0f766e 0, transparent 55%),
-        radial-gradient(circle at 100% 100%, #020617 0, #000 55%);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    /* Floating background orbs */
-    .orb {
-      position: fixed;
-      border-radius: 999px;
-      filter: blur(50px);
-      opacity: 0.45;
-      mix-blend-mode: screen;
-      pointer-events: none;
-      animation: float 18s ease-in-out infinite alternate;
-      z-index: 0;
-    }
-    .orb--1 { width: 420px; height: 420px; background: #6366f1; top: -80px; right: -40px; }
-    .orb--2 { width: 360px; height: 360px; background: #22c55e; bottom: -120px; left: -40px; animation-delay: -8s; }
-    .orb--3 { width: 260px; height: 260px; background: #ec4899; top: 40%; left: 55%; animation-delay: -13s; }
-
-    @keyframes float {
-      0% { transform: translate3d(0,0,0) scale(1); }
-      50% { transform: translate3d(20px,-30px,0) scale(1.05); }
-      100% { transform: translate3d(-30px,20px,0) scale(0.98); }
-    }
-
-    /* Layout */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(18px);
-      background: rgba(15, 23, 42, 0.75);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 26px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 0, #a5b4fc, #4f46e5 60%, #1d1b4b 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: white;
-      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.7);
-    }
-
-    .brand span {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .nav {
-      display: flex;
-      gap: 20px;
-    }
-
-    .nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.15s ease;
-    }
-
-    .nav a:hover,
-    .nav a.active {
-      color: var(--text);
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn {
-      padding: 8px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.6);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: 0.15s ease;
-    }
-
-    .btn:hover {
-      background: rgba(15, 23, 42, 0.9);
-      transform: translateY(-1px);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), #6366f1);
-      border: none;
-      box-shadow: 0 18px 40px rgba(79, 70, 229, 0.6);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 55px rgba(79, 70, 229, 0.8);
-    }
-
-    main {
-      padding: 30px;
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 26px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(22px);
-      animation: fadeIn 0.7s ease forwards;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card h2 {
-      margin: 0 0 12px;
-      font-size: 1.2rem;
-    }
-
-    .pill {
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      font-size: 0.8rem;
-      margin: 4px;
-      display: inline-block;
-    }
-
-    .chart {
-      margin-top: 12px;
-      padding: 16px;
-      border-radius: var(--radius-md);
-      border: 1px dashed var(--border);
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-
-    @media (max-width: 900px) {
-      main { grid-template-columns: 1fr; }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Vaultwise • Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+<body class="dash-body">
+  <div class="dash-layout">
+    <aside class="dash-sidebar">
+      <div class="brand">Vaultwise</div>
+      <nav>
+        <button class="nav-item active">Overview</button>
+        <button class="nav-item">Accounts</button>
+        <button class="nav-item">Insights</button>
+      </nav>
+      <button id="logoutBtn" class="btn ghost small">Logout</button>
+    </aside>
 
-<body>
-  <!-- animated background -->
-  <div class="orb orb--1"></div>
-  <div class="orb orb--2"></div>
-  <div class="orb orb--3"></div>
+    <main class="dash-main">
+      <header class="dash-header">
+        <div>
+          <h1>Portfolio overview</h1>
+          <p class="subtitle">High-level snapshot of your finances</p>
+        </div>
+        <div class="pill">Secure • Encrypted • Private</div>
+      </header>
 
-  <header>
-    <div class="brand">
-      <div class="logo">V</div>
-      <span>Vaultwise</span>
-    </div>
+      <section class="dash-grid">
+        <div class="card metric">
+          <h3>Total balance</h3>
+          <p class="metric-value" id="totalBalance">$124,580.23</p>
+          <span class="metric-tag positive">+4.2% this month</span>
+        </div>
 
-    <nav class="nav">
-      <a class="active">Dashboard</a>
-      <a>Profile</a>
-      <a>Settings</a>
-    </nav>
+        <div class="card metric">
+          <h3>Active accounts</h3>
+          <p class="metric-value" id="activeAccounts">7</p>
+          <span class="metric-tag neutral">Multi‑institution</span>
+        </div>
 
-    <div class="actions">
-      <button class="btn">Start Trial</button>
-      <button class="btn">Upgrade</button>
-      <button class="btn" id="logoutBtn">Logout</button>
-    </div>
-  </header>
+        <div class="card metric">
+          <h3>Risk score</h3>
+          <p class="metric-value" id="riskScore">Moderate</p>
+          <span class="metric-tag warning">Diversify suggested</span>
+        </div>
+      </section>
 
-  <main>
-    <!-- Profile -->
-    <div class="card">
-      <h2>Your Profile</h2>
-      <p><strong>Email:</strong> <span id="profile-email"></span></p>
-      <p><strong>Plan:</strong> <span id="profile-plan"></span></p>
-      <p><strong>Trial Start:</strong> <span id="profile-trial"></span></p>
-    </div>
+      <section class="card wide">
+        <div class="card-header">
+          <h3>Recent activity</h3>
+          <span class="chip">Sample data</span>
+        </div>
+        <div class="activity-list" id="activityList">
+          <!-- Filled by JS -->
+        </div>
+      </section>
+    </main>
+  </div>
 
-    <!-- Budget Analyzer -->
-    <div class="card">
-      <h2>Budget Analyzer</h2>
-
-      <input id="budgetCategory" placeholder="Category (e.g., Rent)" />
-      <input id="budgetAmount" type="number" placeholder="Amount" />
-
-      <button class="btn-primary btn" id="saveBudgetBtn">Save Budget</button>
-
-      <div id="budgetPills"></div>
-      <div class="chart">Your spending breakdown will appear here.</div>
-    </div>
-
-    <!-- Portfolio Analyzer -->
-    <div class="card">
-      <h2>Portfolio Analyzer</h2>
-
-      <input id="assetName" placeholder="Asset (e.g., AAPL)" />
-      <input id="assetValue" type="number" placeholder="Value" />
-
-      <button class="btn-primary btn" id="savePortfolioBtn">Save Portfolio</button>
-
-      <div id="portfolioPills"></div>
-      <div class="chart">Your portfolio distribution will appear here.</div>
-    </div>
-
-    <!-- AI Insights -->
-    <div class="card" style="grid-column: 1 / -1;">
-      <h2>AI Insights</h2>
-      <p class="text-muted">Coming soon — this area will surface patterns from your budget and portfolio automatically.</p>
-    </div>
-  </main>
-
-  <!-- FULL FRONTEND LOGIC -->
-  <script>
-    const API = "https://portfolio-god.onrender.com/api"; 
-    // Replace with YOUR Render backend URL
-
-    const email = localStorage.getItem("vaultwiseEmail");
-
-    if (!email) {
-      window.location.href = "login.html";
-    }
-
-    async function loadUser() {
-      const res = await fetch(`${API}/user/${email}`);
-      const user = await res.json();
-
-      document.getElementById("profile-email").textContent = user.email;
-      document.getElementById("profile-plan").textContent = user.plan;
-      document.getElementById("profile-trial").textContent = user.trialStart;
-
-      renderBudgets(user.budgets);
-      renderPortfolio(user.portfolio);
-    }
-
-    function renderBudgets(budgets) {
-      const container = document.getElementById("budgetPills");
-      container.innerHTML = "";
-      budgets.forEach(b => {
-        container.innerHTML += `<span class="pill">${b.category}: $${b.amount}</span>`;
-      });
-    }
-
-    function renderPortfolio(portfolio) {
-      const container = document.getElementById("portfolioPills");
-      container.innerHTML = "";
-      portfolio.forEach(a => {
-        container.innerHTML += `<span class="pill">${a.name}: $${a.value}</span>`;
-      });
-    }
-
-    document.getElementById("saveBudgetBtn").addEventListener("click", async () => {
-      const category = document.getElementById("budgetCategory").value;
-      const amount = document.getElementById("budgetAmount").value;
-
-      if (!category || !amount) return alert("Enter category and amount");
-
-      const res = await fetch(`${API}/budget`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          budgets: [{ category, amount }]
-        })
-      });
-
-      const data = await res.json();
-      renderBudgets(data.budgets);
-    });
-
-    document.getElementById("savePortfolioBtn").addEventListener("click", async () => {
-      const name = document.getElementById("assetName").value;
-      const value = document.getElementById("assetValue").value;
-
-      if (!name || !value) return alert("Enter asset name and value");
-
-      const res = await fetch(`${API}/portfolio`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          portfolio: [{ name, value }]
-        })
-      });
-
-      const data = await res.json();
-      renderPortfolio(data.portfolio);
-    });
-
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("vaultwiseEmail");
-      window.location.href = "login.html";
-    });
-
-    loadUser();
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
