@@ -1,17 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <h2>Login</h2>
-  <form onsubmit="loginUser(event)">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button>Login</button>
-  </form>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaultwise • Login</title>
 
-  <script src="app.js"></script>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, #0a0f1f, #000);
+    font-family: "Inter", sans-serif;
+    color: #fff;
+  }
+
+  .card {
+    width: 380px;
+    padding: 40px;
+    border-radius: 20px;
+    background: rgba(20, 20, 40, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.15);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  label { font-size: 14px; opacity: 0.8; }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .link {
+    text-align: center;
+    margin-top: 18px;
+  }
+
+  .link a { color: #00eaff; text-decoration: none; }
+</style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Welcome Back</h2>
+
+    <form id="loginForm">
+      <label>Email</label>
+      <input id="email" type="email" required />
+
+      <label>Password</label>
+      <input id="password" type="password" required />
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="link">
+      No account? <a href="register.html">Register</a>
+    </div>
+  </div>
+
+<script src="app.js"></script>
 </body>
 </html>
