@@ -1,20 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Vaultwise • Welcome</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaultwise • Welcome</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: radial-gradient(circle at top, #0a0f1f, #000);
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 25px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  nav a {
+    margin-left: 25px;
+    color: #00eaff;
+    text-decoration: none;
+    font-size: 16px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-top: 120px;
+  }
+
+  .hero h1 {
+    font-size: 60px;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glow 3s infinite alternate;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 10px #00eaff; }
+    to { text-shadow: 0 0 25px #7b2ff7; }
+  }
+
+  .hero p {
+    margin-top: 20px;
+    font-size: 20px;
+    opacity: 0.8;
+  }
+
+  .cta {
+    margin-top: 40px;
+  }
+
+  .cta a {
+    padding: 15px 35px;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    border-radius: 12px;
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.2s;
+  }
+
+  .cta a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #00eaff;
+  }
+</style>
 </head>
-<body class="auth-body">
-  <div class="auth-shell">
-    <div class="auth-card">
-      <h1 class="brand">Vaultwise</h1>
-      <p class="subtitle">Track. Protect. Grow.</p>
-      <div class="auth-actions">
-        <a class="btn primary" href="login.html">Login</a>
-        <a class="btn ghost" href="register.html">Create account</a>
-      </div>
-    </div>
+
+<body>
+<header>
+  <div class="logo">Vaultwise</div>
+  <nav>
+    <a href="login.html">Login</a>
+    <a href="register.html">Get Started</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Your Financial Future, Upgraded</h1>
+  <p>Smart insights. Secure storage. Futuristic design.</p>
+
+  <div class="cta">
+    <a href="register.html">Create Account</a>
   </div>
+</section>
+
 </body>
 </html>
