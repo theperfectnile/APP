@@ -191,6 +191,16 @@
       font-size: 0.85rem;
     }
 
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
     @media (max-width: 900px) {
       main { grid-template-columns: 1fr; }
     }
@@ -218,7 +228,7 @@
     <div class="actions">
       <button class="btn">Start Trial</button>
       <button class="btn">Upgrade</button>
-      <button class="btn" onclick="location.href='login.html'">Logout</button>
+      <button class="btn" id="logoutBtn">Logout</button>
     </div>
   </header>
 
@@ -226,14 +236,20 @@
     <!-- Profile -->
     <div class="card">
       <h2>Your Profile</h2>
-      <p><strong>Email:</strong> user@example.com</p>
-      <p><strong>Plan:</strong> Free Trial</p>
-      <p><strong>Trial Start:</strong> 2026‑04‑12</p>
+      <p><strong>Email:</strong> <span id="profile-email"></span></p>
+      <p><strong>Plan:</strong> <span id="profile-plan"></span></p>
+      <p><strong>Trial Start:</strong> <span id="profile-trial"></span></p>
     </div>
 
     <!-- Budget Analyzer -->
     <div class="card">
       <h2>Budget Analyzer</h2>
+
+      <input id="budgetCategory" placeholder="Category (e.g., Rent)" />
+      <input id="budgetAmount" type="number" placeholder="Amount" />
+
+      <button class="btn-primary btn" id="saveBudgetBtn">Save Budget</button>
+
       <div id="budgetPills"></div>
       <div class="chart">Your spending breakdown will appear here.</div>
     </div>
@@ -241,6 +257,12 @@
     <!-- Portfolio Analyzer -->
     <div class="card">
       <h2>Portfolio Analyzer</h2>
+
+      <input id="assetName" placeholder="Asset (e.g., AAPL)" />
+      <input id="assetValue" type="number" placeholder="Value" />
+
+      <button class="btn-primary btn" id="savePortfolioBtn">Save Portfolio</button>
+
       <div id="portfolioPills"></div>
       <div class="chart">Your portfolio distribution will appear here.</div>
     </div>
@@ -251,5 +273,90 @@
       <p class="text-muted">Coming soon — this area will surface patterns from your budget and portfolio automatically.</p>
     </div>
   </main>
+
+  <!-- FULL FRONTEND LOGIC -->
+  <script>
+    const API = "https://portfolio-god.onrender.com/api"; 
+    // Replace with YOUR Render backend URL
+
+    const email = localStorage.getItem("vaultwiseEmail");
+
+    if (!email) {
+      window.location.href = "login.html";
+    }
+
+    async function loadUser() {
+      const res = await fetch(`${API}/user/${email}`);
+      const user = await res.json();
+
+      document.getElementById("profile-email").textContent = user.email;
+      document.getElementById("profile-plan").textContent = user.plan;
+      document.getElementById("profile-trial").textContent = user.trialStart;
+
+      renderBudgets(user.budgets);
+      renderPortfolio(user.portfolio);
+    }
+
+    function renderBudgets(budgets) {
+      const container = document.getElementById("budgetPills");
+      container.innerHTML = "";
+      budgets.forEach(b => {
+        container.innerHTML += `<span class="pill">${b.category}: $${b.amount}</span>`;
+      });
+    }
+
+    function renderPortfolio(portfolio) {
+      const container = document.getElementById("portfolioPills");
+      container.innerHTML = "";
+      portfolio.forEach(a => {
+        container.innerHTML += `<span class="pill">${a.name}: $${a.value}</span>`;
+      });
+    }
+
+    document.getElementById("saveBudgetBtn").addEventListener("click", async () => {
+      const category = document.getElementById("budgetCategory").value;
+      const amount = document.getElementById("budgetAmount").value;
+
+      if (!category || !amount) return alert("Enter category and amount");
+
+      const res = await fetch(`${API}/budget`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          budgets: [{ category, amount }]
+        })
+      });
+
+      const data = await res.json();
+      renderBudgets(data.budgets);
+    });
+
+    document.getElementById("savePortfolioBtn").addEventListener("click", async () => {
+      const name = document.getElementById("assetName").value;
+      const value = document.getElementById("assetValue").value;
+
+      if (!name || !value) return alert("Enter asset name and value");
+
+      const res = await fetch(`${API}/portfolio`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          portfolio: [{ name, value }]
+        })
+      });
+
+      const data = await res.json();
+      renderPortfolio(data.portfolio);
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("vaultwiseEmail");
+      window.location.href = "login.html";
+    });
+
+    loadUser();
+  </script>
 </body>
 </html>
