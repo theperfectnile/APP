@@ -1,67 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="dashboard">
 <head>
-  <meta charset="UTF-8">
-  <title>Vaultwise • Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaultwise • Dashboard</title>
+
+<style>
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #0a0f1f, #000);
+    font-family: "Inter", sans-serif;
+    color: #fff;
+  }
+
+  header {
+    padding: 25px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,255,255,0.2);
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .logout-btn {
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+  }
+
+  .container {
+    padding: 50px;
+  }
+
+  .card {
+    background: rgba(20,20,40,0.6);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(0,255,255,0.2);
+    box-shadow: 0 0 20px rgba(0,255,255,0.1);
+    max-width: 500px;
+  }
+
+  .card h2 {
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .info {
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+</style>
 </head>
-<body class="dash-body">
-  <div class="dash-layout">
-    <aside class="dash-sidebar">
-      <div class="brand">Vaultwise</div>
-      <nav>
-        <button class="nav-item active">Overview</button>
-        <button class="nav-item">Accounts</button>
-        <button class="nav-item">Insights</button>
-      </nav>
-      <button id="logoutBtn" class="btn ghost small">Logout</button>
-    </aside>
 
-    <main class="dash-main">
-      <header class="dash-header">
-        <div>
-          <h1>Portfolio overview</h1>
-          <p class="subtitle">High-level snapshot of your finances</p>
-        </div>
-        <div class="pill">Secure • Encrypted • Private</div>
-      </header>
+<body>
+<header>
+  <div class="logo">Vaultwise</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
 
-      <section class="dash-grid">
-        <div class="card metric">
-          <h3>Total balance</h3>
-          <p class="metric-value" id="totalBalance">$124,580.23</p>
-          <span class="metric-tag positive">+4.2% this month</span>
-        </div>
+<div class="container">
+  <div class="card">
+    <h2>Your Account</h2>
 
-        <div class="card metric">
-          <h3>Active accounts</h3>
-          <p class="metric-value" id="activeAccounts">7</p>
-          <span class="metric-tag neutral">Multi‑institution</span>
-        </div>
-
-        <div class="card metric">
-          <h3>Risk score</h3>
-          <p class="metric-value" id="riskScore">Moderate</p>
-          <span class="metric-tag warning">Diversify suggested</span>
-        </div>
-      </section>
-
-      <section class="card wide">
-        <div class="card-header">
-          <h3>Recent activity</h3>
-          <span class="chip">Sample data</span>
-        </div>
-        <div class="activity-list" id="activityList">
-          <!-- Filled by JS -->
-        </div>
-      </section>
-    </main>
+    <div class="info">Email: <span id="user-email"></span></div>
+    <div class="info">Plan: <span id="user-plan"></span></div>
+    <div class="info">Trial Started: <span id="trial-start"></span></div>
   </div>
+</div>
 
-  <script>loadDashboard()</script>
-<span id="user-email"></span>
-<span id="user-plan"></span>
-<span id="trial-start"></span>
-<button onclick="logout()">Logout</button>
+<script src="app.js"></script>
 </body>
 </html>
