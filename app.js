@@ -1,7 +1,7 @@
 // ===============================
 // CONFIG
 // ===============================
-const API = "https://YOUR-RENDER-URL.onrender.com";
+const API = "https://backend-qkz7.onrender.com";
 
 // Save logged-in user
 function saveUser(user) {
