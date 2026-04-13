@@ -1,86 +1,223 @@
 <!DOCTYPE html>
-<html lang="en" id="dashboard">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vaultwise • Dashboard</title>
 
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
   body {
     margin: 0;
-    background: radial-gradient(circle at top, #0a0f1f, #000);
+    background: radial-gradient(circle at top, #050816, #000);
     font-family: "Inter", sans-serif;
     color: #fff;
+    display: flex;
+    min-height: 100vh;
   }
 
-  header {
-    padding: 25px 50px;
+  .sidebar {
+    width: 230px;
+    background: rgba(10, 10, 30, 0.95);
+    border-right: 1px solid rgba(0,255,255,0.2);
+    padding: 25px 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(0,255,255,0.2);
+    flex-direction: column;
+    gap: 20px;
   }
 
   .logo {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     background: linear-gradient(90deg, #00eaff, #7b2ff7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
+  .nav-section {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #9ca3af;
+  }
+
+  .nav-item.active {
+    background: linear-gradient(90deg, #00eaff22, #7b2ff722);
+    color: #fff;
+  }
+
   .logout-btn {
-    padding: 10px 20px;
-    background: linear-gradient(90deg, #00eaff, #7b2ff7);
+    margin-top: auto;
+    padding: 10px 14px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
+    background: linear-gradient(90deg, #00eaff, #7b2ff7);
     color: #000;
-    font-weight: bold;
+    font-weight: 600;
   }
 
-  .container {
-    padding: 50px;
+  .main {
+    flex: 1;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .welcome {
+    font-size: 20px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
   }
 
   .card {
-    background: rgba(20,20,40,0.6);
-    padding: 30px;
-    border-radius: 20px;
-    border: 1px solid rgba(0,255,255,0.2);
-    box-shadow: 0 0 20px rgba(0,255,255,0.1);
-    max-width: 500px;
+    background: rgba(15, 15, 40, 0.8);
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid rgba(0,255,255,0.18);
+    box-shadow: 0 0 18px rgba(0,255,255,0.12);
   }
 
-  .card h2 {
-    margin-bottom: 20px;
-    background: linear-gradient(90deg, #00eaff, #7b2ff7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .card-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+    margin-bottom: 8px;
   }
 
-  .info {
-    margin-bottom: 12px;
-    font-size: 18px;
+  .card-value {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .layout-2col {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr;
+    gap: 20px;
+  }
+
+  .panel {
+    background: rgba(15, 15, 40, 0.8);
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid rgba(0,255,255,0.18);
+    box-shadow: 0 0 18px rgba(0,255,255,0.12);
+  }
+
+  .panel h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+  }
+
+  #insights {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #d1d5db;
+  }
+
+  .insight-item {
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 900px) {
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .layout-2col {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      display: none;
+    }
   }
 </style>
 </head>
 
-<body>
-<header>
-  <div class="logo">Vaultwise</div>
-  <button class="logout-btn" onclick="logout()">Logout</button>
-</header>
+<body id="dashboard">
+  <aside class="sidebar">
+    <div class="logo">Vaultwise</div>
 
-<div class="container">
-  <div class="card">
-    <h2>Your Account</h2>
+    <div class="nav-section">
+      <div class="nav-item active">Dashboard</div>
+      <div class="nav-item">Spending</div>
+      <div class="nav-item">Budget</div>
+      <div class="nav-item">Savings</div>
+      <div class="nav-item">Portfolio</div>
+    </div>
 
-    <div class="info">Email: <span id="user-email"></span></div>
-    <div class="info">Plan: <span id="user-plan"></span></div>
-    <div class="info">Trial Started: <span id="trial-start"></span></div>
-  </div>
-</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </aside>
+
+  <main class="main">
+    <div class="top-row">
+      <div class="welcome">
+        Welcome back, <span id="user-email"></span>
+      </div>
+      <div>
+        Plan: <span id="user-plan"></span> • Trial: <span id="trial-start"></span>
+      </div>
+    </div>
+
+    <section class="cards">
+      <div class="card">
+        <div class="card-title">Monthly Income</div>
+        <div class="card-value" id="card-income">$0</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Monthly Expenses</div>
+        <div class="card-value" id="card-expenses">$0</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Net Savings</div>
+        <div class="card-value" id="card-savings">$0</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Portfolio Value</div>
+        <div class="card-value" id="card-portfolio">$0</div>
+      </div>
+    </section>
+
+    <section class="layout-2col">
+      <div class="panel">
+        <h3>Spending Breakdown</h3>
+        <canvas id="spendingChart" height="140"></canvas>
+      </div>
+
+      <div class="panel">
+        <h3>Insights</h3>
+        <div id="insights">
+          <div class="insight-item">Loading insights...</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Portfolio Allocation</h3>
+      <canvas id="portfolioChart" height="120"></canvas>
+    </section>
+  </main>
 
 <script src="app.js"></script>
 </body>
