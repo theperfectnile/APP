@@ -158,3 +158,116 @@ async function resetPassword(event) {
   alert("Password updated!");
   window.location.href = "login.html";
 }
+// ===============================
+// FINANCE API HELPERS
+// ===============================
+async function fetchFinanceSummary() {
+  const res = await fetch(`${API}/api/finance/summary`, {
+    credentials: "include",
+  });
+  return res.json();
+}
+
+async function fetchPortfolio() {
+  const res = await fetch(`${API}/api/finance/portfolio`, {
+    credentials: "include",
+  });
+  return res.json();
+}
+
+// ===============================
+// DASHBOARD INIT
+// ===============================
+async function initDashboard() {
+  const user = getUser();
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Basic user info
+  document.querySelector("#user-email").textContent = user.email;
+  document.querySelector("#user-plan").textContent = user.plan || "Free";
+  document.querySelector("#trial-start").textContent = user.trialStart || "N/A";
+
+  try {
+    const summary = await fetchFinanceSummary();
+    const portfolio = await fetchPortfolio();
+
+    // Cards
+    document.querySelector("#card-income").textContent =
+      `$${(summary.monthlyIncome || 0).toLocaleString()}`;
+    document.querySelector("#card-expenses").textContent =
+      `$${(summary.monthlyExpenses || 0).toLocaleString()}`;
+    document.querySelector("#card-savings").textContent =
+      `$${(summary.netSavings || 0).toLocaleString()}`;
+    document.querySelector("#card-portfolio").textContent =
+      `$${(portfolio.totalValue || 0).toLocaleString()}`;
+
+    // Insights
+    const insightsEl = document.querySelector("#insights");
+    insightsEl.innerHTML = "";
+    (summary.insights || []).forEach(text => {
+      const div = document.createElement("div");
+      div.className = "insight-item";
+      div.textContent = text;
+      insightsEl.appendChild(div);
+    });
+    if (!summary.insights || summary.insights.length === 0) {
+      insightsEl.innerHTML = "<div class='insight-item'>No insights yet. Add income and expenses to see analysis.</div>";
+    }
+
+    // Spending chart
+    const spendCtx = document.getElementById("spendingChart");
+    if (spendCtx && summary.spendingByCategory) {
+      new Chart(spendCtx, {
+        type: "pie",
+        data: {
+          labels: Object.keys(summary.spendingByCategory),
+          datasets: [{
+            data: Object.values(summary.spendingByCategory),
+            backgroundColor: ["#00eaff", "#7b2ff7", "#00ffbf", "#f97316", "#e11d48", "#a855f7"],
+          }]
+        },
+        options: { plugins: { legend: { labels: { color: "#e5e7eb" } } } }
+      });
+    }
+
+    // Portfolio chart
+    const portCtx = document.getElementById("portfolioChart");
+    if (portCtx && portfolio.assets) {
+      new Chart(portCtx, {
+        type: "bar",
+        data: {
+          labels: portfolio.assets.map(a => a.asset),
+          datasets: [{
+            label: "Value",
+            data: portfolio.assets.map(a => a.value),
+            backgroundColor: "#00eaff",
+          }]
+        },
+        options: {
+          scales: {
+            x: { ticks: { color: "#e5e7eb" } },
+            y: { ticks: { color: "#e5e7eb" } }
+          },
+          plugins: { legend: { labels: { color: "#e5e7eb" } } }
+        }
+      });
+    }
+
+  } catch (err) {
+    console.error(err);
+    document.querySelector("#insights").innerHTML =
+      "<div class='insight-item'>Unable to load financial data. Check backend /api/finance routes.</div>";
+  }
+}
+
+// ===============================
+// PAGE ROUTER HOOK
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.body.id === "dashboard") {
+    initDashboard();
+  }
+});
