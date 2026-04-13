@@ -1,125 +1,151 @@
-/* ============================
-   SIMPLE AUTH SYSTEM (LOCALSTORAGE)
-   Works with: login.html, register.html,
-   forgot-password.html, reset-password.html,
-   dashboard.html
-============================ */
+const API_BASE = "/api/auth";
 
-// Utility: get users from storage
-function getUsers() {
-    return JSON.parse(localStorage.getItem("users")) || [];
+// Helpers
+function getToken() {
+  return localStorage.getItem("token");
 }
 
-// Utility: save users
-function saveUsers(users) {
-    localStorage.setItem("users", JSON.stringify(users));
+function setToken(token) {
+  localStorage.setItem("token", token);
 }
 
-/* ============================
-   REGISTER USER
-============================ */
-function registerUser(event) {
-    event.preventDefault();
+function clearToken() {
+  localStorage.removeItem("token");
+}
 
-    const email = document.querySelector("#email").value.trim();
-    const password = document.querySelector("#password").value.trim();
+// Protect dashboard
+if (location.pathname.endsWith("dashboard.html")) {
+  if (!getToken()) {
+    location.href = "login.html";
+  } else {
+    renderSampleActivity();
+  }
+}
 
-    const users = getUsers();
+// Login
+const loginForm = document.querySelector("#loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = document.querySelector("#loginEmail").value.trim();
+    const password = document.querySelector("#loginPassword").value.trim();
+    const errorEl = document.querySelector("#loginError");
 
-    if (users.find(u => u.email === email)) {
-        alert("Account already exists");
+    errorEl.textContent = "";
+
+    try {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorEl.textContent = data.error || "Login failed";
         return;
+      }
+
+      setToken(data.token);
+      location.href = "dashboard.html";
+    } catch {
+      errorEl.textContent = "Network error. Try again.";
     }
-
-    users.push({ email, password });
-    saveUsers(users);
-
-    alert("Registration successful");
-    window.location.href = "login.html";
+  });
 }
 
-/* ============================
-   LOGIN USER
-============================ */
-function loginUser(event) {
-    event.preventDefault();
+// Register
+const registerForm = document.querySelector("#registerForm");
+if (registerForm) {
+  registerForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = document.querySelector("#registerEmail").value.trim();
+    const password = document.querySelector("#registerPassword").value.trim();
+    const errorEl = document.querySelector("#registerError");
 
-    const email = document.querySelector("#email").value.trim();
-    const password = document.querySelector("#password").value.trim();
+    errorEl.textContent = "";
 
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
+    try {
+      const res = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
 
-    if (!user) {
-        alert("Invalid email or password");
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorEl.textContent = data.error || "Registration failed";
         return;
-    }
+      }
 
-    localStorage.setItem("loggedInUser", email);
-    window.location.href = "dashboard.html";
+      // Auto-login or redirect to login
+      location.href = "login.html";
+    } catch {
+      errorEl.textContent = "Network error. Try again.";
+    }
+  });
 }
 
-/* ============================
-   PROTECT DASHBOARD
-============================ */
-function checkAuth() {
-    const user = localStorage.getItem("loggedInUser");
-    if (!user) {
-        window.location.href = "login.html";
-    }
+// Forgot password (placeholder – wire to your backend route)
+const forgotForm = document.querySelector("#forgotForm");
+if (forgotForm) {
+  forgotForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = document.querySelector("#forgotEmail").value.trim();
+    const msgEl = document.querySelector("#forgotMessage");
+
+    msgEl.textContent = "If this email exists, a reset link will be sent.";
+    // Call your backend route here when implemented
+  });
 }
 
-/* ============================
-   LOGOUT
-============================ */
-function logout() {
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "login.html";
+// Reset password (placeholder – expects token in query string)
+const resetForm = document.querySelector("#resetForm");
+if (resetForm) {
+  resetForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const password = document.querySelector("#resetPassword").value.trim();
+    const msgEl = document.querySelector("#resetMessage");
+
+    msgEl.textContent = "Password updated (demo only).";
+    // Call your backend reset route with token + new password
+  });
 }
 
-/* ============================
-   FORGOT PASSWORD
-============================ */
-function sendResetLink(event) {
-    event.preventDefault();
-
-    const email = document.querySelector("#email").value.trim();
-    const users = getUsers();
-
-    if (!users.find(u => u.email === email)) {
-        alert("Email not found");
-        return;
-    }
-
-    localStorage.setItem("resetEmail", email);
-    window.location.href = "reset-password.html";
+// Logout
+const logoutBtn = document.querySelector("#logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    clearToken();
+    location.href = "login.html";
+  });
 }
 
-/* ============================
-   RESET PASSWORD
-============================ */
-function resetPassword(event) {
-    event.preventDefault();
+// Sample dashboard activity
+function renderSampleActivity() {
+  const list = document.querySelector("#activityList");
+  if (!list) return;
 
-    const newPassword = document.querySelector("#password").value.trim();
-    const email = localStorage.getItem("resetEmail");
+  const items = [
+    { label: "Transfer to Savings", amount: "-$500.00", time: "Today • 2:14 PM" },
+    { label: "Dividend payout", amount: "+$42.18", time: "Yesterday • 4:03 PM" },
+    { label: "Card payment", amount: "-$120.49", time: "Apr 10 • 11:27 AM" },
+    { label: "Deposit", amount: "+$2,000.00", time: "Apr 9 • 9:02 AM" }
+  ];
 
-    if (!email) {
-        alert("No reset request found");
-        return;
-    }
-
-    let users = getUsers();
-    users = users.map(u => {
-        if (u.email === email) {
-            return { email, password: newPassword };
-        }
-        return u;
-    });
-
-    saveUsers(users);
-    localStorage.removeItem("resetEmail");
-
-    alert("Password updated successfully");
-    window.location.href = "login.html";
+  list.innerHTML = "";
+  items.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "activity-item";
+    row.innerHTML = `
+      <div>
+        <div>${item.label}</div>
+        <div style="font-size:0.75rem;color:var(--muted);">${item.time}</div>
+      </div>
+      <div style="font-weight:500;">${item.amount}</div>
+    `;
+    list.appendChild(row);
+  });
 }
