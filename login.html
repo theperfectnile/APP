@@ -8,153 +8,81 @@
   <style>
     :root {
       --bg: #020617;
-      --bg-soft: #020617;
       --accent: #4f46e5;
       --accent-2: #22c55e;
-      --accent-soft: rgba(79, 70, 229, 0.18);
       --text: #f9fafb;
       --text-muted: #9ca3af;
-      --border-subtle: rgba(148, 163, 184, 0.35);
+      --border: rgba(148, 163, 184, 0.35);
       --radius-lg: 22px;
       --radius-md: 12px;
-      --shadow-soft: 0 26px 70px rgba(0, 0, 0, 0.75);
-      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      --shadow: 0 26px 70px rgba(0, 0, 0, 0.75);
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
     }
 
-    * ,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: var(--font-sans);
-      color: var(--text);
+      font-family: var(--font);
       background:
         radial-gradient(circle at 0% 0%, #1d283a 0, transparent 55%),
         radial-gradient(circle at 100% 0%, #4f46e5 0, transparent 55%),
         radial-gradient(circle at 0% 100%, #0f766e 0, transparent 55%),
         radial-gradient(circle at 100% 100%, #020617 0, #000 55%);
-      overflow: hidden;
-    }
-
-    /* Animated background orbs */
-
-    .orb {
-      position: fixed;
-      border-radius: 999px;
-      filter: blur(40px);
-      opacity: 0.55;
-      mix-blend-mode: screen;
-      pointer-events: none;
-      z-index: 0;
-      animation: float 18s ease-in-out infinite alternate;
-    }
-
-    .orb--purple {
-      width: 420px;
-      height: 420px;
-      background: radial-gradient(circle, #6366f1, transparent 60%);
-      top: -80px;
-      right: -40px;
-      animation-delay: -4s;
-    }
-
-    .orb--teal {
-      width: 360px;
-      height: 360px;
-      background: radial-gradient(circle, #22c55e, transparent 60%);
-      bottom: -120px;
-      left: -40px;
-      animation-delay: -9s;
-    }
-
-    .orb--pink {
-      width: 260px;
-      height: 260px;
-      background: radial-gradient(circle, #ec4899, transparent 60%);
-      top: 40%;
-      left: 55%;
-      animation-delay: -13s;
-    }
-
-    @keyframes float {
-      0% {
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-      50% {
-        transform: translate3d(20px, -30px, 0) scale(1.05);
-      }
-      100% {
-        transform: translate3d(-30px, 20px, 0) scale(0.98);
-      }
-    }
-
-    /* Layout */
-
-    .page {
-      position: relative;
-      z-index: 1;
+      color: var(--text);
+      overflow-x: hidden;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px 20px;
+      padding: 40px 20px;
     }
 
-    .shell {
-      width: 100%;
-      max-width: 1120px;
-      display: grid;
-      grid-template-columns: minmax(0, 440px) minmax(0, 520px);
-      gap: 40px;
-      align-items: stretch;
+    /* Floating background orbs */
+    .orb {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(50px);
+      opacity: 0.45;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      animation: float 18s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .orb--1 { width: 420px; height: 420px; background: #6366f1; top: -80px; right: -40px; }
+    .orb--2 { width: 360px; height: 360px; background: #22c55e; bottom: -120px; left: -40px; animation-delay: -8s; }
+    .orb--3 { width: 260px; height: 260px; background: #ec4899; top: 40%; left: 55%; animation-delay: -13s; }
+
+    @keyframes float {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(20px,-30px,0) scale(1.05); }
+      100% { transform: translate3d(-30px,20px,0) scale(0.98); }
     }
 
-    /* Auth card */
-
+    /* Card */
     .card {
       position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 420px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 28px 26px 26px;
-      background: linear-gradient(
-          135deg,
-          rgba(15, 23, 42, 0.96),
-          rgba(15, 23, 42, 0.92)
-        );
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: var(--shadow-soft);
+      padding: 32px 28px;
+      box-shadow: var(--shadow);
       backdrop-filter: blur(22px);
-      transform: translateY(18px);
+      animation: fadeIn 0.7s ease forwards;
       opacity: 0;
-      animation: card-in 0.7s cubic-bezier(0.21, 0.8, 0.35, 1) forwards;
+      transform: translateY(20px);
     }
 
-    @keyframes card-in {
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-circle {
-      width: 40px;
-      height: 40px;
+    .logo {
+      width: 48px;
+      height: 48px;
       border-radius: 999px;
       background: radial-gradient(circle at 30% 0, #a5b4fc, #4f46e5 60%, #1d1b4b 100%);
       display: flex;
@@ -162,490 +90,134 @@
       justify-content: center;
       font-weight: 700;
       color: white;
+      margin-bottom: 12px;
       box-shadow: 0 10px 30px rgba(79, 70, 229, 0.7);
     }
 
-    .brand-title {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .brand-title span:first-child {
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-    }
-
-    .brand-title span:last-child {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .badge-beta {
-      font-size: 0.7rem;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: var(--text-muted);
-      background: radial-gradient(circle at 0 0, rgba(148, 163, 184, 0.25), transparent 55%);
-    }
-
-    .headline {
-      margin-bottom: 6px;
-      font-size: 1.45rem;
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.6rem;
       font-weight: 600;
     }
 
     .subtitle {
-      margin: 0 0 18px;
+      margin: 0 0 20px;
       font-size: 0.9rem;
       color: var(--text-muted);
     }
 
-    .subtitle strong {
-      color: #e5e7eb;
-      font-weight: 500;
-    }
-
-    /* Form */
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
     label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       margin-bottom: 6px;
       color: var(--text-muted);
     }
 
     input {
       width: 100%;
-      padding: 10px 11px;
-      border-radius: 11px;
-      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
       background: rgba(15, 23, 42, 0.9);
       color: var(--text);
-      font-size: 0.92rem;
-      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease,
-        transform 0.08s ease;
-    }
-
-    input::placeholder {
-      color: rgba(148, 163, 184, 0.7);
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(15, 23, 42, 0.98);
-      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.6), 0 0 0 12px rgba(79, 70, 229, 0.18);
-      transform: translateY(-1px);
-    }
-
-    .form-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 0.8rem;
-    }
-
-    .link-sm {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .link-sm:hover {
-      text-decoration: underline;
-    }
-
-    .remember {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-    }
-
-    .remember input[type="checkbox"] {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      accent-color: var(--accent);
-      box-shadow: none;
-    }
-
-    .btn {
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.92rem;
-      padding: 9px 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.08s ease, box-shadow 0.12s ease, background 0.12s ease,
-        opacity 0.12s ease;
-      white-space: nowrap;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
     }
 
     .btn-primary {
       width: 100%;
-      margin-top: 4px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: none;
       background: linear-gradient(135deg, var(--accent), #6366f1);
       color: white;
-      box-shadow: 0 18px 40px rgba(79, 70, 229, 0.7);
-    }
-
-    .btn-primary span {
-      font-size: 0.86rem;
-    }
-
-    .btn-primary::after {
-      content: "→";
-      font-size: 0.9rem;
-      opacity: 0;
-      transform: translateX(-4px);
-      transition: opacity 0.12s ease, transform 0.12s ease;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 18px 40px rgba(79, 70, 229, 0.6);
+      transition: 0.15s ease;
     }
 
     .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 22px 55px rgba(79, 70, 229, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 22px 55px rgba(79, 70, 229, 0.8);
     }
 
-    .btn-primary:hover::after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
-      box-shadow: 0 14px 30px rgba(79, 70, 229, 0.7);
-      opacity: 0.95;
-    }
-
-    .auth-switch {
-      margin-top: 14px;
-      font-size: 0.82rem;
+    .footer {
+      margin-top: 16px;
+      font-size: 0.85rem;
       color: var(--text-muted);
       text-align: center;
     }
 
-    .auth-switch a {
+    .footer a {
       color: var(--accent);
       text-decoration: none;
-      font-weight: 500;
-    }
-
-    .auth-switch a:hover {
-      text-decoration: underline;
-    }
-
-    /* Trust strip */
-
-    .trust-strip {
-      margin-top: 18px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      background: radial-gradient(circle at 0 0, rgba(148, 163, 184, 0.25), transparent 55%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .trust-strip span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--accent-2);
-      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.25);
-    }
-
-    .avatars {
-      display: flex;
-      align-items: center;
-    }
-
-    .avatar {
-      width: 20px;
-      height: 20px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #4f46e5, #22c55e);
-      border: 1px solid #020617;
-      margin-left: -6px;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
-    }
-
-    .avatar:first-child {
-      margin-left: 0;
-    }
-
-    /* Right side: story */
-
-    .panel {
-      position: relative;
-      border-radius: var(--radius-lg);
-      padding: 26px 26px 24px;
-      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(22px);
-      overflow: hidden;
-      transform: translateY(18px);
-      opacity: 0;
-      animation: card-in 0.7s cubic-bezier(0.21, 0.8, 0.35, 1) 0.08s forwards;
-    }
-
-    .panel-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .panel-tag-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--accent);
-    }
-
-    .panel h2 {
-      margin: 0 0 8px;
-      font-size: 1.35rem;
-    }
-
-    .panel p {
-      margin: 0 0 14px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .panel ul {
-      margin: 0 0 16px;
-      padding-left: 18px;
-      font-size: 0.86rem;
-      color: var(--text-muted);
-    }
-
-    .panel li + li {
-      margin-top: 4px;
-    }
-
-    .stat-row {
-      display: flex;
-      gap: 14px;
-      margin-bottom: 10px;
-    }
-
-    .stat {
-      flex: 1;
-      padding: 10px 11px;
-      border-radius: var(--radius-md);
-      background: radial-gradient(circle at 0 0, rgba(79, 70, 229, 0.25), rgba(15, 23, 42, 0.95));
-      border: 1px solid rgba(79, 70, 229, 0.5);
-      font-size: 0.8rem;
-    }
-
-    .stat span {
-      display: block;
-    }
-
-    .stat span:first-child {
-      color: var(--text-muted);
-      margin-bottom: 2px;
-    }
-
-    .stat span:last-child {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    .panel-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .pill {
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    /* Responsive */
-
-    @media (max-width: 900px) {
-      .shell {
-        grid-template-columns: minmax(0, 1fr);
-        max-width: 520px;
-      }
-      .panel {
-        display: none;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .page {
-        padding: 22px 16px;
-      }
-      .card {
-        padding: 24px 20px 22px;
-      }
-      .trust-strip {
-        flex-direction: column;
-        align-items: flex-start;
-      }
     }
   </style>
 </head>
+
 <body>
   <!-- animated background -->
-  <div class="orb orb--purple"></div>
-  <div class="orb orb--teal"></div>
-  <div class="orb orb--pink"></div>
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
 
-  <div class="page">
-    <div class="shell">
-      <!-- LEFT: login card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="brand">
-            <div class="logo-circle">V</div>
-            <div class="brand-title">
-              <span>Vaultwise</span>
-              <span>AI‑driven money and portfolio clarity</span>
-            </div>
-          </div>
-          <div class="badge-beta">Early access</div>
-        </div>
+  <div class="card">
+    <div class="logo">V</div>
+    <h1>Welcome back</h1>
+    <p class="subtitle">Log in to access your dashboard.</p>
 
-        <h1 class="headline">Welcome back.</h1>
-        <p class="subtitle">
-          Log in to see <strong>your spending, portfolio, and AI insights</strong> in one live view.
-        </p>
+    <form id="loginForm">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="you@example.com" required />
 
-        <form id="loginForm">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              autocomplete="email"
-            />
-          </div>
+      <label>Password</label>
+      <input id="password" type="password" placeholder="••••••••" required />
 
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              required
-              placeholder="••••••••"
-              autocomplete="current-password"
-            />
-          </div>
+      <button class="btn-primary" type="submit">Log In</button>
+    </form>
 
-          <div class="form-footer">
-            <label class="remember">
-              <input type="checkbox" />
-              <span>Keep me signed in</span>
-            </label>
-            <a href="forgot-password.html" class="link-sm">Forgot password?</a>
-          </div>
-
-          <button type="submit" class="btn btn-primary">
-            <span>Log in to your dashboard</span>
-          </button>
-        </form>
-
-        <div class="auth-switch">
-          Don’t have an account?
-          <a href="register.html">Create one in under a minute</a>
-        </div>
-
-        <div class="trust-strip">
-          <span>
-            <span class="dot"></span>
-            Live for early users tracking over <strong>$3.2M</strong> in combined assets.
-          </span>
-          <span class="avatars">
-            <div class="avatar"></div>
-            <div class="avatar"></div>
-            <div class="avatar"></div>
-          </span>
-        </div>
-      </div>
-
-      <!-- RIGHT: story / value panel -->
-      <aside class="panel">
-        <div class="panel-tag">
-          <span class="panel-tag-dot"></span>
-          Real‑time signal, not spreadsheets
-        </div>
-
-        <h2>See your entire financial life in one place.</h2>
-        <p>
-          Vaultwise pulls your budget and portfolio into a single, calm view—then uses AI to surface
-          what actually matters this week.
-        </p>
-
-        <ul>
-          <li>Track spending with Budget Analyzer</li>
-          <li>Understand risk with Portfolio Analyzer</li>
-          <li>Unlock patterns with AI Insights</li>
-        </ul>
-
-        <div class="stat-row">
-          <div class="stat">
-            <span>Time saved</span>
-            <span>3–5 hrs / month</span>
-          </div>
-          <div class="stat">
-            <span>Clarity score</span>
-            <span>↑ 41% after 30 days</span>
-          </div>
-        </div>
-
-        <div class="panel-footer">
-          <span>“It feels like a calm command center for my money.”</span>
-          <span class="pill">No ads · No selling your data</span>
-        </div>
-      </aside>
+    <div class="footer">
+      Don’t have an account?
+      <a href="register.html">Create one</a>
     </div>
   </div>
 
   <script>
-    // simple redirect for now – replace with real auth when backend is ready
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
+    const API = "https://portfolio-god.onrender.com/api"; 
+    // Replace with your actual backend URL if different
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      window.location.href = "dashboard.html";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        alert("Please enter both email and password.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+
+        localStorage.setItem("vaultwiseEmail", data.email);
+        window.location.href = "dashboard.html";
+
+      } catch (err) {
+        alert("Login failed. Check your backend or internet connection.");
+      }
     });
   </script>
 </body>
