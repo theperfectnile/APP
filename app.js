@@ -1,7 +1,7 @@
 // ===============================
 // CONFIG
 // ===============================
-const API = "YOUR_BACKEND_URL_HERE/api";
+const API = "https://YOUR-RENDER-URL.onrender.com";
 
 // Save logged-in user
 function saveUser(user) {
@@ -22,9 +22,15 @@ function logout() {
 // ===============================
 // REGISTER
 // ===============================
-async function registerUser(event) {
-  event.preventDefault();
+async function registerUser(email, password) {
+  const res = await fetch(`${API}/api/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
 
+  return res.json();
+}
   const email = document.querySelector("#email").value.trim();
   const password = document.querySelector("#password").value.trim();
 
