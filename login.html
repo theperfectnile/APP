@@ -38,7 +38,6 @@
       padding: 40px 20px;
     }
 
-    /* Floating background orbs */
     .orb {
       position: fixed;
       border-radius: 999px;
@@ -59,7 +58,6 @@
       100% { transform: translate3d(-30px,20px,0) scale(0.98); }
     }
 
-    /* Card */
     .card {
       position: relative;
       z-index: 2;
@@ -157,7 +155,6 @@
 </head>
 
 <body>
-  <!-- animated background -->
   <div class="orb orb--1"></div>
   <div class="orb orb--2"></div>
   <div class="orb orb--3"></div>
@@ -184,8 +181,7 @@
   </div>
 
   <script>
-    const API = "https://portfolio-god.onrender.com/api"; 
-    // Replace with your actual backend URL if different
+    const API = "https://portfolio-god.onrender.com/api";
 
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
