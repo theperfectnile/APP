@@ -6,7 +6,8 @@ import authRoutes from "./authRoutes.js";
 dotenv.config();
 const app = express();
 
-app.use(cors());
+const express = require("express");
+const app = express();
 app.use(express.json());
 app.use(express.static("public")); // serves your frontend
 
