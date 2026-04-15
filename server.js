@@ -1,26 +1,14 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import dotenv from "dotenv";
-import authRoutes from "./authRoutes.js";
-dotenv.config();
-const app = express();
-
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
+const dotenv = require("dotenv");
+const authRoutes = require("./authRoutes.js");
 
-app.use(
-  cors({
-    origin: "https://theperfectnile.github.io",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+dotenv.config();
 
 const app = express();
-const cors = require("cors");
 
+// CORS FIX
 app.use(
   cors({
     origin: "https://theperfectnile.github.io",
@@ -29,6 +17,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(express.json());
 app.use(express.static("public")); // serves your frontend
 
@@ -38,6 +27,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error(err));
+
 app.get("/api/finance/summary", (req, res) => {
   res.json({
     monthlyIncome: 5000,
@@ -58,6 +48,7 @@ app.get("/api/finance/summary", (req, res) => {
     ]
   });
 });
+
 app.get("/api/finance/portfolio", (req, res) => {
   res.json({
     totalValue: 24500,
