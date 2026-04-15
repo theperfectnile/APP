@@ -1,224 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vaultwise • Dashboard</title>
-
-<!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-  body {
-    margin: 0;
-    background: radial-gradient(circle at top, #050816, #000);
-    font-family: "Inter", sans-serif;
-    color: #fff;
-    display: flex;
-    min-height: 100vh;
-  }
-
-  .sidebar {
-    width: 230px;
-    background: rgba(10, 10, 30, 0.95);
-    border-right: 1px solid rgba(0,255,255,0.2);
-    padding: 25px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .logo {
-    font-size: 24px;
-    font-weight: 700;
-    background: linear-gradient(90deg, #00eaff, #7b2ff7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .nav-section {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .nav-item {
-    padding: 10px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #9ca3af;
-  }
-
-  .nav-item.active {
-    background: linear-gradient(90deg, #00eaff22, #7b2ff722);
-    color: #fff;
-  }
-
-  .logout-btn {
-    margin-top: auto;
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    background: linear-gradient(90deg, #00eaff, #7b2ff7);
-    color: #000;
-    font-weight: 600;
-  }
-
-  .main {
-    flex: 1;
-    padding: 30px 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-  }
-
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .welcome {
-    font-size: 20px;
-  }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-  }
-
-  .card {
-    background: rgba(15, 15, 40, 0.8);
-    border-radius: 18px;
-    padding: 18px;
-    border: 1px solid rgba(0,255,255,0.18);
-    box-shadow: 0 0 18px rgba(0,255,255,0.12);
-  }
-
-  .card-title {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #9ca3af;
-    margin-bottom: 8px;
-  }
-
-  .card-value {
-    font-size: 22px;
-    font-weight: 600;
-  }
-
-  .layout-2col {
-    display: grid;
-    grid-template-columns: 2fr 1.2fr;
-    gap: 20px;
-  }
-
-  .panel {
-    background: rgba(15, 15, 40, 0.8);
-    border-radius: 18px;
-    padding: 18px;
-    border: 1px solid rgba(0,255,255,0.18);
-    box-shadow: 0 0 18px rgba(0,255,255,0.12);
-  }
-
-  .panel h3 {
-    margin: 0 0 10px;
-    font-size: 16px;
-  }
-
-  #insights {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #d1d5db;
-  }
-
-  .insight-item {
-    margin-bottom: 8px;
-  }
-
-  @media (max-width: 900px) {
-    .cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .layout-2col {
-      grid-template-columns: 1fr;
-    }
-    .sidebar {
-      display: none;
-    }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Vaultwise • Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
-<body id="dashboard">
-  <aside class="sidebar">
-    <div class="logo">Vaultwise</div>
-
-    <div class="nav-section">
-      <div class="nav-item active">Dashboard</div>
-      <div class="nav-item">Spending</div>
-      <div class="nav-item">Budget</div>
-      <div class="nav-item">Savings</div>
-      <div class="nav-item">Portfolio</div>
+<body>
+  <header class="top-bar">
+    <h1>Vaultwise Dashboard</h1>
+    <div class="top-actions">
+      <button id="trialBtn">Start Free Trial</button>
+      <span id="trialStatus"></span>
+      <button id="signOutBtn">Sign Out</button>
     </div>
+  </header>
 
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </aside>
-
-  <main class="main">
-    <div class="top-row">
-      <div class="welcome">
-        Welcome back, <span id="user-email"></span>
-      </div>
-      <div>
-        Plan: <span id="user-plan"></span> • Trial: <span id="trial-start"></span>
-      </div>
-    </div>
-
+  <main class="dashboard">
     <section class="cards">
       <div class="card">
-        <div class="card-title">Monthly Income</div>
-        <div class="card-value" id="card-income">$0</div>
+        <h2>Monthly Income</h2>
+        <p id="incomeValue">$0</p>
       </div>
       <div class="card">
-        <div class="card-title">Monthly Expenses</div>
-        <div class="card-value" id="card-expenses">$0</div>
+        <h2>Monthly Expenses</h2>
+        <p id="expensesValue">$0</p>
       </div>
       <div class="card">
-        <div class="card-title">Net Savings</div>
-        <div class="card-value" id="card-savings">$0</div>
+        <h2>Net Savings</h2>
+        <p id="savingsValue">$0</p>
       </div>
       <div class="card">
-        <div class="card-title">Portfolio Value</div>
-        <div class="card-value" id="card-portfolio">$0</div>
+        <h2>Portfolio Value</h2>
+        <p id="portfolioValue">$0</p>
       </div>
     </section>
 
-    <section class="layout-2col">
-      <div class="panel">
-        <h3>Spending Breakdown</h3>
-        <canvas id="spendingChart" height="140"></canvas>
+    <section class="user-input-section">
+      <h2>Enter Your Financial Data</h2>
+
+      <div class="row">
+        <label>Month</label>
+        <select id="monthSelect"></select>
+        <label>Year</label>
+        <select id="yearSelect"></select>
       </div>
 
-      <div class="panel">
-        <h3>Insights</h3>
-        <div id="insights">
-          <div class="insight-item">Loading insights...</div>
-        </div>
+      <div class="row">
+        <input id="incomeInput" type="number" placeholder="Monthly Income" />
+        <input id="expensesInput" type="number" placeholder="Monthly Expenses" />
+      </div>
+
+      <div class="row">
+        <input id="portfolioInput" type="number" placeholder="Portfolio Value" />
+        <input id="goalInput" type="number" placeholder="Savings Goal" />
+      </div>
+
+      <div class="row">
+        <button id="saveEntryBtn">Save Entry</button>
+        <button id="analyzeBtn">Analyze</button>
       </div>
     </section>
 
-    <section class="panel">
-      <h3>Portfolio Allocation</h3>
-      <canvas id="portfolioChart" height="120"></canvas>
+    <section class="insights-section">
+      <h2>Insights</h2>
+      <p id="insightsText">Add data and click Analyze to see insights.</p>
+    </section>
+
+    <section class="history-section">
+      <h2>History</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Income</th>
+            <th>Expenses</th>
+            <th>Portfolio</th>
+            <th>Goal</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
     </section>
   </main>
 
-<script src="app.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
