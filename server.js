@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const authRoutes = require("./authRoutes.js");
+const financeRoutes = require("./financeRoutes"); // adjust path if you put it in /routes
+
+app.use("/api/finance", financeRoutes);
 
 dotenv.config();
 
