@@ -16,5 +16,7 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+ trialStart: { type: Date, default: null },
+  trialActive: { type: Boolean, default: false },
+});
 module.exports = mongoose.model("User", UserSchema);
