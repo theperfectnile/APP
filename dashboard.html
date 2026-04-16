@@ -6,14 +6,19 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="top-bar">
-    <h1>Vaultwise Dashboard</h1>
-    <div class="top-actions">
-      <button id="trialBtn">Start Free Trial</button>
-      <span id="trialStatus"></span>
-      <button id="signOutBtn">Sign Out</button>
-    </div>
-  </header>
+ <div class="sidebar">
+  <h2 class="logo">Vaultwise</h2>
+
+  <a href="dashboard.html" class="active">Dashboard</a>
+  <a href="insights.html">Insights</a>
+  <a href="accounts.html">Accounts</a>
+  <a href="settings.html">Settings</a>
+
+  <button class="logout-btn" onclick="logout()">Sign Out</button>
+</div>
+
+<div class="main-content">
+
 
   <main class="dashboard">
     <section class="cards">
