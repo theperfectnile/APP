@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Finance = require("./models/Finance");
 
-const User = require("../models/User");
+const User = require("./models/User");
 const jwt = require("jsonwebtoken");
 
 // simple auth middleware (reuse your existing one if you have it)
