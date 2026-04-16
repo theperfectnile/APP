@@ -1,7 +1,8 @@
 // routes/financeRoutes.js
 const express = require("express");
 const router = express.Router();
-const Finance = require("../models/Finance");
+const Finance = require("./models/Finance");
+
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
