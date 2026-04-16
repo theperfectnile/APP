@@ -2,14 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const authRoutes = require("./authRoutes.js");
-const financeRoutes = require("./financeRoutes"); // adjust path if you put it in /routes
 
-app.use("/api/finance", financeRoutes);
+const authRoutes = require("./authRoutes.js");
+const financeRoutes = require("./financeRoutes");
 
 dotenv.config();
 
-const app = express();
+const app = express();   // ✅ MUST come before any app.use()
 
 // CORS FIX
 app.use(
@@ -24,13 +23,17 @@ app.use(
 app.use(express.json());
 app.use(express.static("public")); // serves your frontend
 
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/finance", financeRoutes);   // ✅ now safe
 
+// MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error(err));
 
+// Test routes (optional)
 app.get("/api/finance/summary", (req, res) => {
   res.json({
     monthlyIncome: 5000,
@@ -64,4 +67,5 @@ app.get("/api/finance/portfolio", (req, res) => {
   });
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
