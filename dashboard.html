@@ -6,89 +6,133 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
- <div class="sidebar">
-  <h2 class="logo">Vaultwise</h2>
 
-  <a href="dashboard.html" class="active">Dashboard</a>
-  <a href="insights.html">Insights</a>
-  <a href="accounts.html">Accounts</a>
-  <a href="settings.html">Settings</a>
+  <div class="sidebar">
+    <h2 class="logo">Vaultwise</h2>
 
-  <button class="logout-btn" onclick="logout()">Sign Out</button>
-</div>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="#">Insights</a>
+    <a href="#">Accounts</a>
+    <a href="#">Settings</a>
 
-<div class="main-content">
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
 
-
-  <main class="dashboard">
-    <section class="cards">
-      <div class="card">
-        <h2>Monthly Income</h2>
-        <p id="incomeValue">$0</p>
+  <div class="main-content">
+    <div class="page-header">
+      <div>
+        <h1>Dashboard</h1>
+        <span>Your financial overview at a glance</span>
       </div>
-      <div class="card">
-        <h2>Monthly Expenses</h2>
-        <p id="expensesValue">$0</p>
-      </div>
-      <div class="card">
-        <h2>Net Savings</h2>
-        <p id="savingsValue">$0</p>
-      </div>
-      <div class="card">
-        <h2>Portfolio Value</h2>
-        <p id="portfolioValue">$0</p>
-      </div>
-    </section>
+    </div>
 
-    <section class="user-input-section">
-      <h2>Enter Your Financial Data</h2>
-
-      <div class="row">
-        <label>Month</label>
-        <select id="monthSelect"></select>
-        <label>Year</label>
-        <select id="yearSelect"></select>
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Monthly Income</h3>
+        <p id="income">$0</p>
       </div>
 
-      <div class="row">
-        <input id="incomeInput" type="number" placeholder="Monthly Income" />
-        <input id="expensesInput" type="number" placeholder="Monthly Expenses" />
+      <div class="stat-card">
+        <h3>Monthly Expenses</h3>
+        <p id="expenses">$0</p>
       </div>
 
-      <div class="row">
-        <input id="portfolioInput" type="number" placeholder="Portfolio Value" />
-        <input id="goalInput" type="number" placeholder="Savings Goal" />
+      <div class="stat-card">
+        <h3>Net Savings</h3>
+        <p id="savings">$0</p>
       </div>
 
-      <div class="row">
-        <button id="saveEntryBtn">Save Entry</button>
-        <button id="analyzeBtn">Analyze</button>
+      <div class="stat-card">
+        <h3>Portfolio Value</h3>
+        <p id="portfolio">$0</p>
       </div>
-    </section>
+    </div>
 
-    <section class="insights-section">
-      <h2>Insights</h2>
-      <p id="insightsText">Add data and click Analyze to see insights.</p>
-    </section>
+    <!-- Entry form -->
+    <div class="panel">
+      <h2>Add / Update Monthly Entry</h2>
 
-    <section class="history-section">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="month">Month</label>
+          <select id="month">
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="year">Year</label>
+          <input type="number" id="year" value="2026" />
+        </div>
+
+        <div class="form-group">
+          <label for="monthlyIncome">Monthly Income</label>
+          <input type="number" id="monthlyIncome" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="monthlyExpenses">Monthly Expenses</label>
+          <input type="number" id="monthlyExpenses" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="portfolioValue">Portfolio Value</label>
+          <input type="number" id="portfolioValue" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="savingsGoal">Savings Goal</label>
+          <input type="number" id="savingsGoal" placeholder="0" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveEntry()">Save Entry</button>
+        <button class="btn-secondary" onclick="analyzeInsights()">Analyze Insights</button>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="panel">
+      <h2>Financial Charts</h2>
+      <canvas id="incomeExpenseChart" height="120"></canvas>
+      <canvas id="savingsChart" height="120" style="margin-top: 30px;"></canvas>
+    </div>
+
+    <!-- History -->
+    <div class="panel">
       <h2>History</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>Income</th>
-            <th>Expenses</th>
-            <th>Portfolio</th>
-            <th>Goal</th>
-          </tr>
-        </thead>
-        <tbody id="historyBody"></tbody>
-      </table>
-    </section>
-  </main>
-  </div> 
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Income</th>
+              <th>Expenses</th>
+              <th>Portfolio</th>
+              <th>Goal</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="dashboard.js"></script>
 </body>
 </html>
