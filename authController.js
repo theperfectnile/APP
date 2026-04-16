@@ -1,66 +1,38 @@
 const User = require("./models/User");
-
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// ===============================
-// REGISTER
-// ===============================
-const register = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const exists = await User.findOne({ email });
-    if (exists) {
-      return res.json({ success: false, message: "Email already registered" });
-    }
+    if (exists) return res.status(400).json({ message: "Email already exists" });
 
     const hashed = await bcrypt.hash(password, 10);
-    await User.create({ email, password: hashed });
 
-    res.json({ success: true, message: "Account created" });
+    const user = await User.create({ email, password: hashed });
+
+    res.json({ message: "Registered successfully" });
   } catch (err) {
-    console.error("REGISTER ERROR:", err);
-    res.status(500).json({ success: false, message: "Registration failed" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-// ===============================
-// LOGIN
-// ===============================
-const login = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.json({ success: false, message: "Invalid credentials" });
-    }
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.json({ success: false, message: "Invalid credentials" });
-    }
+    if (!match) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET || "defaultsecret",
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    res.json({
-      success: true,
-      user: {
-        email: user.email,
-        plan: "Free",
-        trialStart: user.createdAt,
-        token
-      }
-    });
+    res.json({ token });
   } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    res.status(500).json({ success: false, message: "Login failed" });
+    res.status(500).json({ message: "Server error" });
   }
 };
-
-module.exports = { register, login };
