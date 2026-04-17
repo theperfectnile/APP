@@ -1,4 +1,4 @@
-const FinanceEntry = require("./models/FinanceEntry");
+const FinanceEntry = require("../models/FinanceEntry");
 
 exports.addEntry = async (req, res) => {
   try {
