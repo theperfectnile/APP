@@ -3,21 +3,19 @@
 // ===============================
 const API = "https://backend-qkz7.onrender.com";
 
-
-
-// Save logged-in user
-function saveUser(user) {
-  localStorage.setItem("vaultwiseUser", JSON.stringify(user));
+// ===============================
+// AUTH HELPERS
+// ===============================
+function saveToken(token) {
+  localStorage.setItem("token", token);
 }
 
-// Get logged-in user
-function getUser() {
-  return JSON.parse(localStorage.getItem("vaultwiseUser"));
+function getToken() {
+  return localStorage.getItem("token");
 }
 
-// Logout
 function logout() {
-  localStorage.removeItem("vaultwiseUser");
+  localStorage.removeItem("token");
   window.location.href = "login.html";
 }
 
@@ -43,7 +41,7 @@ if (document.querySelector("#registerForm")) {
 
     const data = await registerUser(email, password);
 
-    if (data.success) {
+    if (data.message === "Registered successfully") {
       alert("Account created!");
       window.location.href = "login.html";
     } else {
@@ -74,200 +72,135 @@ if (document.querySelector("#loginForm")) {
 
     const data = await loginUser(email, password);
 
-    if (!data.success) {
+    if (!data.token) {
       alert(data.message || "Login failed");
       return;
     }
 
-    saveUser(data.user);
+    saveToken(data.token);
     window.location.href = "dashboard.html";
   });
 }
 
 // ===============================
-// PROTECT DASHBOARD
-// ===============================
-async function loadDashboard() {
-  const user = getUser();
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  document.querySelector("#user-email").textContent = user.email;
-  document.querySelector("#user-plan").textContent = user.plan || "Free";
-  document.querySelector("#trial-start").textContent = user.trialStart || "N/A";
-}
-
-if (document.body.id === "dashboard") {
-  loadDashboard();
-}
-
-// ===============================
-// FORGOT PASSWORD
+// FORGOT PASSWORD (FRONTEND ONLY)
 // ===============================
 async function sendReset(event) {
   event.preventDefault();
 
-  const email = document.querySelector("#email").value.trim();
+  const email = document.querySelector("#forgotEmail").value.trim();
+  const msg = document.querySelector("#forgotMessage");
 
-  const res = await fetch(`${API}/api/auth/forgot-password`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    alert(data.message || "Email not found");
-    return;
-  }
-
-  localStorage.setItem("resetEmail", email);
-  alert("Reset link sent!");
-  window.location.href = "reset-password.html";
+  msg.textContent = "This feature is not yet implemented on the backend.";
+  msg.style.color = "#ff4d4d";
 }
 
 // ===============================
-// RESET PASSWORD
+// RESET PASSWORD (FRONTEND ONLY)
 // ===============================
 async function resetPassword(event) {
   event.preventDefault();
 
-  const newPassword = document.querySelector("#password").value.trim();
-  const email = localStorage.getItem("resetEmail");
+  alert("Reset password is not implemented yet.");
+}
 
-  if (!email) {
-    alert("No reset request found");
-    return;
-  }
+// ===============================
+// FINANCE HELPERS
+// ===============================
+async function fetchSummary() {
+  const token = getToken();
 
-  const res = await fetch(`${API}/api/auth/reset-password`, {
+  const res = await fetch(`${API}/api/finance/summary`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return res.json();
+}
+
+async function fetchHistory() {
+  const token = getToken();
+
+  const res = await fetch(`${API}/api/finance/all`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return res.json();
+}
+
+async function saveEntry() {
+  const token = getToken();
+
+  const payload = {
+    month: document.getElementById("month").value,
+    year: document.getElementById("year").value,
+    income: document.getElementById("monthlyIncome").value,
+    expenses: document.getElementById("monthlyExpenses").value,
+    portfolio: document.getElementById("portfolioValue").value,
+    goal: document.getElementById("savingsGoal").value
+  };
+
+  const res = await fetch(`${API}/api/finance/add`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, newPassword })
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    location.reload();
+  } else {
+    alert("Failed to save entry");
+  }
+}
+
+async function analyzeInsights() {
+  const token = getToken();
+
+  const res = await fetch(`${API}/api/finance/analyze`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }
   });
 
   const data = await res.json();
-
-  if (!res.ok) {
-    alert(data.message || "Reset failed");
-    return;
-  }
-
-  localStorage.removeItem("resetEmail");
-  alert("Password updated!");
-  window.location.href = "login.html";
-}
-// ===============================
-// FINANCE API HELPERS
-// ===============================
-async function fetchFinanceSummary() {
-  const res = await fetch(`${API}/api/finance/summary`, {
-    credentials: "include",
-  });
-  return res.json();
-}
-
-async function fetchPortfolio() {
-  const res = await fetch(`${API}/api/finance/portfolio`, {
-    credentials: "include",
-  });
-  return res.json();
+  alert(data.message || "No insights returned");
 }
 
 // ===============================
 // DASHBOARD INIT
 // ===============================
 async function initDashboard() {
-  const user = getUser();
-  if (!user) {
+  const token = getToken();
+  if (!token) {
     window.location.href = "login.html";
     return;
   }
 
-  // Basic user info
-  document.querySelector("#user-email").textContent = user.email;
-  document.querySelector("#user-plan").textContent = user.plan || "Free";
-  document.querySelector("#trial-start").textContent = user.trialStart || "N/A";
+  const summary = await fetchSummary();
+  const history = await fetchHistory();
 
-  try {
-    const summary = await fetchFinanceSummary();
-    const portfolio = await fetchPortfolio();
+  document.getElementById("income").innerText = `$${summary.monthlyIncome ?? 0}`;
+  document.getElementById("expenses").innerText = `$${summary.monthlyExpenses ?? 0}`;
+  document.getElementById("savings").innerText = `$${summary.netSavings ?? 0}`;
+  document.getElementById("portfolio").innerText = `$${summary.portfolioValue ?? 0}`;
 
-    // Cards
-    document.querySelector("#card-income").textContent =
-      `$${(summary.monthlyIncome || 0).toLocaleString()}`;
-    document.querySelector("#card-expenses").textContent =
-      `$${(summary.monthlyExpenses || 0).toLocaleString()}`;
-    document.querySelector("#card-savings").textContent =
-      `$${(summary.netSavings || 0).toLocaleString()}`;
-    document.querySelector("#card-portfolio").textContent =
-      `$${(portfolio.totalValue || 0).toLocaleString()}`;
+  const table = document.getElementById("history-body");
+  table.innerHTML = "";
 
-    // Insights
-    const insightsEl = document.querySelector("#insights");
-    insightsEl.innerHTML = "";
-    (summary.insights || []).forEach(text => {
-      const div = document.createElement("div");
-      div.className = "insight-item";
-      div.textContent = text;
-      insightsEl.appendChild(div);
-    });
-    if (!summary.insights || summary.insights.length === 0) {
-      insightsEl.innerHTML = "<div class='insight-item'>No insights yet. Add income and expenses to see analysis.</div>";
-    }
-
-    // Spending chart
-    const spendCtx = document.getElementById("spendingChart");
-    if (spendCtx && summary.spendingByCategory) {
-      new Chart(spendCtx, {
-        type: "pie",
-        data: {
-          labels: Object.keys(summary.spendingByCategory),
-          datasets: [{
-            data: Object.values(summary.spendingByCategory),
-            backgroundColor: ["#00eaff", "#7b2ff7", "#00ffbf", "#f97316", "#e11d48", "#a855f7"],
-          }]
-        },
-        options: { plugins: { legend: { labels: { color: "#e5e7eb" } } } }
-      });
-    }
-
-    // Portfolio chart
-    const portCtx = document.getElementById("portfolioChart");
-    if (portCtx && portfolio.assets) {
-      new Chart(portCtx, {
-        type: "bar",
-        data: {
-          labels: portfolio.assets.map(a => a.asset),
-          datasets: [{
-            label: "Value",
-            data: portfolio.assets.map(a => a.value),
-            backgroundColor: "#00eaff",
-          }]
-        },
-        options: {
-          scales: {
-            x: { ticks: { color: "#e5e7eb" } },
-            y: { ticks: { color: "#e5e7eb" } }
-          },
-          plugins: { legend: { labels: { color: "#e5e7eb" } } }
-        }
-      });
-    }
-
-  } catch (err) {
-    console.error(err);
-    document.querySelector("#insights").innerHTML =
-      "<div class='insight-item'>Unable to load financial data. Check backend /api/finance routes.</div>";
-  }
+  history.forEach(entry => {
+    table.innerHTML += `
+      <tr>
+        <td>${entry.month} ${entry.year}</td>
+        <td>$${entry.income}</td>
+        <td>$${entry.expenses}</td>
+        <td>$${entry.portfolio}</td>
+        <td>$${entry.goal}</td>
+      </tr>
+    `;
+  });
 }
 
-// ===============================
-// PAGE ROUTER HOOK
-// ===============================
 document.addEventListener("DOMContentLoaded", () => {
   if (document.body.id === "dashboard") {
     initDashboard();
