@@ -94,7 +94,7 @@
 
         const data = await res.json();
 
-        if (data.success) {
+       if (data.message === "Registered successfully") {
           alert("Account created successfully");
           window.location.href = "login.html";
         } else {
