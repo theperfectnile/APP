@@ -1,109 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
+<script>
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  <style>
-    body {
-      background: #0a0f1f;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      color: #fff;
-    }
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-    .card {
-      width: 350px;
-      padding: 30px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      backdrop-filter: blur(10px);
-    }
+    try {
+      const res = await fetch("https://backend-qkz7.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      margin-bottom: 18px;
-      border-radius: 10px;
-      border: none;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-    }
+      const data = await res.json();
 
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #00eaff, #7b2ff7);
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .link {
-      text-align: center;
-      margin-top: 18px;
-    }
-
-    .link a {
-      color: #00eaff;
-      text-decoration: none;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="card">
-    <h2>Welcome Back</h2>
-
-    <form id="loginForm">
-      <label>Email</label>
-      <input id="email" type="email" required />
-
-      <label>Password</label>
-      <input id="password" type="password" required />
-
-      <button type="submit">Login</button>
-    </form>
-
-    <div class="link">
-      No account? <a href="register.html">Register</a>
-    </div>
-  </div>
-
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const res = await fetch("https://backend-qkz7.onrender.com/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-          localStorage.setItem("token", data.user.token);
-          window.location.href = "dashboard.html";
-        } else {
-          alert(data.message || "Login failed");
-        }
-      } catch (err) {
-        alert("Network error — backend might be sleeping");
+      if (res.ok && data.token) {
+        localStorage.setItem("token", data.token);
+        window.location.href = "dashboard.html";
+      } else {
+        alert(data.message || "Login failed");
       }
-    });
-  </script>
-</body>
-</html>
+    } catch (err) {
+      alert("Network error — backend might be sleeping");
+    }
+  });
+</script>
