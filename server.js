@@ -5,8 +5,8 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const authRoutes = require("./authRoutes");
-const financeRoutes = require("./financeRoutes");
+const authRoutes = require("./routes/authRoutes");
+const financeRoutes = require("./routes/financeRoutes");
 
 const app = express();
 
@@ -25,11 +25,11 @@ app.use(
 
 app.use(express.json());
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/finance", financeRoutes);
 
-// MongoDB
+// MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
