@@ -79,7 +79,6 @@ function renderHistory(data) {
     table.innerHTML += row;
   });
 }
-}
 
 // -------------------------------
 // Save Entry
@@ -87,14 +86,15 @@ function renderHistory(data) {
 async function saveEntry() {
   const token = getToken();
 
- const payload = {
-  month: document.getElementById("month").value,
-  year: document.getElementById("year").value,
-  monthlyIncome: document.getElementById("monthlyIncome").value,
-  monthlyExpenses: document.getElementById("monthlyExpenses").value,
-  portfolioValue: document.getElementById("portfolioValue").value,
-  savingsGoal: document.getElementById("savingsGoal").value
-};
+  const payload = {
+    month: document.getElementById("month").value,
+    year: document.getElementById("year").value,
+    monthlyIncome: document.getElementById("monthlyIncome").value,
+    monthlyExpenses: document.getElementById("monthlyExpenses").value,
+    portfolioValue: document.getElementById("portfolioValue").value,
+    savingsGoal: document.getElementById("savingsGoal").value
+  };
+
   try {
     const res = await fetch("https://backend-qkz7.onrender.com/api/finance/add", {
       method: "POST",
@@ -165,44 +165,6 @@ function renderCharts(data) {
           tension: 0.3
         },
         {
-          label: "Expenses",
-          data: expenses,
-          borderColor: "#ff3b3b",
-          backgroundColor: "rgba(255,59,59,0.15)",
-          tension: 0.3
-        }
-      ]
-    },
-    options: {
-      plugins: { legend: { labels: { color: "#e0e0e0" } } },
-      scales: {
-        x: { ticks: { color: "#bfbfbf" } },
-        y: { ticks: { color: "#bfbfbf" } }
-      }
-    }
-  });
-
-  new Chart(savingsCtx, {
-    type: "bar",
-    data: {
-      labels: months,
-      datasets: [
-        {
-          label: "Net Savings",
-          data: savings,
-          backgroundColor: "#00ffaa"
-        }
-      ]
-    },
-    options: {
-      plugins: { legend: { labels: { color: "#e0e0e0" } } },
-      scales: {
-        x: { ticks: { color: "#bfbfbf" } },
-        y: { ticks: { color: "#bfbfbf" } }
-      }
-    }
-  });
-}
           label: "Expenses",
           data: expenses,
           borderColor: "#ff3b3b",
