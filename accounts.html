@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vaultwise • Accounts</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body id="dashboard">
+
+  <aside class="sidebar">
+    <h2 class="logo">Vaultwise</h2>
+
+    <nav class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="insights.html">Insights</a>
+      <a href="accounts.html" class="active">Accounts</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </aside>
+
+  <main class="main-content">
+
+    <header class="page-header">
+      <div>
+        <h1>Accounts</h1>
+        <span>Manage your linked financial accounts</span>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Checking Account</h3>
+        <p>$4,200</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Savings Account</h3>
+        <p>$12,800</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Brokerage</h3>
+        <p>$9,450</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Crypto Wallet</h3>
+        <p>$1,900</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Link New Account</h2>
+      <button class="btn-primary">+ Add Account</button>
+    </section>
+
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

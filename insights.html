@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vaultwise • Insights</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body id="dashboard">
+
+  <aside class="sidebar">
+    <h2 class="logo">Vaultwise</h2>
+
+    <nav class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="insights.html" class="active">Insights</a>
+      <a href="accounts.html">Accounts</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </aside>
+
+  <main class="main-content">
+
+    <header class="page-header">
+      <div>
+        <h1>Insights</h1>
+        <span>AI‑powered financial analysis</span>
+      </div>
+    </header>
+
+    <!-- Insight Cards -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Spending Trend</h3>
+        <p style="color:#00ffaa;">+4.2%</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Income Stability</h3>
+        <p style="color:#00eaff;">Stable</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Goal Progress</h3>
+        <p style="color:#ffd700;">62%</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Portfolio Growth</h3>
+        <p style="color:#7fff00;">+8.9%</p>
+      </div>
+    </section>
+
+    <!-- AI Insights Panel -->
+    <section class="panel">
+      <h2>AI Insights</h2>
+      <p>Your personalized financial insights will appear here.</p>
+      <p style="opacity:0.7;">(Coming soon: spending predictions, savings optimization, portfolio risk analysis)</p>
+    </section>
+
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
