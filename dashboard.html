@@ -5,29 +5,36 @@
   <title>Vaultwise • Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body id="dashboard">
 
-  <div class="sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
 
-    <a href="dashboard.html" class="active">Dashboard</a>
-    <a href="#">Insights</a>
-    <a href="#">Accounts</a>
-    <a href="#">Settings</a>
+    <nav class="nav-links">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="#">Insights</a>
+      <a href="#">Accounts</a>
+      <a href="#">Settings</a>
+    </nav>
 
     <button class="logout-btn" onclick="logout()">Sign Out</button>
-  </div>
+  </aside>
 
-  <div class="main-content">
-    <div class="page-header">
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Header -->
+    <header class="page-header">
       <div>
         <h1>Dashboard</h1>
         <span>Your financial overview at a glance</span>
       </div>
-    </div>
+    </header>
 
     <!-- Stats -->
-    <div class="stats-grid">
+    <section class="stats-grid">
       <div class="stat-card">
         <h3>Monthly Income</h3>
         <p id="income">$0</p>
@@ -47,28 +54,29 @@
         <h3>Portfolio Value</h3>
         <p id="portfolio">$0</p>
       </div>
-    </div>
+    </section>
 
-    <!-- Entry form -->
-    <div class="panel">
+    <!-- Entry Form -->
+    <section class="panel">
       <h2>Add / Update Monthly Entry</h2>
 
       <div class="form-grid">
+
         <div class="form-group">
           <label for="month">Month</label>
           <select id="month">
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
+            <option>January</option>
+            <option>February</option>
+            <option>March</option>
+            <option>April</option>
+            <option>May</option>
+            <option>June</option>
+            <option>July</option>
+            <option>August</option>
+            <option>September</option>
+            <option>October</option>
+            <option>November</option>
+            <option>December</option>
           </select>
         </div>
 
@@ -96,24 +104,26 @@
           <label for="savingsGoal">Savings Goal</label>
           <input type="number" id="savingsGoal" placeholder="0" />
         </div>
+
       </div>
 
       <div class="form-actions">
         <button class="btn-primary" onclick="saveEntry()">Save Entry</button>
         <button class="btn-secondary" onclick="analyzeInsights()">Analyze Insights</button>
       </div>
-    </div>
+    </section>
 
     <!-- Charts -->
-    <div class="panel">
+    <section class="panel">
       <h2>Financial Charts</h2>
       <canvas id="incomeExpenseChart" height="120"></canvas>
       <canvas id="savingsChart" height="120" style="margin-top: 30px;"></canvas>
-    </div>
+    </section>
 
     <!-- History -->
-    <div class="panel">
+    <section class="panel">
       <h2>History</h2>
+
       <div class="table-wrapper">
         <table>
           <thead>
@@ -125,14 +135,17 @@
               <th>Goal</th>
             </tr>
           </thead>
-          <tbody id="history-body">
-          </tbody>
+
+          <tbody id="history-body"></tbody>
         </table>
       </div>
-    </div>
-  </div>
+    </section>
 
+  </main>
+
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="dashboard.js"></script>
+
 </body>
 </html>
