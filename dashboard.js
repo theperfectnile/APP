@@ -86,15 +86,14 @@ function renderHistory(data) {
 async function saveEntry() {
   const token = getToken();
 
-  const payload = {
-    month: document.getElementById("month").value,
-    year: document.getElementById("year").value,
-    income: document.getElementById("monthlyIncome").value,
-    expenses: document.getElementById("monthlyExpenses").value,
-    portfolio: document.getElementById("portfolioValue").value,
-    goal: document.getElementById("savingsGoal").value
-  };
-
+ const payload = {
+  month: document.getElementById("month").value,
+  year: document.getElementById("year").value,
+  monthlyIncome: document.getElementById("monthlyIncome").value,
+  monthlyExpenses: document.getElementById("monthlyExpenses").value,
+  portfolioValue: document.getElementById("portfolioValue").value,
+  savingsGoal: document.getElementById("savingsGoal").value
+};
   try {
     const res = await fetch("https://backend-qkz7.onrender.com/api/finance/add", {
       method: "POST",
