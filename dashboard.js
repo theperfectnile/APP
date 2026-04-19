@@ -145,9 +145,9 @@ function renderCharts(data) {
   if (!Array.isArray(data) || data.length === 0) return;
 
   const months = data.map(e => `${e.month} ${e.year}`);
-  const income = data.map(e => e.income);
-  const expenses = data.map(e => e.expenses);
-  const savings = data.map(e => e.income - e.expenses);
+  const income = data.map(e => e.monthlyIncome);
+  const expenses = data.map(e => e.monthlyExpenses);
+  const savings = data.map(e => e.monthlyIncome - e.monthlyExpenses);
 
   const incomeCtx = document.getElementById("incomeExpenseChart");
   const savingsCtx = document.getElementById("savingsChart");
@@ -165,6 +165,44 @@ function renderCharts(data) {
           tension: 0.3
         },
         {
+          label: "Expenses",
+          data: expenses,
+          borderColor: "#ff3b3b",
+          backgroundColor: "rgba(255,59,59,0.15)",
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      plugins: { legend: { labels: { color: "#e0e0e0" } } },
+      scales: {
+        x: { ticks: { color: "#bfbfbf" } },
+        y: { ticks: { color: "#bfbfbf" } }
+      }
+    }
+  });
+
+  new Chart(savingsCtx, {
+    type: "bar",
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: "Net Savings",
+          data: savings,
+          backgroundColor: "#00ffaa"
+        }
+      ]
+    },
+    options: {
+      plugins: { legend: { labels: { color: "#e0e0e0" } } },
+      scales: {
+        x: { ticks: { color: "#bfbfbf" } },
+        y: { ticks: { color: "#bfbfbf" } }
+      }
+    }
+  });
+}
           label: "Expenses",
           data: expenses,
           borderColor: "#ff3b3b",
