@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Vaultwise • Insights</title>
-  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="styles.css?v=10" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -31,50 +31,45 @@
     <section class="stats-grid">
       <div class="stat-card">
         <h3>Spending Trend</h3>
-        <p id="trend">Loading...</p>
+        <p id="trendValue">+4.2%</p>
       </div>
 
       <div class="stat-card">
         <h3>Income Stability</h3>
-        <p id="stability">Loading...</p>
+        <p id="stabilityValue">Stable</p>
       </div>
 
       <div class="stat-card">
         <h3>Goal Progress</h3>
-        <p id="goalProgress">Loading...</p>
+        <p id="goalValue">62%</p>
       </div>
 
       <div class="stat-card">
         <h3>Portfolio Growth</h3>
-        <p id="growth">Loading...</p>
+        <p id="growthValue">+8.9%</p>
       </div>
     </section>
 
-    <!-- Insights Chart -->
+    <!-- Chart -->
     <section class="panel">
-      <h2>Spending vs Income Trend</h2>
+      <h2>Income vs Expenses Trend</h2>
       <canvas id="insightsChart" height="120"></canvas>
     </section>
 
     <!-- AI Insights -->
     <section class="panel">
       <h2>AI Insights</h2>
-      <p id="aiText">Analyzing your financial patterns...</p>
+      <p id="aiInsightText">Analyzing your financial patterns...</p>
     </section>
 
   </main>
 
   <script src="dashboard.js"></script>
-  <script>
-    // Fake insight values for now
-    document.getElementById("trend").innerText = "+4.2%";
-    document.getElementById("stability").innerText = "Stable";
-    document.getElementById("goalProgress").innerText = "62%";
-    document.getElementById("growth").innerText = "+8.9%";
 
+  <script>
     // Fake AI text animation
     setTimeout(() => {
-      document.getElementById("aiText").innerText =
+      document.getElementById("aiInsightText").innerText =
         "Your spending increased slightly this month, but income remains stable. Savings are on track to meet your quarterly goal.";
     }, 1200);
 
