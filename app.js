@@ -177,37 +177,38 @@ async function initDashboard() {
 // DOMContentLoaded ROUTER
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("registerForm");
-  if (!form) return;
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  // REGISTER PAGE
+  const registerForm = document.getElementById("registerForm");
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-    try {
-      const res = await fetch("https://backend-qkz7.onrender.com/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      try {
+        const res = await fetch(`${API}/api/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (res.ok) {
-        alert("Registered successfully");
-        window.location.href = "login.html";
-      } else {
-        alert(data.message || "Registration failed");
+        if (res.ok) {
+          alert("Registered successfully");
+          window.location.href = "login.html";
+        } else {
+          alert(data.message || "Registration failed");
+        }
+      } catch (err) {
+        alert("Network error");
       }
-    } catch (err) {
-      alert("Network error");
-    }
-  });
-});
+    });
+  }
 
-  // Login page
+  // LOGIN PAGE
   const loginForm = document.querySelector("#loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
@@ -224,9 +225,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Dashboard page
+  // DASHBOARD PAGE
   if (document.body.id === "dashboard") {
     initDashboard();
   }
-});
 
+});
