@@ -22,6 +22,17 @@
 
   <main class="main-content fade-in">
 <section class="panel">
+  <h2>AI Insight</h2>
+  <p id="aiInsightBox">Analyzing your financial patterns...</p>
+</section>
+
+<script>
+  setTimeout(() => {
+    document.getElementById("aiInsightBox").innerText =
+      "Your spending increased slightly this month, but income remains stable. Savings are on track to meet your quarterly goal.";
+  }, 1200);
+</script>
+    <section class="panel">
   <h2>Financial Education Video</h2>
   <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
     <iframe 
