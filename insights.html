@@ -3,65 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <title>Vaultwise • Insights</title>
- <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body id="dashboard">
 
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
-
-   <nav class="nav-links">
-  <a href="/APP/dashboard.html">Dashboard</a>
-  <a href="/APP/insights.html">Insights</a>
-  <a href="/APP/accounts.html">Accounts</a>
-  <a href="/APP/settings.html">Settings</a>
-</nav>
-
+    <nav class="nav-links">
+      <a href="/APP/dashboard.html">Dashboard</a>
+      <a href="/APP/insights.html" class="active">Insights</a>
+      <a href="/APP/accounts.html">Accounts</a>
+      <a href="/APP/settings.html">Settings</a>
+    </nav>
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
 
-  <main class="main-content">
+  <main class="main-content fade-in">
 
     <header class="page-header">
-      <div>
-        <h1>Insights</h1>
-        <span>AI‑powered financial analysis</span>
-      </div>
+      <h1>Insights</h1>
+      <span>AI‑powered financial analysis</span>
     </header>
 
     <!-- Insight Cards -->
     <section class="stats-grid">
       <div class="stat-card">
         <h3>Spending Trend</h3>
-        <p style="color:#00ffaa;">+4.2%</p>
+        <p id="trend">Loading...</p>
       </div>
 
       <div class="stat-card">
         <h3>Income Stability</h3>
-        <p style="color:#00eaff;">Stable</p>
+        <p id="stability">Loading...</p>
       </div>
 
       <div class="stat-card">
         <h3>Goal Progress</h3>
-        <p style="color:#ffd700;">62%</p>
+        <p id="goalProgress">Loading...</p>
       </div>
 
       <div class="stat-card">
         <h3>Portfolio Growth</h3>
-        <p style="color:#7fff00;">+8.9%</p>
+        <p id="growth">Loading...</p>
       </div>
     </section>
 
-    <!-- AI Insights Panel -->
+    <!-- Insights Chart -->
+    <section class="panel">
+      <h2>Spending vs Income Trend</h2>
+      <canvas id="insightsChart" height="120"></canvas>
+    </section>
+
+    <!-- AI Insights -->
     <section class="panel">
       <h2>AI Insights</h2>
-      <p>Your personalized financial insights will appear here.</p>
-      <p style="opacity:0.7;">(Coming soon: spending predictions, savings optimization, portfolio risk analysis)</p>
+      <p id="aiText">Analyzing your financial patterns...</p>
     </section>
 
   </main>
 
   <script src="dashboard.js"></script>
+  <script>
+    // Fake insight values for now
+    document.getElementById("trend").innerText = "+4.2%";
+    document.getElementById("stability").innerText = "Stable";
+    document.getElementById("goalProgress").innerText = "62%";
+    document.getElementById("growth").innerText = "+8.9%";
+
+    // Fake AI text animation
+    setTimeout(() => {
+      document.getElementById("aiText").innerText =
+        "Your spending increased slightly this month, but income remains stable. Savings are on track to meet your quarterly goal.";
+    }, 1200);
+
+    // Fake chart
+    new Chart(document.getElementById("insightsChart"), {
+      type: "line",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr"],
+        datasets: [
+          {
+            label: "Income",
+            data: [4200, 4300, 4400, 4500],
+            borderColor: "#00eaff",
+            tension: 0.3
+          },
+          {
+            label: "Expenses",
+            data: [3100, 3300, 3500, 3600],
+            borderColor: "#ff3b3b",
+            tension: 0.3
+          }
+        ]
+      }
+    });
+  </script>
+
 </body>
 </html>
