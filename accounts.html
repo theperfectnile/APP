@@ -3,31 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <title>Vaultwise • Accounts</title>
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=5" />
 </head>
 
 <body id="dashboard">
 
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
-
-  <nav class="nav-links">
-  <a href="/APP/dashboard.html">Dashboard</a>
-  <a href="/APP/insights.html">Insights</a>
-  <a href="/APP/accounts.html">Accounts</a>
-  <a href="/APP/settings.html">Settings</a>
-</nav>
-
+    <nav class="nav-links">
+      <a href="/APP/dashboard.html">Dashboard</a>
+      <a href="/APP/insights.html">Insights</a>
+      <a href="/APP/accounts.html" class="active">Accounts</a>
+      <a href="/APP/settings.html">Settings</a>
+    </nav>
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
 
-  <main class="main-content">
+  <main class="main-content fade-in">
 
     <header class="page-header">
-      <div>
-        <h1>Accounts</h1>
-        <span>Manage your linked financial accounts</span>
-      </div>
+      <h1>Accounts</h1>
+      <span>Manage your linked financial accounts</span>
     </header>
 
     <section class="stats-grid">
