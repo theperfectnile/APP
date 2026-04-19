@@ -1,4 +1,38 @@
 // -------------------------------
+// Utility: Toast Notifications
+// -------------------------------
+function showToast(message, type = "info") {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerText = message;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => toast.classList.remove("show"), 3000);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// -------------------------------
+// Animated Number Counter
+// -------------------------------
+function animateValue(id, end) {
+  const el = document.getElementById(id);
+  let start = 0;
+  const duration = 800;
+  const step = end / (duration / 16);
+
+  const counter = setInterval(() => {
+    start += step;
+    if (start >= end) {
+      start = end;
+      clearInterval(counter);
+    }
+    el.innerText = `$${Math.round(start)}`;
+  }, 16);
+}
+
+// -------------------------------
 // Auth helpers
 // -------------------------------
 function getToken() {
@@ -7,7 +41,7 @@ function getToken() {
 
 function logout() {
   localStorage.removeItem("token");
-  window.location.href = "login.html";
+  window.location.href = "/APP/login.html";
 }
 
 // -------------------------------
@@ -17,7 +51,7 @@ async function loadDashboard() {
   const token = getToken();
 
   if (!token) {
-    window.location.href = "login.html";
+    window.location.href = "/APP/login.html";
     return;
   }
 
@@ -26,20 +60,16 @@ async function loadDashboard() {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    if (!res.ok) {
-      console.error("Summary fetch failed:", res.status);
-      return;
-    }
-
     const data = await res.json();
 
-    document.getElementById("income").innerText = `$${data.monthlyIncome ?? 0}`;
-    document.getElementById("expenses").innerText = `$${data.monthlyExpenses ?? 0}`;
-    document.getElementById("savings").innerText = `$${data.netSavings ?? 0}`;
-    document.getElementById("portfolio").innerText = `$${data.portfolioValue ?? 0}`;
+    animateValue("income", data.monthlyIncome ?? 0);
+    animateValue("expenses", data.monthlyExpenses ?? 0);
+    animateValue("savings", data.netSavings ?? 0);
+    animateValue("portfolio", data.portfolioValue ?? 0);
 
   } catch (err) {
     console.error("Dashboard summary error:", err);
+    showToast("Error loading dashboard summary", "error");
   }
 }
 
@@ -54,17 +84,13 @@ async function loadHistory() {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    if (!res.ok) {
-      console.error("History fetch failed:", res.status);
-      return;
-    }
-
     const data = await res.json();
     renderHistory(data);
     renderCharts(data);
 
   } catch (err) {
     console.error("History load error:", err);
+    showToast("Error loading history", "error");
   }
 }
 
@@ -114,17 +140,16 @@ async function saveEntry() {
       body: JSON.stringify(payload)
     });
 
-    if (!res.ok) {
-      console.error("Save entry failed:", res.status);
-      alert("Failed to save entry");
-      return;
+    if (res.ok) {
+      showToast("Entry saved!", "success");
+      location.reload();
+    } else {
+      showToast("Failed to save entry", "error");
     }
-
-    location.reload();
 
   } catch (err) {
     console.error("Save entry error:", err);
-    alert("Error saving entry");
+    showToast("Error saving entry", "error");
   }
 }
 
@@ -140,18 +165,12 @@ async function analyzeInsights() {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    if (!res.ok) {
-      console.error("Analyze failed:", res.status);
-      alert("Unable to analyze insights");
-      return;
-    }
-
     const insights = await res.json();
-    alert(insights.message || "No insights returned");
+    showToast(insights.message || "No insights returned", "info");
 
   } catch (err) {
     console.error("Insights error:", err);
-    alert("Error analyzing insights");
+    showToast("Error analyzing insights", "error");
   }
 }
 
@@ -189,13 +208,6 @@ function renderCharts(data) {
           tension: 0.3
         }
       ]
-    },
-    options: {
-      plugins: { legend: { labels: { color: "#e0e0e0" } } },
-      scales: {
-        x: { ticks: { color: "#bfbfbf" } },
-        y: { ticks: { color: "#bfbfbf" } }
-      }
     }
   });
 
@@ -210,13 +222,6 @@ function renderCharts(data) {
           backgroundColor: "#00ffaa"
         }
       ]
-    },
-    options: {
-      plugins: { legend: { labels: { color: "#e0e0e0" } } },
-      scales: {
-        x: { ticks: { color: "#bfbfbf" } },
-        y: { ticks: { color: "#bfbfbf" } }
-      }
     }
   });
 }
@@ -224,5 +229,6 @@ function renderCharts(data) {
 // -------------------------------
 // Initialize Dashboard
 // -------------------------------
+document.body.classList.add("fade-in");
 loadDashboard();
 loadHistory();
