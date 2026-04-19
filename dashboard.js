@@ -70,14 +70,15 @@ function renderHistory(data) {
     const row = `
       <tr>
         <td>${entry.month} ${entry.year}</td>
-        <td>$${entry.income}</td>
-        <td>$${entry.expenses}</td>
-        <td>$${entry.portfolio}</td>
-        <td>$${entry.goal}</td>
+        <td>$${entry.monthlyIncome}</td>
+        <td>$${entry.monthlyExpenses}</td>
+        <td>$${entry.portfolioValue}</td>
+        <td>$${entry.savingsGoal}</td>
       </tr>
     `;
     table.innerHTML += row;
   });
+}
 }
 
 // -------------------------------
