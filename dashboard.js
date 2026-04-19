@@ -26,6 +26,11 @@ async function loadDashboard() {
       headers: { Authorization: `Bearer ${token}` }
     });
 
+    if (!res.ok) {
+      console.error("Summary fetch failed:", res.status);
+      return;
+    }
+
     const data = await res.json();
 
     document.getElementById("income").innerText = `$${data.monthlyIncome ?? 0}`;
@@ -35,7 +40,6 @@ async function loadDashboard() {
 
   } catch (err) {
     console.error("Dashboard summary error:", err);
-    alert("Error loading dashboard summary");
   }
 }
 
@@ -49,6 +53,11 @@ async function loadHistory() {
     const res = await fetch("https://backend-qkz7.onrender.com/api/finance/all", {
       headers: { Authorization: `Bearer ${token}` }
     });
+
+    if (!res.ok) {
+      console.error("History fetch failed:", res.status);
+      return;
+    }
 
     const data = await res.json();
     renderHistory(data);
@@ -105,11 +114,13 @@ async function saveEntry() {
       body: JSON.stringify(payload)
     });
 
-    if (res.ok) {
-      location.reload();
-    } else {
+    if (!res.ok) {
+      console.error("Save entry failed:", res.status);
       alert("Failed to save entry");
+      return;
     }
+
+    location.reload();
 
   } catch (err) {
     console.error("Save entry error:", err);
@@ -128,6 +139,12 @@ async function analyzeInsights() {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` }
     });
+
+    if (!res.ok) {
+      console.error("Analyze failed:", res.status);
+      alert("Unable to analyze insights");
+      return;
+    }
 
     const insights = await res.json();
     alert(insights.message || "No insights returned");
