@@ -11,54 +11,42 @@
 
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
-   <nav class="nav-links">
-  <a href="dashboard.html">Dashboard</a>
-  <a href="insights.html">Insights</a>
-  <a href="accounts.html">Accounts</a>
-  <a href="settings.html" class="active">Settings</a>
-</nav>
+    <nav class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="insights.html" class="active">Insights</a>
+      <a href="accounts.html">Accounts</a>
+      <a href="settings.html">Settings</a>
+    </nav>
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
 
   <main class="main-content fade-in">
-<section class="panel">
-  <h2>Financial Education Video</h2>
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
-    <iframe 
-      src="https://www.youtube.com/embed/1YyJ1ObqHnE"
-      frameborder="0"
-      allowfullscreen
-      style="position:absolute;top:0;left:0;width:100%;height:100%;">
-    </iframe>
-  </div>
-</section>
 
-<script>
-  setTimeout(() => {
-    document.getElementById("aiInsightBox").innerText =
-      "Your spending increased slightly this month, but income remains stable. Savings are on track to meet your quarterly goal.";
-  }, 1200);
-</script>
-    <section class="panel">
-  <h2>Financial Education Video</h2>
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
-    <iframe 
-      src="https://www.youtube.com/embed/t8C8YHkzjvM" 
-      frameborder="0" 
-      allowfullscreen 
-      style="position:absolute;top:0;left:0;width:100%;height:100%;">
-    </iframe>
-  </div>
-</section>
-    <section class="panel">
-  <h2>Market Snapshot</h2>
-  <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d" 
-       style="width:100%;border-radius:12px;margin-top:10px;" />
-</section>
+    <!-- Header -->
     <header class="page-header">
       <h1>Insights</h1>
       <span>AI‑powered financial analysis</span>
     </header>
+
+    <!-- Financial Education Video -->
+    <section class="panel">
+      <h2>Financial Education Video</h2>
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
+        <iframe 
+          src="https://www.youtube.com/embed/1YyJ1ObqHnE"
+          frameborder="0"
+          allowfullscreen
+          style="position:absolute;top:0;left:0;width:100%;height:100%;">
+        </iframe>
+      </div>
+    </section>
+
+    <!-- Market Snapshot -->
+    <section class="panel">
+      <h2>Market Snapshot</h2>
+      <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d" 
+           style="width:100%;border-radius:12px;margin-top:10px;" />
+    </section>
 
     <!-- Insight Cards -->
     <section class="stats-grid">
@@ -97,15 +85,14 @@
 
   </main>
 
-
   <script>
-    // Fake AI text animation
+    // AI text animation
     setTimeout(() => {
       document.getElementById("aiInsightText").innerText =
         "Your spending increased slightly this month, but income remains stable. Savings are on track to meet your quarterly goal.";
     }, 1200);
 
-    // Fake chart
+    // Chart.js line chart
     new Chart(document.getElementById("insightsChart"), {
       type: "line",
       data: {
