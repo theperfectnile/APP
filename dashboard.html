@@ -25,7 +25,7 @@
   <!-- Main Content -->
   <main class="main-content">
 
-    <!-- Hero Panel (your Black lifestyle photo) -->
+    <!-- Hero Panel -->
     <section class="panel">
       <img
         src="dashboard-hero.jpg"
@@ -148,6 +148,146 @@
           <tbody id="history-body"></tbody>
         </table>
       </div>
+    </section>
+
+    <!-- Lifestyle & Finance Survey -->
+    <section class="panel">
+      <h2>Personalized Lifestyle & Finance Survey</h2>
+      <p style="margin-bottom:15px;">Answer honestly to receive tailored recommendations for improving your financial and personal habits.</p>
+
+      <div class="form-grid">
+
+        <!-- Q1 -->
+        <div class="form-group">
+          <label>1. How often do you eat out or order takeout?</label>
+          <select id="q1">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q2 -->
+        <div class="form-group">
+          <label>2. How often do you meal plan before grocery shopping?</label>
+          <select id="q2">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q3 -->
+        <div class="form-group">
+          <label>3. How often do you throw away unused groceries?</label>
+          <select id="q3">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q4 -->
+        <div class="form-group">
+          <label>4. How often do you choose convenience foods over cooking?</label>
+          <select id="q4">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q5 -->
+        <div class="form-group">
+          <label>5. How often do you exercise intentionally?</label>
+          <select id="q5">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q6 -->
+        <div class="form-group">
+          <label>6. How often do you feel low-energy or sluggish?</label>
+          <select id="q6">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q7 -->
+        <div class="form-group">
+          <label>7. How often do you review your bank or credit card statements?</label>
+          <select id="q7">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q8 -->
+        <div class="form-group">
+          <label>8. How often do you save or invest money each month?</label>
+          <select id="q8">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q9 -->
+        <div class="form-group">
+          <label>9. How often do you make impulse purchases?</label>
+          <select id="q9">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+        <!-- Q10 -->
+        <div class="form-group">
+          <label>10. How often do you buy non-essential items for your kids?</label>
+          <select id="q10">
+            <option value="1">Never</option>
+            <option value="2">Rarely</option>
+            <option value="3">Sometimes</option>
+            <option value="4">Often</option>
+            <option value="5">Very Often</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" onclick="calculateSurvey()">Get Recommendations</button>
+      </div>
+    </section>
+
+    <!-- Survey Results -->
+    <section class="panel">
+      <h2>Your Personalized Recommendations</h2>
+      <p id="surveyResults">Complete the survey to see your results.</p>
     </section>
 
   </main>
