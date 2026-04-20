@@ -334,3 +334,104 @@ function calculateSurvey() {
 
   document.getElementById("surveyResults").innerHTML = advice;
 }
+function calculateSurvey() {
+  const get = id => Number(document.getElementById(id).value);
+
+  const answers = {
+    q1: get("q1"),
+    q2: get("q2"),
+    q3: get("q3"),
+    q4: get("q4"),
+    q5: get("q5"),
+    q6: get("q6"),
+    q7: get("q7"),
+    q8: get("q8"),
+    q9: get("q9"),
+    q10: get("q10")
+  };
+
+  let advice = "";
+
+  // Helper to convert numeric choice to text
+  const choiceText = {
+    1: "Never",
+    2: "Rarely",
+    3: "Sometimes",
+    4: "Often",
+    5: "Very Often"
+  };
+
+  // -----------------------------
+  // MEAL PLANNING + FOOD HABITS
+  // -----------------------------
+  if (answers.q1 === 1) advice += "🍽️ You never eat out — that’s budget‑friendly, but make sure you’re not skipping meals or relying on snacks. Try planning 1–2 balanced meals ahead.<br><br>";
+  if (answers.q1 === 2) advice += "🍽️ You rarely eat out — great for saving money. Keep a simple meal plan to avoid last‑minute takeout.<br><br>";
+  if (answers.q1 === 3) advice += "🍽️ You sometimes eat out — totally normal. Try setting a weekly limit so it stays intentional.<br><br>";
+  if (answers.q1 === 4) advice += "🍽️ You often eat out — consider cooking 1–2 meals at home to balance convenience and cost.<br><br>";
+  if (answers.q1 === 5) advice += "🍽️ You eat out very often — start with one home‑cooked meal per week to save money and reduce food waste.<br><br>";
+
+  if (answers.q2 === 1) advice += "📝 You never meal plan — start with planning just one dinner for the week. Keep it simple.<br><br>";
+  if (answers.q2 === 2) advice += "📝 You rarely meal plan — try planning 2 meals to reduce stress and grocery costs.<br><br>";
+  if (answers.q2 === 3) advice += "📝 You sometimes meal plan — adding one more planned meal can help you stay consistent.<br><br>";
+  if (answers.q2 === 4) advice += "📝 You often meal plan — keep refining what works for you.<br><br>";
+  if (answers.q2 === 5) advice += "📝 You always meal plan — strong habit. Keep using it to stay organized and save money.<br><br>";
+
+  if (answers.q3 === 1) advice += "🥗 You never waste groceries — excellent. Keep buying only what you use.<br><br>";
+  if (answers.q3 === 2) advice += "🥗 You rarely waste food — good balance. A quick fridge check before shopping helps even more.<br><br>";
+  if (answers.q3 === 3) advice += "🥗 You sometimes waste food — try smaller portions or freezing leftovers.<br><br>";
+  if (answers.q3 === 4) advice += "🥗 You often waste food — planning meals around what you already have can help.<br><br>";
+  if (answers.q3 === 5) advice += "🥗 You waste food very often — start with buying fewer perishables and using leftovers creatively.<br><br>";
+
+  if (answers.q4 === 1) advice += "🍳 You never choose convenience foods — great, but make sure cooking isn’t stressing you out.<br><br>";
+  if (answers.q4 === 2) advice += "🍳 You rarely choose convenience foods — balanced and healthy.<br><br>";
+  if (answers.q4 === 3) advice += "🍳 You sometimes choose convenience foods — totally normal. Try prepping ingredients ahead.<br><br>";
+  if (answers.q4 === 4) advice += "🍳 You often choose convenience foods — consider cooking simple meals like stir‑fries or sheet‑pan dinners.<br><br>";
+  if (answers.q4 === 5) advice += "🍳 You rely heavily on convenience foods — start with one homemade meal per week to build confidence.<br><br>";
+
+  // -----------------------------
+  // EXERCISE + ENERGY
+  // -----------------------------
+  if (answers.q5 === 1) advice += "🏋🏾 You never exercise — start with 5 minutes of walking or stretching daily.<br><br>";
+  if (answers.q5 === 2) advice += "🏋🏾 You rarely exercise — aim for 1–2 short sessions per week.<br><br>";
+  if (answers.q5 === 3) advice += "🏋🏾 You sometimes exercise — consistency will help you feel better.<br><br>";
+  if (answers.q5 === 4) advice += "🏋🏾 You often exercise — great routine. Keep it up.<br><br>";
+  if (answers.q5 === 5) advice += "🏋🏾 You exercise very often — strong habit. Just watch for burnout.<br><br>";
+
+  if (answers.q6 === 1) advice += "⚡ You never feel sluggish — great energy levels.<br><br>";
+  if (answers.q6 === 2) advice += "⚡ You rarely feel sluggish — keep supporting your energy with sleep and hydration.<br><br>";
+  if (answers.q6 === 3) advice += "⚡ You sometimes feel sluggish — try adding light movement or improving sleep.<br><br>";
+  if (answers.q6 === 4) advice += "⚡ You often feel sluggish — consider improving sleep routine and adding gentle exercise.<br><br>";
+  if (answers.q6 === 5) advice += "⚡ You feel sluggish very often — small daily habits (water, stretching, sleep) can help a lot.<br><br>";
+
+  // -----------------------------
+  // MONEY HABITS
+  // -----------------------------
+  if (answers.q7 === 1) advice += "💳 You never review statements — start with a weekly 2‑minute check‑in.<br><br>";
+  if (answers.q7 === 2) advice += "💳 You rarely review statements — try checking once a week to stay aware.<br><br>";
+  if (answers.q7 === 3) advice += "💳 You sometimes review statements — good start. Make it a habit.<br><br>";
+  if (answers.q7 === 4) advice += "💳 You often review statements — strong awareness.<br><br>";
+  if (answers.q7 === 5) advice += "💳 You always review statements — excellent financial awareness.<br><br>";
+
+  if (answers.q8 === 1) advice += "💰 You never save or invest — start with $5–$10 a week to build momentum.<br><br>";
+  if (answers.q8 === 2) advice += "💰 You rarely save — try automating a small amount monthly.<br><br>";
+  if (answers.q8 === 3) advice += "💰 You sometimes save — consistency will help you grow wealth.<br><br>";
+  if (answers.q8 === 4) advice += "💰 You often save — strong habit. Keep going.<br><br>";
+  if (answers.q8 === 5) advice += "💰 You save very often — excellent discipline.<br><br>";
+
+  if (answers.q9 === 1) advice += "🛍️ You never impulse buy — disciplined and intentional.<br><br>";
+  if (answers.q9 === 2) advice += "🛍️ You rarely impulse buy — healthy balance.<br><br>";
+  if (answers.q9 === 3) advice += "🛍️ You sometimes impulse buy — try a 24‑hour pause before purchases.<br><br>";
+  if (answers.q9 === 4) advice += "🛍️ You often impulse buy — consider setting a monthly fun budget.<br><br>";
+  if (answers.q9 === 5) advice += "🛍️ You impulse buy very often — try tracking triggers and setting spending limits.<br><br>";
+
+  // -----------------------------
+  // KID SPENDING
+  // -----------------------------
+  if (answers.q10 === 1) advice += "🧒🏾 You never buy extras for your kids — disciplined. A small fun budget could add joy without overspending.<br><br>";
+  if (answers.q10 === 2) advice += "🧒🏾 You rarely buy extras — balanced approach.<br><br>";
+  if (answers.q10 === 3) advice += "🧒🏾 You sometimes buy extras — normal. A monthly limit keeps it predictable.<br><br>";
+  if (answers.q10 === 4) advice += "🧒🏾 You often buy extras — consider setting a clear monthly budget.<br><br>";
+  if (answers.q10 === 5) advice += "🧒🏾 You very often buy extras — a structured budget can help protect your long‑term goals.<br><br>";
+
+  document.getElementById("surveyResults").innerHTML = advice;
+}
