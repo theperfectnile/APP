@@ -290,3 +290,47 @@ function calculateSurvey() {
 
   document.getElementById("surveyResults").innerHTML = advice;
 }
+// -----------------------------
+// SURVEY CALCULATION FUNCTION
+// -----------------------------
+function calculateSurvey() {
+  const get = id => Number(document.getElementById(id).value);
+
+  const q1 = get("q1");
+  const q2 = get("q2");
+  const q3 = get("q3");
+  const q4 = get("q4");
+  const q5 = get("q5");
+  const q6 = get("q6");
+  const q7 = get("q7");
+  const q8 = get("q8");
+  const q9 = get("q9");
+  const q10 = get("q10");
+
+  const rev = v => 6 - v;
+
+  const mealScore = rev(q1) + q2 + rev(q3) + rev(q4);
+  const exerciseScore = q5 + rev(q6);
+  const spendingScore = rev(q7) + q8 + rev(q9);
+  const kidsScore = rev(q10);
+
+  let advice = "";
+
+  if (mealScore <= 8) advice += "🍽️ You should meal plan more.<br><br>";
+  else if (mealScore <= 14) advice += "🍽️ You're doing okay with food habits.<br><br>";
+  else advice += "🍽️ Great job! Your meal planning habits are strong.<br><br>";
+
+  if (exerciseScore <= 4) advice += "🏋🏾 You should exercise more.<br><br>";
+  else if (exerciseScore <= 7) advice += "🏋🏾 You're doing alright, but more consistency will help.<br><br>";
+  else advice += "🏋🏾 Excellent — your activity levels are strong.<br><br>";
+
+  if (spendingScore <= 8) advice += "💸 You should save or invest more and reduce impulse spending.<br><br>";
+  else if (spendingScore <= 14) advice += "💸 You're managing money decently.<br><br>";
+  else advice += "💸 Strong financial habits — keep it up.<br><br>";
+
+  if (kidsScore <= 3) advice += "🧒🏾 You're doing well with kid-related spending.<br><br>";
+  else if (kidsScore <= 7) advice += "🧒🏾 Consider setting a monthly 'kid fun budget.'<br><br>";
+  else advice += "🧒🏾 You may be overspending on non-essentials for your kids.<br><br>";
+
+  document.getElementById("surveyResults").innerHTML = advice;
+}
