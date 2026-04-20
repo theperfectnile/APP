@@ -1,5 +1,5 @@
 // -------------------------------
-// Utility: Toast Notifications
+// Toast Notifications
 // -------------------------------
 function showToast(message, type = "info") {
   const toast = document.createElement("div");
@@ -7,36 +7,22 @@ function showToast(message, type = "info") {
   toast.innerText = message;
 
   document.body.appendChild(toast);
-document.addEventListener("DOMContentLoaded", () => {
-    initDashboard();
-});
-  function initDashboard() {
-    loadSummary();
-    loadHistory();
-    // any other startup functions
-}
-  function loadSummary() {
-    // your summary code
-}
 
-function loadHistory() {
-    // your history code
-}
-
-function renderHistory() {
-    // your render code
-}
-
-function saveEntry() {
-    // your save code
-}
-
-function analyzeInsights() {
-    // your insights code
-}
   setTimeout(() => toast.classList.add("show"), 10);
   setTimeout(() => toast.classList.remove("show"), 3000);
   setTimeout(() => toast.remove(), 3500);
+}
+
+// -------------------------------
+// Auth Helpers
+// -------------------------------
+function getToken() {
+  return localStorage.getItem("token");
+}
+
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "/APP/login.html";
 }
 
 // -------------------------------
@@ -44,6 +30,8 @@ function analyzeInsights() {
 // -------------------------------
 function animateValue(id, end) {
   const el = document.getElementById(id);
+  if (!el) return;
+
   let start = 0;
   const duration = 800;
   const step = end / (duration / 16);
@@ -59,27 +47,11 @@ function animateValue(id, end) {
 }
 
 // -------------------------------
-// Auth helpers
-// -------------------------------
-function getToken() {
-  return localStorage.getItem("token");
-}
-
-function logout() {
-  localStorage.removeItem("token");
-  window.location.href = "/APP/login.html";
-}
-
-// -------------------------------
-// Load Dashboard Summary
+// Dashboard Summary Loader
 // -------------------------------
 async function loadDashboard() {
   const token = getToken();
-
-  if (!token) {
-    window.location.href = "/APP/login.html";
-    return;
-  }
+  if (!token) return;
 
   try {
     const res = await fetch("https://backend-qkz7.onrender.com/api/finance/summary", {
@@ -100,10 +72,11 @@ async function loadDashboard() {
 }
 
 // -------------------------------
-// Load Finance History
+// Finance History Loader
 // -------------------------------
 async function loadHistory() {
   const token = getToken();
+  if (!token) return;
 
   try {
     const res = await fetch("https://backend-qkz7.onrender.com/api/finance/all", {
@@ -111,6 +84,7 @@ async function loadHistory() {
     });
 
     const data = await res.json();
+
     renderHistory(data);
     renderCharts(data);
 
@@ -125,6 +99,8 @@ async function loadHistory() {
 // -------------------------------
 function renderHistory(data) {
   const table = document.getElementById("history-body");
+  if (!table) return;
+
   table.innerHTML = "";
 
   data.forEach(entry => {
@@ -146,14 +122,15 @@ function renderHistory(data) {
 // -------------------------------
 async function saveEntry() {
   const token = getToken();
+  if (!token) return;
 
   const payload = {
-    month: document.getElementById("month").value,
-    year: document.getElementById("year").value,
-    monthlyIncome: document.getElementById("monthlyIncome").value,
-    monthlyExpenses: document.getElementById("monthlyExpenses").value,
-    portfolioValue: document.getElementById("portfolioValue").value,
-    savingsGoal: document.getElementById("savingsGoal").value
+    month: document.getElementById("month")?.value,
+    year: document.getElementById("year")?.value,
+    monthlyIncome: document.getElementById("monthlyIncome")?.value,
+    monthlyExpenses: document.getElementById("monthlyExpenses")?.value,
+    portfolioValue: document.getElementById("portfolioValue")?.value,
+    savingsGoal: document.getElementById("savingsGoal")?.value
   };
 
   try {
@@ -161,7 +138,7 @@ async function saveEntry() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(payload)
     });
@@ -184,6 +161,7 @@ async function saveEntry() {
 // -------------------------------
 async function analyzeInsights() {
   const token = getToken();
+  if (!token) return;
 
   try {
     const res = await fetch("https://backend-qkz7.onrender.com/api/finance/analyze", {
@@ -206,13 +184,15 @@ async function analyzeInsights() {
 function renderCharts(data) {
   if (!Array.isArray(data) || data.length === 0) return;
 
+  const incomeCtx = document.getElementById("incomeExpenseChart");
+  const savingsCtx = document.getElementById("savingsChart");
+
+  if (!incomeCtx || !savingsCtx) return;
+
   const months = data.map(e => `${e.month} ${e.year}`);
   const income = data.map(e => e.monthlyIncome);
   const expenses = data.map(e => e.monthlyExpenses);
   const savings = data.map(e => e.monthlyIncome - e.monthlyExpenses);
-
-  const incomeCtx = document.getElementById("incomeExpenseChart");
-  const savingsCtx = document.getElementById("savingsChart");
 
   new Chart(incomeCtx, {
     type: "line",
@@ -253,8 +233,11 @@ function renderCharts(data) {
 }
 
 // -------------------------------
-// Initialize Dashboard
+// Page Initialization
 // -------------------------------
-document.body.classList.add("fade-in");
-loadDashboard();
-loadHistory();
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+
+  if (document.getElementById("income")) loadDashboard();
+  if (document.getElementById("history-body")) loadHistory();
+});
