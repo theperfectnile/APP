@@ -11,24 +11,25 @@
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
     <nav class="nav-links">
-      <a href="/APP/dashboard.html">Dashboard</a>
-      <a href="/APP/insights.html">Insights</a>
-      <a href="/APP/accounts.html" class="active">Accounts</a>
-      <a href="/APP/settings.html">Settings</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="insights.html">Insights</a>
+      <a href="accounts.html" class="active">Accounts</a>
+      <a href="settings.html">Settings</a>
     </nav>
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
 
   <main class="main-content fade-in">
-<section class="panel">
-  <h2>Account Logos</h2>
-  <div style="display:flex;gap:20px;flex-wrap:wrap;">
-    <img src="https://logo.clearbit.com/chase.com" width="80" />
-    <img src="https://logo.clearbit.com/bankofamerica.com" width="80" />
-    <img src="https://logo.clearbit.com/coinbase.com" width="80" />
-    <img src="https://logo.clearbit.com/robinhood.com" width="80" />
-  </div>
-</section>
+
+    <!-- Warm lifestyle header image -->
+    <section class="panel">
+      <img
+        src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&w=1400&q=80"
+        alt="Black woman reviewing accounts and finances"
+        style="width:100%;border-radius:12px;object-fit:cover;max-height:260px;"
+      />
+    </section>
+
     <header class="page-header">
       <h1>Accounts</h1>
       <span>Manage your linked financial accounts</span>
@@ -54,6 +55,17 @@
       <div class="stat-card">
         <h3>Crypto Wallet</h3>
         <p>$1,900</p>
+      </div>
+    </section>
+
+    <!-- Small logo strip (kept minimal) -->
+    <section class="panel">
+      <h2>Connected Institutions</h2>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
+        <img src="https://logo.clearbit.com/chase.com" width="60" alt="Chase" />
+        <img src="https://logo.clearbit.com/bankofamerica.com" width="60" alt="Bank of America" />
+        <img src="https://logo.clearbit.com/coinbase.com" width="60" alt="Coinbase" />
+        <img src="https://logo.clearbit.com/robinhood.com" width="60" alt="Robinhood" />
       </div>
     </section>
 
