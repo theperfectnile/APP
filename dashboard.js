@@ -7,7 +7,33 @@ function showToast(message, type = "info") {
   toast.innerText = message;
 
   document.body.appendChild(toast);
+document.addEventListener("DOMContentLoaded", () => {
+    initDashboard();
+});
+  function initDashboard() {
+    loadSummary();
+    loadHistory();
+    // any other startup functions
+}
+  function loadSummary() {
+    // your summary code
+}
 
+function loadHistory() {
+    // your history code
+}
+
+function renderHistory() {
+    // your render code
+}
+
+function saveEntry() {
+    // your save code
+}
+
+function analyzeInsights() {
+    // your insights code
+}
   setTimeout(() => toast.classList.add("show"), 10);
   setTimeout(() => toast.classList.remove("show"), 3000);
   setTimeout(() => toast.remove(), 3500);
