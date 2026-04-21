@@ -42,78 +42,7 @@
       </div>
     </header>
 
-    <!-- Stats -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <h3>Monthly Income</h3>
-        <p id="income">$0</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Monthly Expenses</h3>
-        <p id="expenses">$0</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Net Savings</h3>
-        <p id="savings">$0</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Portfolio Value</h3>
-        <p id="portfolio">$0</p>
-      </div>
-    </section>
-
-    <!-- Entry Form -->
-    <section class="panel">
-      <h2>Add / Update Monthly Entry</h2>
-
-      <div class="form-grid">
-
-        <div class="form-group">
-          <label for="month">Month</label>
-          <select id="month">
-            <option>January</option>
-            <option>February</option>
-            <option>March</option>
-            <option>April</option>
-            <option>May</option>
-            <option>June</option>
-            <option>July</option>
-            <option>August</option>
-            <option>September</option>
-            <option>October</option>
-            <option>November</option>
-            <option>December</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="year">Year</label>
-          <input type="number" id="year" value="2026" />
-        </div>
-
-        <div class="form-group">
-          <label for="monthlyIncome">Monthly Income</label>
-          <input type="number" id="monthlyIncome" placeholder="0" />
-        </div>
-
-        <div class="form-group">
-          <label for="monthlyExpenses">Monthly Expenses</label>
-          <input type="number" id="monthlyExpenses" placeholder="0" />
-        </div>
-
-        <div class="form-group">
-          <label for="portfolioValue">Portfolio Value</label>
-          <input type="number" id="portfolioValue" placeholder="0" />
-        </div>
-
-        <div class="form-group">
-          <label for="savingsGoal">Savings Goal</label>
-          <input type="number" id="savingsGoal" placeholder="0" />
-        </div>
-
+  
       </div>
 
       <div class="form-actions">
@@ -121,17 +50,6 @@
         <button class="btn-secondary" onclick="analyzeInsights()">Analyze Insights</button>
       </div>
     </section>
-
-    <!-- Charts -->
-    <section class="panel">
-      <h2>Financial Charts</h2>
-      <canvas id="incomeExpenseChart" height="120"></canvas>
-      <canvas id="savingsChart" height="120" style="margin-top: 30px;"></canvas>
-    </section>
-
-    <!-- History -->
-    <section class="panel">
-      <h2>History</h2>
 
       <div class="table-wrapper">
         <table>
