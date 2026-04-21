@@ -28,51 +28,7 @@
       <span>AI‑powered financial analysis</span>
     </header>
 
-    <!-- Small lifestyle + illustration panel -->
-    <section class="panel">
-      <h2>Your Financial Story</h2>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:stretch;">
-        <img
-          src="insights-photo.jpg"
-          alt="Black person reviewing monthly budget"
-          style="flex:1;min-width:220px;border-radius:12px;object-fit:cover;max-height:220px;"
-        />
-        <img
-          src="insights-illustration.jpg"
-          alt="Black-themed financial illustration"
-          style="flex:1;min-width:220px;border-radius:12px;object-fit:cover;max-height:220px;"
-        />
-      </div>
-    </section>
-
-    <!-- Insight Cards -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <h3>Spending Trend</h3>
-        <p id="trendValue">+4.2%</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Income Stability</h3>
-        <p id="stabilityValue">Stable</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Goal Progress</h3>
-        <p id="goalValue">62%</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Portfolio Growth</h3>
-        <p id="growthValue">+8.9%</p>
-      </div>
-    </section>
-
-    <!-- Chart -->
-    <section class="panel">
-      <h2>Income vs Expenses Trend</h2>
-      <canvas id="insightsChart" height="120"></canvas>
-    </section>
+   
 
     <!-- AI Insights -->
     <section class="panel">
@@ -92,32 +48,6 @@
       }
     }, 1200);
 
-    // Chart.js line chart
-    const ctx = document.getElementById("insightsChart");
-    if (ctx) {
-      new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["Jan", "Feb", "Mar", "Apr"],
-          datasets: [
-            {
-              label: "Income",
-              data: [4200, 4300, 4400, 4500],
-              borderColor: "#00eaff",
-              backgroundColor: "rgba(0,234,255,0.15)",
-              tension: 0.3
-            },
-            {
-              label: "Expenses",
-              data: [3100, 3300, 3500, 3600],
-              borderColor: "#ff3b3b",
-              backgroundColor: "rgba(255,59,59,0.15)",
-              tension: 0.3
-            }
-          ]
-        }
-      });
-    }
   </script>
 
   <script src="dashboard.js"></script>
