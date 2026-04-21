@@ -446,6 +446,12 @@ const lifeScore = calculateLifeScore(answers);
 
 document.getElementById("lifeScoreValue").innerHTML =
   `<strong>${lifeScore}</strong> / 100`;
+
+  // Step 7: micro‑habits
+const microHabits = generateMicroHabits(personality, lifeScore, answers);
+
+document.getElementById("microHabitsList").innerHTML =
+  microHabits.map(habit => `<li>${habit}</li>`).join("");
 }
 // -------------------------------------------
 // FINANCIAL PERSONALITY ENGINE
@@ -523,4 +529,61 @@ function calculateLifeScore(answers) {
 
   // Normalize to 0–100
   return Math.min(100, Math.max(0, Math.round(score)));
+}
+// -------------------------------------------
+// MICRO‑HABITS ENGINE
+// -------------------------------------------
+function generateMicroHabits(personality, lifeScore, answers) {
+  const habits = [];
+
+  // Personality‑based habits
+  if (personality.type === "The Improviser") {
+    habits.push("Pause 24 hours before any non‑essential purchase.");
+    habits.push("Review yesterday’s spending for 2 minutes.");
+  }
+
+  if (personality.type === "The Free Spirit") {
+    habits.push("Plan just one meal for the week.");
+    habits.push("Do a 2‑minute wallet or purse clean‑out.");
+  }
+
+  if (personality.type === "The Overloaded Achiever") {
+    habits.push("Take a 5‑minute walk or stretch break.");
+    habits.push("Drink one full glass of water this morning.");
+  }
+
+  if (personality.type === "The Provider") {
+    habits.push("Set a $5–$10 kid fun budget for the week.");
+    habits.push("Do one small act of self‑care today.");
+  }
+
+  if (personality.type === "The Planner") {
+    habits.push("Review your budget categories for 3 minutes.");
+    habits.push("Prep ingredients for one meal ahead of time.");
+  }
+
+  if (personality.type === "The Builder") {
+    habits.push("Choose one habit to improve by 1% today.");
+    habits.push("Track one purchase you make today.");
+  }
+
+  // Life Score‑based habits
+  if (lifeScore < 40) {
+    habits.push("Drink one bottle of water before noon.");
+    habits.push("Do 5 minutes of movement today.");
+  } else if (lifeScore < 70) {
+    habits.push("Plan one meal for tomorrow.");
+    habits.push("Review your bank app for 2 minutes.");
+  } else {
+    habits.push("Celebrate one win from this week.");
+    habits.push("Prep tomorrow’s breakfast or lunch.");
+  }
+
+  // Behavior‑based habits (survey answers)
+  if (answers.q1 >= 4) habits.push("Cook one meal at home this week.");
+  if (answers.q5 <= 2) habits.push("Do a 3‑minute stretch session.");
+  if (answers.q9 >= 4) habits.push("Unsubscribe from one marketing email.");
+
+  // Return 3 habits max
+  return habits.slice(0, 3);
 }
