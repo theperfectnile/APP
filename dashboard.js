@@ -452,6 +452,12 @@ const microHabits = generateMicroHabits(personality, lifeScore, answers);
 
 document.getElementById("microHabitsList").innerHTML =
   microHabits.map(habit => `<li>${habit}</li>`).join("");
+ 
+  // Step 8: weekly report
+const weeklyReport = generateWeeklyReport(answers, personality, lifeScore);
+
+document.getElementById("weeklyReportText").innerHTML = weeklyReport;
+This updates the weekly report every time the 
 }
 // -------------------------------------------
 // FINANCIAL PERSONALITY ENGINE
@@ -586,4 +592,51 @@ function generateMicroHabits(personality, lifeScore, answers) {
 
   // Return 3 habits max
   return habits.slice(0, 3);
+}
+// -------------------------------------------
+// WEEKLY REPORT ENGINE
+// -------------------------------------------
+function generateWeeklyReport(answers, personality, lifeScore) {
+  let report = "";
+
+  // Personality summary
+  report += `<strong>Personality:</strong> ${personality.type}<br>${personality.description}<br><br>`;
+
+  // Life score summary
+  if (lifeScore < 40) {
+    report += "Your Life Score shows you're in a rebuilding phase. Focus on small, consistent habits to regain momentum.<br><br>";
+  } else if (lifeScore < 70) {
+    report += "Your Life Score shows you're making progress. Keep strengthening the habits that are working.<br><br>";
+  } else {
+    report += "Your Life Score is strong. Maintain your routines and celebrate your wins.<br><br>";
+  }
+
+  // Behavior patterns
+  report += "<strong>Behavior Patterns:</strong><br>";
+
+  if (answers.q1 >= 4) report += "• You rely on eating out often — planning 1–2 meals at home could help.<br>";
+  if (answers.q2 <= 2) report += "• Meal planning is inconsistent — try planning just one meal ahead.<br>";
+  if (answers.q3 >= 4) report += "• Food waste is high — buy smaller quantities or freeze leftovers.<br>";
+  if (answers.q4 >= 4) report += "• Convenience foods are common — prepping ingredients can help.<br>";
+  if (answers.q5 <= 2) report += "• Exercise is low — even 5 minutes a day makes a difference.<br>";
+  if (answers.q6 >= 4) report += "• Energy levels are low — hydration and sleep routines may help.<br>";
+  if (answers.q7 <= 2) report += "• You rarely review statements — try a weekly 2‑minute check‑in.<br>";
+  if (answers.q8 <= 2) report += "• Saving is inconsistent — automate a small amount weekly.<br>";
+  if (answers.q9 >= 4) report += "• Impulse spending is high — try a 24‑hour pause rule.<br>";
+  if (answers.q10 >= 4) report += "• Kid spending is high — consider a small weekly kid fun budget.<br>";
+
+  report += "<br>";
+
+  // Focus for next week
+  report += "<strong>Focus for Next Week:</strong><br>";
+
+  if (lifeScore < 40) {
+    report += "Choose ONE habit to improve by 1% — small wins matter most right now.";
+  } else if (lifeScore < 70) {
+    report += "Strengthen the habits that are already working and add one new micro‑habit.";
+  } else {
+    report += "Maintain your strong habits and celebrate your consistency.";
+  }
+
+  return report;
 }
