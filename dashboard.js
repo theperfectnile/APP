@@ -458,6 +458,12 @@ const weeklyReport = generateWeeklyReport(answers, personality, lifeScore);
 
 document.getElementById("weeklyReportText").innerHTML = weeklyReport;
 This updates the weekly report every time the 
+ 
+  // Step 9: kid budget recommendation
+const kidBudget = calculateKidBudget(answers, lifeScore);
+
+document.getElementById("kidBudgetValue").innerHTML =
+  `Recommended weekly kid fun budget: <strong>$${kidBudget.min} – $${kidBudget.max}</strong>`;
 }
 // -------------------------------------------
 // FINANCIAL PERSONALITY ENGINE
@@ -639,4 +645,49 @@ function generateWeeklyReport(answers, personality, lifeScore) {
   }
 
   return report;
+}
+// -------------------------------------------
+// KID BUDGET ENGINE
+// -------------------------------------------
+function calculateKidBudget(answers, lifeScore) {
+  // Base budget range (weekly)
+  let baseMin = 5;
+  let baseMax = 25;
+
+  // Adjust based on spending behavior (q10)
+  if (answers.q10 === 1) { 
+    baseMin += 5; 
+    baseMax += 10; 
+  }
+  if (answers.q10 === 2) { 
+    baseMin += 3; 
+    baseMax += 5; 
+  }
+  if (answers.q10 === 3) { 
+    baseMin += 0; 
+    baseMax += 0; 
+  }
+  if (answers.q10 === 4) { 
+    baseMin -= 2; 
+    baseMax -= 5; 
+  }
+  if (answers.q10 === 5) { 
+    baseMin -= 5; 
+    baseMax -= 10; 
+  }
+
+  // Adjust based on life score
+  if (lifeScore < 40) {
+    baseMin -= 2;
+    baseMax -= 5;
+  } else if (lifeScore > 70) {
+    baseMin += 2;
+    baseMax += 5;
+  }
+
+  // Ensure values never go negative
+  baseMin = Math.max(0, baseMin);
+  baseMax = Math.max(baseMin, baseMax);
+
+  return { min: baseMin, max: baseMax };
 }
