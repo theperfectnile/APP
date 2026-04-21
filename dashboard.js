@@ -334,7 +334,7 @@ function calculateSurvey() {
 
   document.getElementById("surveyResults").innerHTML = advice;
 }
-function calculateSurvey() {
+function calculateSurvey() { 
   const get = id => Number(document.getElementById(id).value);
 
   const answers = {
@@ -360,7 +360,6 @@ function calculateSurvey() {
     4: "Often",
     5: "Very Often"
   };
-
   // -----------------------------
   // MEAL PLANNING + FOOD HABITS
   // -----------------------------
@@ -433,5 +432,62 @@ function calculateSurvey() {
   if (answers.q10 === 4) advice += "🧒🏾 You often buy extras — consider setting a clear monthly budget.<br><br>";
   if (answers.q10 === 5) advice += "🧒🏾 You very often buy extras — a structured budget can help protect your long‑term goals.<br><br>";
 
-  document.getElementById("surveyResults").innerHTML = advice;
+// Update survey results
+document.getElementById("surveyResults").innerHTML = advice;
+
+// Step 5: personality engine (corrected)
+const personality = getFinancialPersonality(answers);
+
+document.getElementById("personalityType").innerHTML =
+  `<strong>${personality.type}</strong><br>${personality.description}`;
+}
+// -------------------------------------------
+// FINANCIAL PERSONALITY ENGINE
+// -------------------------------------------
+function getFinancialPersonality(answers) {
+  let type = "";
+  let description = "";
+
+  // Patterns
+  const eatsOutOften = answers.q1 >= 4;
+  const noMealPlanning = answers.q2 <= 2;
+  const wastesFood = answers.q3 >= 4;
+  const convenienceFood = answers.q4 >= 4;
+
+  const noExercise = answers.q5 === 1;
+  const lowEnergy = answers.q6 >= 4;
+
+  const neverReviewsMoney = answers.q7 === 1;
+  const neverSaves = answers.q8 === 1;
+  const impulseBuyer = answers.q9 >= 4;
+
+  const highKidSpending = answers.q10 >= 4;
+
+  // Personality Logic
+  if (neverSaves && impulseBuyer) {
+    type = "The Improviser";
+    description = "You live in the moment. You make quick decisions and enjoy spontaneity, but adding small structure can help you build long-term stability.";
+  }
+  else if (neverReviewsMoney && noMealPlanning) {
+    type = "The Free Spirit";
+    description = "You prefer flexibility over structure. A few light routines can help you stay in control without feeling restricted.";
+  }
+  else if (noExercise && lowEnergy) {
+    type = "The Overloaded Achiever";
+    description = "You carry a lot on your shoulders. Improving energy and routines will help you feel more balanced and in control.";
+  }
+  else if (highKidSpending) {
+    type = "The Provider";
+    description = "You love giving to your family. A clear kid budget helps you support them without sacrificing your own goals.";
+  }
+  else if (!neverSaves && !impulseBuyer && answers.q2 >= 4) {
+    type = "The Planner";
+    description = "You value structure and consistency. You’re intentional with your habits and finances, and it shows.";
+  }
+  else {
+    type = "The Builder";
+    description = "You’re developing your habits and learning what works for you. Small improvements will create big results over time.";
+  }
+
+  return { type, description };
 }
