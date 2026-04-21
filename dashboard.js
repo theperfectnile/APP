@@ -16,6 +16,10 @@ function showToast(message, type = "info") {
 // -------------------------------
 // Auth Helpers
 // -------------------------------
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "/APP/login.html";
+}
 function getToken() {
   return localStorage.getItem("token");
 }
@@ -24,7 +28,9 @@ function logout() {
   localStorage.removeItem("token");
   window.location.href = "/APP/login.html";
 }
-
+window.onload = function() {
+    renderMoodJournal();
+};
 // -------------------------------
 // Animated Number Counter
 // -------------------------------
@@ -690,4 +696,50 @@ function calculateKidBudget(answers, lifeScore) {
   baseMax = Math.max(baseMin, baseMax);
 
   return { min: baseMin, max: baseMax };
+}
+// -------------------------------------------
+// MOOD + MONEY JOURNAL ENGINE
+// -------------------------------------------
+function saveMoodEntry() {
+  const mood = document.getElementById("moodSelect").value;
+  const note = document.getElementById("moodNote").value.trim();
+
+  if (!mood && !note) return;
+
+  const entry = {
+    mood,
+    note,
+    timestamp: new Date().toLocaleString()
+  };
+
+  // Load existing entries
+  let journal = JSON.parse(localStorage.getItem("moodJournal") || "[]");
+
+  // Add new entry to the top
+  journal.unshift(entry);
+
+  // Save back to localStorage
+  localStorage.setItem("moodJournal", JSON.stringify(journal));
+
+  // Update UI
+  renderMoodJournal();
+
+  // Clear inputs
+  document.getElementById("moodSelect").value = "";
+  document.getElementById("moodNote").value = "";
+}
+
+function renderMoodJournal() {
+  const journal = JSON.parse(localStorage.getItem("moodJournal") || "[]");
+
+  document.getElementById("moodJournalList").innerHTML = journal
+    .slice(0, 5) // show last 5 entries
+    .map(entry => `
+      <li>
+        <strong>${entry.timestamp}</strong><br>
+        Mood: ${entry.mood}<br>
+        ${entry.note ? `Note: ${entry.note}` : ""}
+      </li>
+    `)
+    .join("");
 }
