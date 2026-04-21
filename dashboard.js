@@ -440,6 +440,12 @@ const personality = getFinancialPersonality(answers);
 
 document.getElementById("personalityType").innerHTML =
   `<strong>${personality.type}</strong><br>${personality.description}`;
+
+  // Step 6: life score
+const lifeScore = calculateLifeScore(answers);
+
+document.getElementById("lifeScoreValue").innerHTML =
+  `<strong>${lifeScore}</strong> / 100`;
 }
 // -------------------------------------------
 // FINANCIAL PERSONALITY ENGINE
@@ -490,4 +496,31 @@ function getFinancialPersonality(answers) {
   }
 
   return { type, description };
+}
+// -------------------------------------------
+// LIFE SCORE ENGINE
+// -------------------------------------------
+function calculateLifeScore(answers) {
+  let score = 0;
+
+  // Food habits (q1–q4)
+  score += (6 - answers.q1) * 2;   // eating out less = better
+  score += answers.q2 * 2;         // meal planning = good
+  score += (6 - answers.q3) * 2;   // wasting less = good
+  score += (6 - answers.q4) * 2;   // less convenience food = good
+
+  // Exercise + Energy (q5–q6)
+  score += answers.q5 * 3;         // more exercise = better
+  score += (6 - answers.q6) * 2;   // less sluggish = better
+
+  // Money habits (q7–q9)
+  score += answers.q7 * 3;         // reviewing statements = good
+  score += answers.q8 * 3;         // saving = good
+  score += (6 - answers.q9) * 3;   // fewer impulse buys = good
+
+  // Kid spending (q10)
+  score += (6 - answers.q10) * 1;  // less overspending = better
+
+  // Normalize to 0–100
+  return Math.min(100, Math.max(0, Math.round(score)));
 }
