@@ -310,6 +310,28 @@
   <h2>Kid Budget Recommendation</h2>
   <p id="kidBudgetValue">Complete the survey to see your recommended kid budget.</p>
 </section>
+    <section class="panel">
+  <h2>Mood + Money Journal</h2>
+
+  <label for="moodSelect">How are you feeling today?</label>
+  <select id="moodSelect">
+    <option value="">Select mood...</option>
+    <option value="happy">😊 Happy</option>
+    <option value="stressed">😣 Stressed</option>
+    <option value="tired">😴 Tired</option>
+    <option value="motivated">💪 Motivated</option>
+    <option value="anxious">😟 Anxious</option>
+    <option value="neutral">😐 Neutral</option>
+  </select>
+
+  <label for="moodNote">Notes about your day or spending:</label>
+  <textarea id="moodNote" placeholder="Write a quick reflection..."></textarea>
+
+  <button onclick="saveMoodEntry()">Save Entry</button>
+
+  <h3>Recent Entries</h3>
+  <ul id="moodJournalList"></ul>
+</section>
   </main>
 
   <!-- Scripts -->
