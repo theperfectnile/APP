@@ -103,18 +103,38 @@ async function analyzeInsights() {
   const token = getToken();
   if (!token) return;
 
+  async function saveEntry() {
+  const token = getToken();
+  if (!token) return;
+
+  const payload = {
+    // whatever fields you send to the backend
+    income: Number(document.getElementById("income")?.value || 0),
+    expenses: Number(document.getElementById("expenses")?.value || 0),
+    portfolio: Number(document.getElementById("portfolio")?.value || 0),
+    goal: Number(document.getElementById("goal")?.value || 0)
+  };
+
   try {
-    const res = await fetch("https://backend-qkz7.onrender.com/api/finance/analyze", {
+    const res = await fetch("https://backend-qkz7.onrender.com/api/finance/add", {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}` }
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
     });
 
-    const insights = await res.json();
-    showToast(insights.message || "No insights returned", "info");
+    if (res.ok) {
+      showToast("Entry saved!", "success");
+      location.reload();
+    } else {
+      showToast("Failed to save entry", "error");
+    }
 
   } catch (err) {
-    console.error("Insights error:", err);
-    showToast("Error analyzing insights", "error");
+    console.error("Save entry error:", err);
+    showToast("Error saving entry", "error");
   }
 }
 // -------------------------------
