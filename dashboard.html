@@ -26,7 +26,7 @@
   <main class="main-content">
 
     <!-- Hero Panel -->
-    <section class="panel">
+    <section class="panel fade-in">
       <img
         src="dashboard-hero.jpg"
         alt="Black family or individual reviewing finances"
@@ -35,21 +35,54 @@
     </section>
 
     <!-- Header -->
-    <header class="page-header">
+    <header class="page-header fade-in">
       <div>
         <h1>Dashboard</h1>
         <span>Your financial overview at a glance</span>
       </div>
     </header>
 
-  
+    <!-- Top Stats -->
+    <section class="panel panel--stats fade-in">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Monthly Income</h3>
+          <p>$0.00</p>
+        </div>
+        <div class="stat-card">
+          <h3>Monthly Expenses</h3>
+          <p>$0.00</p>
+        </div>
+        <div class="stat-card">
+          <h3>Portfolio Value</h3>
+          <p>$0.00</p>
+        </div>
+        <div class="stat-card">
+          <h3>Goal Progress</h3>
+          <p>0%</p>
+        </div>
       </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="panel fade-in">
+      <h2>Quick Actions</h2>
+      <p style="margin-bottom:12px;opacity:0.8;font-size:13px;">
+        Log a new entry or generate insights from your recent data.
+      </p>
 
       <div class="form-actions">
         <button class="btn-primary" onclick="saveEntry()">Save Entry</button>
         <button class="btn-secondary" onclick="analyzeInsights()">Analyze Insights</button>
       </div>
     </section>
+
+    <!-- History Table -->
+    <section class="panel fade-in">
+      <h2>History</h2>
+      <p style="margin-bottom:10px;opacity:0.8;font-size:13px;">
+        Track your income, expenses, portfolio, and goals over time.
+      </p>
 
       <div class="table-wrapper">
         <table>
@@ -69,7 +102,7 @@
     </section>
 
     <!-- Lifestyle & Finance Survey -->
-    <section class="panel">
+    <section class="panel fade-in">
       <h2>Personalized Lifestyle & Finance Survey</h2>
       <p style="margin-bottom:15px;">Answer honestly to receive tailored recommendations for improving your financial and personal habits.</p>
 
@@ -203,53 +236,64 @@
     </section>
 
     <!-- Survey Results -->
-    <section class="panel">
+    <section class="panel fade-in">
       <h2>Your Personalized Recommendations</h2>
       <p id="surveyResults">Complete the survey to see your results.</p>
     </section>
-<!-- Financial Personality Panel -->
-<section class="panel">
-  <h2>Your Money Personality</h2>
-  <p id="personalityType">Complete the survey to discover your financial personality.</p>
-</section>
-    <section class="panel">
-  <h2>Your Life Score</h2>
-  <p id="lifeScoreValue">Complete the survey to see your score.</p>
-</section>
-    <section class="panel">
-  <h2>Today's Micro‑Habits</h2>
-  <ul id="microHabitsList"></ul>
-</section>
-    <section class="panel">
-  <h2>Your Weekly Report</h2>
-  <p id="weeklyReportText">Complete the survey to generate your weekly report.</p>
-</section>
-    <section class="panel">
-  <h2>Kid Budget Recommendation</h2>
-  <p id="kidBudgetValue">Complete the survey to see your recommended kid budget.</p>
-</section>
-    <section class="panel">
-  <h2>Mood + Money Journal</h2>
 
-  <label for="moodSelect">How are you feeling today?</label>
-  <select id="moodSelect">
-    <option value="">Select mood...</option>
-    <option value="happy">😊 Happy</option>
-    <option value="stressed">😣 Stressed</option>
-    <option value="tired">😴 Tired</option>
-    <option value="motivated">💪 Motivated</option>
-    <option value="anxious">😟 Anxious</option>
-    <option value="neutral">😐 Neutral</option>
-  </select>
+    <!-- Financial Personality Panel -->
+    <section class="panel fade-in">
+      <h2>Your Money Personality</h2>
+      <p id="personalityType">Complete the survey to discover your financial personality.</p>
+    </section>
 
-  <label for="moodNote">Notes about your day or spending:</label>
-  <textarea id="moodNote" placeholder="Write a quick reflection..."></textarea>
+    <!-- Life Score -->
+    <section class="panel fade-in">
+      <h2>Your Life Score</h2>
+      <p id="lifeScoreValue">Complete the survey to see your score.</p>
+    </section>
 
-  <button onclick="saveMoodEntry()">Save Entry</button>
+    <!-- Micro Habits -->
+    <section class="panel fade-in">
+      <h2>Today's Micro‑Habits</h2>
+      <ul id="microHabitsList"></ul>
+    </section>
 
-  <h3>Recent Entries</h3>
-  <ul id="moodJournalList"></ul>
-</section>
+    <!-- Weekly Report -->
+    <section class="panel fade-in">
+      <h2>Your Weekly Report</h2>
+      <p id="weeklyReportText">Complete the survey to generate your weekly report.</p>
+    </section>
+
+    <!-- Kid Budget -->
+    <section class="panel fade-in">
+      <h2>Kid Budget Recommendation</h2>
+      <p id="kidBudgetValue">Complete the survey to see your recommended kid budget.</p>
+    </section>
+
+    <!-- Mood + Money Journal -->
+    <section class="panel fade-in">
+      <h2>Mood + Money Journal</h2>
+
+      <label for="moodSelect">How are you feeling today?</label>
+      <select id="moodSelect">
+        <option value="">Select mood...</option>
+        <option value="happy">😊 Happy</option>
+        <option value="stressed">😣 Stressed</option>
+        <option value="tired">😴 Tired</option>
+        <option value="motivated">💪 Motivated</option>
+        <option value="anxious">😟 Anxious</option>
+        <option value="neutral">😐 Neutral</option>
+      </select>
+
+      <label for="moodNote" style="margin-top:12px;display:block;">Notes about your day or spending:</label>
+      <textarea id="moodNote" placeholder="Write a quick reflection..."></textarea>
+
+      <button class="btn-primary" style="margin-top:12px;" onclick="saveMoodEntry()">Save Entry</button>
+
+      <h3 style="margin-top:18px;">Recent Entries</h3>
+      <ul id="moodJournalList"></ul>
+    </section>
   </main>
 
   <!-- Scripts -->
