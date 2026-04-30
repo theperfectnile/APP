@@ -320,5 +320,13 @@
     <span>Settings</span>
   </a>
 </nav>
+  <script>
+  const path = window.location.pathname;
+  document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+    if (path.includes(item.getAttribute('href'))) {
+      item.classList.add('active');
+    }
+  });
+</script>
 </body>
 </html>
