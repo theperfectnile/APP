@@ -7,24 +7,7 @@
 </head>
 
 <body id="dashboard">
-<div class="summary-container">
 
-  <div class="summary-card">
-    <h3>Total Income</h3>
-    <span id="totalIncome">$0</span>
-  </div>
-
-  <div class="summary-card">
-    <h3>Total Expenses</h3>
-    <span id="totalExpenses">$0</span>
-  </div>
-
-  <div class="summary-card">
-    <h3>Portfolio Value</h3>
-    <span id="totalPortfolio">$0</span>
-  </div>
-
-</div>
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
@@ -42,15 +25,6 @@
   <!-- Main Content -->
   <main class="main-content">
 
-    <!-- Hero Panel -->
-    <section class="panel fade-in">
-      <img
-        src="dashboard-hero.jpg"
-        alt="Black family or individual reviewing finances"
-        style="width:100%;border-radius:12px;object-fit:cover;max-height:260px;"
-      />
-    </section>
-
     <!-- Header -->
     <header class="page-header fade-in">
       <div>
@@ -59,26 +33,37 @@
       </div>
     </header>
 
-    <!-- Top Stats -->
-    <section class="panel panel--stats fade-in">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h3>Monthly Income</h3>
-          <p>$0.00</p>
+    <!-- Dashboard Summary -->
+    <section class="panel fade-in">
+      <h2>Monthly Summary</h2>
+
+      <div class="summary-container">
+
+        <div class="summary-card">
+          <h3>Total Income</h3>
+          <span id="totalIncome">$0</span>
         </div>
-        <div class="stat-card">
-          <h3>Monthly Expenses</h3>
-          <p>$0.00</p>
+
+        <div class="summary-card">
+          <h3>Total Expenses</h3>
+          <span id="totalExpenses">$0</span>
         </div>
-        <div class="stat-card">
+
+        <div class="summary-card">
           <h3>Portfolio Value</h3>
-          <p>$0.00</p>
+          <span id="totalPortfolio">$0</span>
         </div>
-        <div class="stat-card">
-          <h3>Goal Progress</h3>
-          <p>0%</p>
-        </div>
+
       </div>
+    </section>
+
+    <!-- Hero Panel -->
+    <section class="panel fade-in">
+      <img
+        src="dashboard-hero.jpg"
+        alt="Black family or individual reviewing finances"
+        style="width:100%;border-radius:12px;object-fit:cover;max-height:260px;"
+      />
     </section>
 
     <!-- Quick Actions -->
@@ -125,7 +110,7 @@
 
       <div class="form-grid">
 
-        <!-- Q1 -->
+        <!-- Q1–Q10 -->
         <div class="form-group">
           <label>1. How often do you eat out or order takeout?</label>
           <select id="q1">
@@ -137,7 +122,6 @@
           </select>
         </div>
 
-        <!-- Q2 -->
         <div class="form-group">
           <label>2. How often do you meal plan before grocery shopping?</label>
           <select id="q2">
@@ -149,10 +133,8 @@
           </select>
         </div>
 
-        <!-- Q3 -->
         <div class="form-group">
           <label>3. How often do you throw away unused groceries?</label>
-        
           <select id="q3">
             <option value="1">Never</option>
             <option value="2">Rarely</option>
@@ -162,7 +144,6 @@
           </select>
         </div>
 
-        <!-- Q4 -->
         <div class="form-group">
           <label>4. How often do you choose convenience foods over cooking?</label>
           <select id="q4">
@@ -174,7 +155,6 @@
           </select>
         </div>
 
-        <!-- Q5 -->
         <div class="form-group">
           <label>5. How often do you exercise intentionally?</label>
           <select id="q5">
@@ -186,7 +166,6 @@
           </select>
         </div>
 
-        <!-- Q6 -->
         <div class="form-group">
           <label>6. How often do you feel low-energy or sluggish?</label>
           <select id="q6">
@@ -198,7 +177,6 @@
           </select>
         </div>
 
-        <!-- Q7 -->
         <div class="form-group">
           <label>7. How often do you review your bank or credit card statements?</label>
           <select id="q7">
@@ -210,7 +188,6 @@
           </select>
         </div>
 
-        <!-- Q8 -->
         <div class="form-group">
           <label>8. How often do you save or invest money each month?</label>
           <select id="q8">
@@ -222,7 +199,6 @@
           </select>
         </div>
 
-        <!-- Q9 -->
         <div class="form-group">
           <label>9. How often do you make impulse purchases?</label>
           <select id="q9">
@@ -234,7 +210,6 @@
           </select>
         </div>
 
-        <!-- Q10 -->
         <div class="form-group">
           <label>10. How often do you buy non-essential items for your kids?</label>
           <select id="q10">
@@ -288,29 +263,7 @@
       <h2>Kid Budget Recommendation</h2>
       <p id="kidBudgetValue">Complete the survey to see your recommended kid budget.</p>
     </section>
-<!-- Dashboard Summary -->
-<section class="panel fade-in">
-  <h2>Monthly Summary</h2>
 
-  <div class="summary-container">
-
-    <div class="summary-card">
-      <h3>Total Income</h3>
-      <span id="totalIncome">$0</span>
-    </div>
-
-    <div class="summary-card">
-      <h3>Total Expenses</h3>
-      <span id="totalExpenses">$0</span>
-    </div>
-
-    <div class="summary-card">
-      <h3>Portfolio Value</h3>
-      <span id="totalPortfolio">$0</span>
-    </div>
-
-  </div>
-</section>
     <!-- Mood + Money Journal -->
     <section class="panel fade-in">
       <h2>Mood + Money Journal</h2>
@@ -334,41 +287,46 @@
       <h3 style="margin-top:18px;">Recent Entries</h3>
       <ul id="moodJournalList"></ul>
     </section>
+
   </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item active">
+      <i class="icon">📊</i>
+      <span>Dashboard</span>
+    </a>
+
+    <a href="insights.html" class="nav-item">
+      <i class="icon">💡</i>
+      <span>Insights</span>
+    </a>
+
+    <a href="accounts.html" class="nav-item">
+      <i class="icon">🏦</i>
+      <span>Accounts</span>
+    </a>
+
+    <a href="settings.html" class="nav-item">
+      <i class="icon">⚙️</i>
+      <span>Settings</span>
+    </a>
+  </nav>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="dashboard.js"></script>
-<nav class="bottom-nav">
-  <a href="dashboard.html" class="nav-item active">
-    <i class="icon">📊</i>
-    <span>Dashboard</span>
-  </a>
-
-  <a href="insights.html" class="nav-item">
-    <i class="icon">💡</i>
-    <span>Insights</span>
-  </a>
-
-  <a href="accounts.html" class="nav-item">
-    <i class="icon">🏦</i>
-    <span>Accounts</span>
-  </a>
-
-  <a href="settings.html" class="nav-item">
-    <i class="icon">⚙️</i>
-    <span>Settings</span>
-  </a>
-</nav>
-   <script src="app.js"></script>
+  <script src="app.js"></script>
   <script src="premium.js"></script>
-    <script>
-  const path = window.location.pathname;
-  document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-    if (path.includes(item.getAttribute('href'))) {
-      item.classList.add('active');
-    }
-  });
-</script>
+
+  <script>
+    const path = window.location.pathname;
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+      if (path.includes(item.getAttribute('href'))) {
+        item.classList.add('active');
+      }
+    });
+  </script>
+
 </body>
 </html>
