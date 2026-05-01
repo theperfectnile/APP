@@ -78,7 +78,6 @@ async function loadDashboard() {
     console.error("Save entry error:", err);
     showToast("Error saving entry", "error");
   }
-}
 
 // -------------------------------
 // Analyze Insights
