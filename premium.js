@@ -15,3 +15,22 @@ function enablePremium() {
 function disablePremium() {
   localStorage.setItem(PREMIUM_KEY, "false");
 }
+// premium.js
+
+function isPremium() {
+    return localStorage.getItem("vaultwise_premium") === "true";
+}
+
+function applyPremiumLocks() {
+    const premiumSections = document.querySelectorAll(".premium-lock");
+
+    premiumSections.forEach(section => {
+        if (!isPremium()) {
+            section.classList.add("premium-locked");
+        } else {
+            section.classList.remove("premium-locked");
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", applyPremiumLocks);
