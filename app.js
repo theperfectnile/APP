@@ -44,45 +44,6 @@ async function loginUser(email, password) {
 }
 
 // ===============================
-// FORGOT PASSWORD (TEMP VERSION)
-// ===============================
-async function sendReset(event) {
-  event.preventDefault();
-
-  const email = document.querySelector("#forgotEmail").value.trim();
-  const msg = document.querySelector("#forgotMessage");
-
-  try {
-    const res = await fetch(`${API}/api/auth/forgot-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      msg.textContent = data.message || "Reset link sent!";
-      msg.style.color = "#00ffaa";
-    } else {
-      msg.textContent = data.message || "Email not found";
-      msg.style.color = "#ff4d4d";
-    }
-  } catch (err) {
-    msg.textContent = "Network error — try again later.";
-    msg.style.color = "#ff4d4d";
-  }
-}
-
-// ===============================
-// RESET PASSWORD (TEMP VERSION)
-// ===============================
-async function resetPassword(event) {
-  event.preventDefault();
-  alert("Reset password is not implemented yet.");
-}
-
-// ===============================
 // FINANCE HELPERS
 // ===============================
 async function fetchSummary() {
@@ -101,6 +62,9 @@ async function fetchHistory() {
   return res.json();
 }
 
+// ===============================
+// SAVE ENTRY
+// ===============================
 async function saveEntry() {
   const token = getToken();
 
@@ -129,16 +93,6 @@ async function saveEntry() {
   }
 }
 
-async function analyzeInsights() {
-  const token = getToken();
-  const res = await fetch(`${API}/api/finance/analyze`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const data = await res.json();
-  alert(data.message || "No insights returned");
-}
-
 // ===============================
 // DASHBOARD INIT
 // ===============================
@@ -152,10 +106,10 @@ async function initDashboard() {
   const summary = await fetchSummary();
   const history = await fetchHistory();
 
-  document.getElementById("income").innerText = `$${summary.monthlyIncome ?? 0}`;
-  document.getElementById("expenses").innerText = `$${summary.monthlyExpenses ?? 0}`;
-  document.getElementById("savings").innerText = `$${summary.netSavings ?? 0}`;
-  document.getElementById("portfolio").innerText = `$${summary.portfolioValue ?? 0}`;
+  // MATCHES YOUR HTML IDs
+  document.getElementById("totalIncome").innerText = `$${summary.monthlyIncome ?? 0}`;
+  document.getElementById("totalExpenses").innerText = `$${summary.monthlyExpenses ?? 0}`;
+  document.getElementById("totalPortfolio").innerText = `$${summary.portfolioValue ?? 0}`;
 
   const table = document.getElementById("history-body");
   table.innerHTML = "";
