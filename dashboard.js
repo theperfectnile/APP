@@ -73,23 +73,7 @@ async function loadDashboard() {
   }
 }
 
-  try {
-    const res = await fetch("https://backend-qkz7.onrender.com/api/finance/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      showToast("Entry saved!", "success");
-      location.reload();
-    } else {
-      showToast("Failed to save entry", "error");
-    }
-
+  
   } catch (err) {
     console.error("Save entry error:", err);
     showToast("Error saving entry", "error");
