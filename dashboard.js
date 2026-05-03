@@ -69,7 +69,29 @@ async function loadDashboard() {
     showToast("Error loading dashboard summary", "error");
   }
 }
+async function loadMoneyPersonality() {
+  try {
+    const res = await fetch(`${API_BASE}/money-personality/result`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
 
+    const data = await res.json();
+
+    if (data.personalityType) {
+      document.getElementById("moneyPersonalityType").innerText =
+        data.personalityType;
+    } else {
+      document.getElementById("moneyPersonalityType").innerText =
+        "No results yet";
+    }
+  } catch (err) {
+    console.error("Money Personality load error:", err);
+    document.getElementById("moneyPersonalityType").innerText =
+      "Error loading";
+  }
+}
 // -------------------------------
 // Save Entry
 // -------------------------------
@@ -394,3 +416,45 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("history-body")) loadHistory();
   renderMoodJournal();
 });
+function openMoneyPersonalitySurvey() {
+  const modal = document.getElementById("moneyPersonalityModal");
+  modal.style.display = "block";
+}
+
+function closeMoneyPersonalitySurvey() {
+  const modal = document.getElementById("moneyPersonalityModal");
+  modal.style.display = "none";
+}
+
+async function submitMoneyPersonalitySurvey() {
+  const answers = [
+    document.getElementById("mp_q1").value,
+    document.getElementById("mp_q2").value,
+    document.getElementById("mp_q3").value,
+    document.getElementById("mp_q4").value
+  ];
+
+  try {
+    const res = await fetch(`${API_BASE}/money-personality/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({ answers })
+    });
+
+    const data = await res.json();
+
+    if (data.personalityType) {
+      alert(`Your Money Personality: ${data.personalityType}`);
+      closeMoneyPersonalitySurvey();
+      loadMoneyPersonality();
+    } else {
+      alert("There was an issue saving your result.");
+    }
+  } catch (err) {
+    console.error("Money Personality submit error:", err);
+    alert("Error submitting survey.");
+  }
+}
