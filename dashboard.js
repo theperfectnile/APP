@@ -1,3 +1,4 @@
+const API_BASE = "https://backend-qkz7.onrender.com/api";
 // -------------------------------
 // Toast Notifications
 // -------------------------------
@@ -18,6 +19,22 @@ function showToast(message, type = "info") {
 // -------------------------------
 function getToken() {
   return localStorage.getItem("token");
+  async function loadUser() {
+  try {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+
+    const data = await res.json();
+
+    if (!data || data.message === "Unauthorized") {
+      logout();
+    }
+  } catch (err) {
+    console.error("User load error:", err);
+    logout();
+  }
+}
 }
 
 function logout() {
@@ -54,7 +71,7 @@ async function loadDashboard() {
   if (!token) return;
 
   try {
-    const res = await fetch("https://backend-qkz7.onrender.com/api/finance/summary", {
+    const res = await fetch(`${API_BASE}/finance/summary`)
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -137,7 +154,7 @@ async function loadHistory() {
   if (!token) return;
 
   try {
-    const res = await fetch("https://backend-qkz7.onrender.com/api/finance/history", {
+    const res = await fetch(`${API_BASE}/finance/all`)
       headers: { Authorization: `Bearer ${token}` }
     });
 
