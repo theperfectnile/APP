@@ -142,7 +142,11 @@
     <section class="panel fade-in">
       <h2>Personalized Lifestyle & Finance Survey</h2>
       <p class="panel-subtext">Answer honestly to receive tailored recommendations.</p>
-
+<div class="survey-card">
+  <h3>Your Money Personality</h3>
+  <p id="moneyPersonalityType">Loading...</p>
+  <button onclick="openMoneyPersonalitySurvey()">Take Survey</button>
+</div>
       <div class="form-grid">
 
         <!-- Q1–Q10 -->
@@ -353,6 +357,41 @@
   <script src="auth.js"></script>
   <script src="premium.js"></script>
   <script src="dashboard.js"></script>
+<div id="moneyPersonalityModal" class="modal">
+  <div class="modal-content">
+    <h2>Money Personality Survey</h2>
 
+    <label>1. How often do you budget?</label>
+    <select id="mp_q1">
+      <option value="1">Always</option>
+      <option value="5">Sometimes</option>
+      <option value="10">Rarely</option>
+    </select>
+
+    <label>2. How do you feel about spending?</label>
+    <select id="mp_q2">
+      <option value="1">I avoid it</option>
+      <option value="5">Neutral</option>
+      <option value="10">I enjoy it</option>
+    </select>
+
+    <label>3. How often do you invest?</label>
+    <select id="mp_q3">
+      <option value="1">Regularly</option>
+      <option value="5">Occasionally</option>
+      <option value="10">Never</option>
+    </select>
+
+    <label>4. How do you react to financial stress?</label>
+    <select id="mp_q4">
+      <option value="1">Plan more</option>
+      <option value="5">Ignore it</option>
+      <option value="10">Spend more</option>
+    </select>
+
+    <button onclick="submitMoneyPersonalitySurvey()">Submit</button>
+    <button onclick="closeMoneyPersonalitySurvey()">Close</button>
+  </div>
+</div>
 </body>
 </html>
