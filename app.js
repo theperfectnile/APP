@@ -56,7 +56,7 @@ async function fetchSummary() {
 
 async function fetchHistory() {
   const token = getToken();
-  const res = await fetch(`${API}/api/finance/all`, {
+  const res = await fetch(`${API}/api/finance/history`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.json();
@@ -69,12 +69,10 @@ async function saveEntry() {
   const token = getToken();
 
   const payload = {
-    month: document.getElementById("month").value,
-    year: document.getElementById("year").value,
-    income: document.getElementById("monthlyIncome").value,
-    expenses: document.getElementById("monthlyExpenses").value,
-    portfolio: document.getElementById("portfolioValue").value,
-    goal: document.getElementById("savingsGoal").value
+    income: Number(document.getElementById("monthlyIncome")?.value || 0),
+    expenses: Number(document.getElementById("monthlyExpenses")?.value || 0),
+    portfolio: Number(document.getElementById("portfolioValue")?.value || 0),
+    goal: Number(document.getElementById("savingsGoal")?.value || 0)
   };
 
   const res = await fetch(`${API}/api/finance/add`, {
@@ -107,9 +105,9 @@ async function initDashboard() {
   const history = await fetchHistory();
 
   // MATCHES YOUR HTML IDs
-  document.getElementById("totalIncome").innerText = `$${summary.monthlyIncome ?? 0}`;
-  document.getElementById("totalExpenses").innerText = `$${summary.monthlyExpenses ?? 0}`;
-  document.getElementById("totalPortfolio").innerText = `$${summary.portfolioValue ?? 0}`;
+  document.getElementById("totalIncome").innerText = `$${summary.totalIncome ?? 0}`;
+  document.getElementById("totalExpenses").innerText = `$${summary.totalExpenses ?? 0}`;
+  document.getElementById("totalPortfolio").innerText = `$${summary.totalPortfolio ?? 0}`;
 
   const table = document.getElementById("history-body");
   table.innerHTML = "";
@@ -117,7 +115,7 @@ async function initDashboard() {
   history.forEach(entry => {
     table.innerHTML += `
       <tr>
-        <td>${entry.month} ${entry.year}</td>
+        <td>${entry.month}</td>
         <td>$${entry.income}</td>
         <td>$${entry.expenses}</td>
         <td>$${entry.portfolio}</td>
