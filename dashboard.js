@@ -6,7 +6,12 @@ function showToast(message, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.innerText = message;
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === "block" ? "none" : "block";
+}
 
+  
   document.body.appendChild(toast);
 
   setTimeout(() => toast.classList.add("show"), 10);
