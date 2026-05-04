@@ -37,6 +37,47 @@
   <h2>📊 Monthly Summary</h2>
 </div>
 <div id="summarySection" class="section-content">
+   <!-- Monthly Summary -->
+      <section class="panel fade-in">
+        <h2>Monthly Summary</h2>
+
+        <div class="summary-container">
+          <div class="summary-card">
+            <h3>Total Income</h3>
+            <span id="totalIncome">$0</span>
+          </div>
+
+          <div class="summary-card">
+            <h3>Total Expenses</h3>
+            <span id="totalExpenses">$0</span>
+          </div>
+
+          <div class="summary-card">
+            <h3>Portfolio Value</h3>
+            <span id="totalPortfolio">$0</span>
+          <!-- History Table -->
+      <section class="panel fade-in">
+        <h2>History</h2>
+        <p class="panel-subtext">Track your income, expenses, portfolio, and goals.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Income</th>
+                <th>Expenses</th>
+                <th>Portfolio</th>
+                <th>Goal</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+      </section>
+          </div>
+        </div>
+      </section>
   <!-- your summary cards go here -->
 </div>
 
@@ -75,28 +116,6 @@
     <!-- PREMIUM‑LOCKED FINANCE AREA -->
     <div class="premium-lock" data-feature="finance">
 
-      <!-- Monthly Summary -->
-      <section class="panel fade-in">
-        <h2>Monthly Summary</h2>
-
-        <div class="summary-container">
-          <div class="summary-card">
-            <h3>Total Income</h3>
-            <span id="totalIncome">$0</span>
-          </div>
-
-          <div class="summary-card">
-            <h3>Total Expenses</h3>
-            <span id="totalExpenses">$0</span>
-          </div>
-
-          <div class="summary-card">
-            <h3>Portfolio Value</h3>
-            <span id="totalPortfolio">$0</span>
-          </div>
-        </div>
-      </section>
-
       <!-- Quick Actions -->
       <section class="panel fade-in">
         <h2>Quick Actions</h2>
@@ -105,27 +124,6 @@
         <div class="form-actions">
           <button class="btn-primary" onclick="saveEntry()">Save Entry</button>
           <button class="btn-secondary" onclick="analyzeInsights()">Analyze Insights</button>
-        </div>
-      </section>
-
-      <!-- History Table -->
-      <section class="panel fade-in">
-        <h2>History</h2>
-        <p class="panel-subtext">Track your income, expenses, portfolio, and goals.</p>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Income</th>
-                <th>Expenses</th>
-                <th>Portfolio</th>
-                <th>Goal</th>
-              </tr>
-            </thead>
-            <tbody id="history-body"></tbody>
-          </table>
         </div>
       </section>
 
