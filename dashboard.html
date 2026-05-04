@@ -32,7 +32,46 @@
         <span>Your financial overview at a glance</span>
       </div>
     </header>
+<!-- SUMMARY -->
+<div class="section" onclick="toggleSection('summarySection')">
+  <h2>📊 Monthly Summary</h2>
+</div>
+<div id="summarySection" class="section-content">
+  <!-- your summary cards go here -->
+</div>
 
+<!-- HISTORY -->
+<div class="section" onclick="toggleSection('historySection')">
+  <h2>📜 Finance History</h2>
+</div>
+<div id="historySection" class="section-content">
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Category</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody id="historyTableBody"></tbody>
+  </table>
+</div>
+
+<!-- SURVEYS -->
+<div class="section" onclick="toggleSection('surveySection')">
+  <h2>📝 Surveys</h2>
+</div>
+<div id="surveySection" class="section-content">
+  <button onclick="openMoneyPersonalityModal()">Money Personality Survey</button>
+</div>
+
+<!-- MONEY PERSONALITY RESULT -->
+<div class="section" onclick="toggleSection('mpResultSection')">
+  <h2>💡 Money Personality Result</h2>
+</div>
+<div id="mpResultSection" class="section-content">
+  <div id="mpResult"></div>
+</div>
     <!-- PREMIUM‑LOCKED FINANCE AREA -->
     <div class="premium-lock" data-feature="finance">
 
