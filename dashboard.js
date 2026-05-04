@@ -480,3 +480,4 @@ async function submitMoneyPersonalitySurvey() {
     alert("Error submitting survey.");
   }
 }
+
