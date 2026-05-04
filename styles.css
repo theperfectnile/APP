@@ -453,3 +453,23 @@ canvas {
     font-size: 1rem;
     font-weight: bold;
 }
+/* Collapsible Dashboard Sections */
+.section {
+  background: #f5f5f5;
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.section h2 {
+  margin: 0;
+}
+
+.section-content {
+  display: none;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
