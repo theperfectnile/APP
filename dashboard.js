@@ -480,4 +480,9 @@ async function submitMoneyPersonalitySurvey() {
     alert("Error submitting survey.");
   }
 }
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
 
+  el.style.display = el.style.display === "block" ? "none" : "block";
+}
