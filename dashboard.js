@@ -40,7 +40,6 @@ function getToken() {
     logout();
   }
 }
-}
 
 function logout() {
   localStorage.removeItem("token");
