@@ -7,7 +7,6 @@
 </head>
 
 <body id="dashboard">
-
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
@@ -24,7 +23,6 @@
 
   <!-- Main Content -->
   <main class="main-content">
-
     <!-- Header -->
     <header class="page-header fade-in">
       <div>
@@ -32,15 +30,15 @@
         <span>Your financial overview at a glance</span>
       </div>
     </header>
-<!-- SUMMARY -->
-<div class="section" onclick="toggleSection('summarySection')">
-  <h2>📊 Monthly Summary</h2>
-</div>
-<div id="summarySection" class="section-content">
-   <!-- Monthly Summary -->
-      <section class="panel fade-in">
-        <h2>Monthly Summary</h2>
 
+    <!-- PREMIUM‑LOCKED FINANCE AREA -->
+    <div class="premium-lock" data-feature="finance">
+
+      <!-- 📊 Monthly Summary (collapsible) -->
+      <div class="section" onclick="toggleSection('summarySection')">
+        <h2>📊 Monthly Summary</h2>
+      </div>
+      <div id="summarySection" class="section-content">
         <div class="summary-container">
           <div class="summary-card">
             <h3>Total Income</h3>
@@ -53,381 +51,75 @@
           </div>
 
           <div class="summary-card">
-            <h3>Portfolio Value</h3>
-            <span id="totalPortfolio">$0</span>
-          <!-- History Table -->
-      <section class="panel fade-in">
-        <h2>History</h2>
-        <p class="panel-subtext">Track your income, expenses, portfolio, and goals.</p>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Income</th>
-                <th>Expenses</th>
-                <th>Portfolio</th>
-                <th>Goal</th>
-              </tr>
-            </thead>
-            <tbody id="history-body"></tbody>
-          </table>
-        </div>
-      </section>
-          </div>
-        </div>
-      </section>
-  <!-- your summary cards go here -->
-</div>
-
-<!-- HISTORY -->
-<div class="section" onclick="toggleSection('historySection')">
-  <h2>📜 Finance History</h2>
-</div>
-<div id="historySection" class="section-content">
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Category</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
-    <tbody id="historyTableBody"></tbody>
-  </table>
-</div>
-
-<!-- SURVEYS -->
-<div class="section" onclick="toggleSection('surveySection')">
-  <h2>📝 Surveys</h2>
-</div>
-<div id="surveySection" class="section-content">
-  <button onclick="openMoneyPersonalityModal()">Money Personality Survey</button>
-</div>
-
-<!-- MONEY PERSONALITY RESULT -->
-<div class="section" onclick="toggleSection('mpResultSection')">
-  <h2>💡 Money Personality Result</h2>
-</div>
-<div id="mpResultSection" class="section-content">
-  <div id="mpResult"></div>
-</div>
-    <!-- PREMIUM‑LOCKED FINANCE AREA -->
-    <div class="premium-lock" data-feature="finance">
-
-      <!-- Quick Actions -->
-      <section class="panel fade-in">
-        <h2>Quick Actions</h2>
-        <p class="panel-subtext">Log a new entry or generate insights.</p>
-
-        <div class="form-actions">
-          <button class="btn-primary" onclick="saveEntry()">Save Entry</button>
-          <button class="btn-secondary" onclick="analyzeInsights()">Analyze Insights</button>
-        </div>
-      </section>
-
-      <!-- Insights -->
-      <section class="panel fade-in">
-        <h2>Financial Insights</h2>
-
-        <div class="insights-grid">
-
-          <div class="insight-card">
-            <h3>Personality Type</h3>
-            <p id="personalityType">Complete the survey to discover your financial personality.</p>
+            <h3>Net Cash Flow</h3>
+            <span id="netCashFlow">$0</span>
           </div>
 
-          <div class="insight-card">
-            <h3>Life Score</h3>
-            <p id="lifeScoreValue">-- / 100</p>
+          <div class="summary-card">
+            <h3>Savings Rate</h3>
+            <span id="savingsRate">0%</span>
           </div>
-
-          <div class="insight-card">
-            <h3>Micro‑Habits</h3>
-            <ul id="microHabitsList">
-              <li>Complete the survey to unlock personalized micro‑habits.</li>
-            </ul>
-          </div>
-
-          <div class="insight-card">
-            <h3>Weekly Report</h3>
-            <p id="weeklyReportText">Your weekly report will appear here.</p>
-          </div>
-
-          <div class="insight-card">
-            <h3>Kid Budget Recommendation</h3>
-            <p id="kidBudgetValue">Complete the survey to see your recommended kid budget.</p>
-          </div>
-
         </div>
-      </section>
-
-    </div>
-    <!-- END PREMIUM‑LOCK -->
-
-    <!-- Hero Panel -->
-    <section class="panel fade-in">
-      <img
-        src="dashboard-hero.jpg"
-        alt="Black family or individual reviewing finances"
-        style="width:100%;border-radius:12px;object-fit:cover;max-height:260px;"
-      />
-    </section>
-
-    <!-- Survey -->
-    <section class="panel fade-in">
-      <h2>Personalized Lifestyle & Finance Survey</h2>
-      <p class="panel-subtext">Answer honestly to receive tailored recommendations.</p>
-<div class="survey-card">
-  <h3>Your Money Personality</h3>
-  <p id="moneyPersonalityType">Loading...</p>
-  <button onclick="openMoneyPersonalitySurvey()">Take Survey</button>
-</div>
-      <div class="form-grid">
-
-        <!-- Q1–Q10 -->
-        <div class="form-group">
-          <label>1. How often do you eat out or order takeout?</label>
-          <select id="q1">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>2. How often do you meal plan?</label>
-          <select id="q2">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>3. How often do you waste groceries?</label>
-          <select id="q3">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>4. How often do you choose convenience foods?</label>
-          <select id="q4">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>5. How often do you exercise?</label>
-          <select id="q5">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>6. How often do you feel low-energy?</label>
-          <select id="q6">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>7. How often do you review statements?</label>
-          <select id="q7">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>8. How often do you save or invest?</label>
-          <select id="q8">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>9. How often do you impulse buy?</label>
-          <select id="q9">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>10. How often do you buy non-essential items for kids?</label>
-          <select id="q10">
-            <option value="1">Never</option>
-            <option value="2">Rarely</option>
-            <option value="3">Sometimes</option>
-            <option value="4">Often</option>
-            <option value="5">Very Often</option>
-          </select>
-        </div>
-
       </div>
 
-      <div class="form-actions">
-        <button class="btn-primary" onclick="calculateSurvey()">Get Recommendations</button>
+      <!-- 📜 Finance History (collapsible) -->
+      <div class="section" onclick="toggleSection('historySection')">
+        <h2>📜 Finance History</h2>
+      </div>
+      <div id="historySection" class="section-content">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody"></tbody>
+        </table>
       </div>
 
-    </section>
+      <!-- 📝 Surveys (collapsible) -->
+      <div class="section" onclick="toggleSection('surveySection')">
+        <h2>📝 Surveys</h2>
+      </div>
+      <div id="surveySection" class="section-content">
+        <div class="survey-actions">
+          <button class="primary-btn" onclick="openMoneyPersonalityModal()">
+            Money Personality Survey
+          </button>
+          <!-- Add other survey buttons here if you have them -->
+        </div>
 
-    <!-- Survey Results -->
-    <section class="panel fade-in">
-      <h2>Your Personalized Recommendations</h2>
-      <p id="surveyResults">Complete the survey to see your results.</p>
-    </section>
+        <!-- Money Personality Modal -->
+        <div id="moneyPersonalityModal" class="modal" style="display: none;">
+          <div class="modal-content">
+            <span class="close" onclick="closeMoneyPersonalityModal()">&times;</span>
+            <h2>Money Personality Survey</h2>
+            <p>Answer the questions to discover your money personality.</p>
+            <form id="moneyPersonalityForm">
+              <!-- Your existing survey questions/inputs go here -->
+            </form>
+            <button type="button" class="primary-btn" onclick="submitMoneyPersonalitySurvey()">
+              Submit Survey
+            </button>
+          </div>
+        </div>
+      </div>
 
-    <!-- Personality -->
-    <section class="panel fade-in">
-      <h2>Your Money Personality</h2>
-      <p id="personalityType">Complete the survey to discover your financial personality.</p>
-    </section>
+      <!-- 💡 Money Personality Result (collapsible) -->
+      <div class="section" onclick="toggleSection('mpResultSection')">
+        <h2>💡 Money Personality Result</h2>
+      </div>
+      <div id="mpResultSection" class="section-content">
+        <div id="mpResult" class="result-card">
+          <!-- JS will populate this with the user’s money personality result -->
+        </div>
+      </div>
 
-    <!-- Life Score -->
-    <section class="panel fade-in">
-      <h2>Your Life Score</h2>
-      <p id="lifeScoreValue">Complete the survey to see your score.</p>
-    </section>
-
-    <!-- Micro Habits -->
-    <section class="panel fade-in">
-      <h2>Today's Micro‑Habits</h2>
-      <ul id="microHabitsList"></ul>
-    </section>
-
-    <!-- Weekly Report -->
-    <section class="panel fade-in">
-      <h2>Your Weekly Report</h2>
-      <p id="weeklyReportText">Complete the survey to generate your weekly report.</p>
-    </section>
-
-    <!-- Kid Budget -->
-    <section class="panel fade-in">
-      <h2>Kid Budget Recommendation</h2>
-      <p id="kidBudgetValue">Complete the survey to see your recommended kid budget.</p>
-    </section>
-
-    <!-- Mood Journal -->
-    <section class="panel fade-in">
-      <h2>Mood + Money Journal</h2>
-
-      <label for="moodSelect">How are you feeling today?</label>
-      <select id="moodSelect">
-        <option value="">Select mood...</option>
-        <option value="happy">😊 Happy</option>
-        <option value="stressed">😣 Stressed</option>
-        <option value="tired">😴 Tired</option>
-        <option value="motivated">💪 Motivated</option>
-        <option value="anxious">😟 Anxious</option>
-        <option value="neutral">😐 Neutral</option>
-      </select>
-
-      <label for="moodNote" style="margin-top:12px;display:block;">Notes about your day or spending:</label>
-      <textarea id="moodNote" placeholder="Write a quick reflection..."></textarea>
-
-      <button class="btn-primary" style="margin-top:12px;" onclick="saveMoodEntry()">Save Entry</button>
-
-      <h3 style="margin-top:18px;">Recent Entries</h3>
-      <ul id="moodJournalList"></ul>
-    </section>
-
+    </div> <!-- end premium-lock -->
   </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item active">
-      <i class="icon">📊</i>
-      <span>Dashboard</span>
-    </a>
-
-    <a href="insights.html" class="nav-item">
-      <i class="icon">💡</i>
-      <span>Insights</span>
-    </a>
-
-    <a href="accounts.html" class="nav-item">
-      <i class="icon">🏦</i>
-      <span>Accounts</span>
-    </a>
-
-    <a href="settings.html" class="nav-item">
-      <i class="icon">⚙️</i>
-      <span>Settings</span>
-    </a>
-  </nav>
-
-  <!-- Scripts -->
-  <script src="premium.js"></script>
   <script src="dashboard.js"></script>
-<div id="moneyPersonalityModal" class="modal">
-  <div class="modal-content">
-    <h2>Money Personality Survey</h2>
-
-    <label>1. How often do you budget?</label>
-    <select id="mp_q1">
-      <option value="1">Always</option>
-      <option value="5">Sometimes</option>
-      <option value="10">Rarely</option>
-    </select>
-
-    <label>2. How do you feel about spending?</label>
-    <select id="mp_q2">
-      <option value="1">I avoid it</option>
-      <option value="5">Neutral</option>
-      <option value="10">I enjoy it</option>
-    </select>
-
-    <label>3. How often do you invest?</label>
-    <select id="mp_q3">
-      <option value="1">Regularly</option>
-      <option value="5">Occasionally</option>
-      <option value="10">Never</option>
-    </select>
-
-    <label>4. How do you react to financial stress?</label>
-    <select id="mp_q4">
-      <option value="1">Plan more</option>
-      <option value="5">Ignore it</option>
-      <option value="10">Spend more</option>
-    </select>
-
-    <button onclick="submitMoneyPersonalitySurvey()">Submit</button>
-    <button onclick="closeMoneyPersonalitySurvey()">Close</button>
-  </div>
-</div>
 </body>
 </html>
