@@ -1,4 +1,5 @@
 const API_BASE = "https://backend-qkz7.onrender.com/api";
+
 // -------------------------------
 // Toast Notifications
 // -------------------------------
@@ -6,12 +7,7 @@ function showToast(message, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.innerText = message;
-function toggleSection(id) {
-  const el = document.getElementById(id);
-  el.style.display = el.style.display === "block" ? "none" : "block";
-}
 
-  
   document.body.appendChild(toast);
 
   setTimeout(() => toast.classList.add("show"), 10);
@@ -20,11 +16,23 @@ function toggleSection(id) {
 }
 
 // -------------------------------
+// Collapsible Sections
+// -------------------------------
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.style.display = el.style.display === "block" ? "none" : "block";
+}
+
+// -------------------------------
 // Auth Helpers
 // -------------------------------
 function getToken() {
   return localStorage.getItem("token");
-  async function loadUser() {
+}
+
+async function loadUser() {
   try {
     const res = await fetch(`${API_BASE}/auth/me`, {
       headers: { Authorization: `Bearer ${getToken()}` }
@@ -75,7 +83,7 @@ async function loadDashboard() {
   if (!token) return;
 
   try {
-    const res = await fetch(`${API_BASE}/finance/summary`)
+    const res = await fetch(`${API_BASE}/finance/summary`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -84,12 +92,15 @@ async function loadDashboard() {
     animateValue("totalIncome", data.totalIncome || 0);
     animateValue("totalExpenses", data.totalExpenses || 0);
     animateValue("totalPortfolio", data.totalPortfolio || 0);
-
   } catch (err) {
     console.error("Dashboard summary error:", err);
     showToast("Error loading dashboard summary", "error");
   }
 }
+
+// -------------------------------
+// Load Money Personality Result
+// -------------------------------
 async function loadMoneyPersonality() {
   try {
     const res = await fetch(`${API_BASE}/money-personality/result`, {
@@ -113,6 +124,7 @@ async function loadMoneyPersonality() {
       "Error loading";
   }
 }
+
 // -------------------------------
 // Save Entry
 // -------------------------------
@@ -128,7 +140,7 @@ async function saveEntry() {
   };
 
   try {
-    const res = await fetch("https://backend-qkz7.onrender.com/api/finance/add", {
+    const res = await fetch(`${API_BASE}/finance/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -143,7 +155,6 @@ async function saveEntry() {
     } else {
       showToast("Failed to save entry", "error");
     }
-
   } catch (err) {
     console.error("Save entry error:", err);
     showToast("Error saving entry", "error");
@@ -158,12 +169,14 @@ async function loadHistory() {
   if (!token) return;
 
   try {
-    const res = await fetch(`${API_BASE}/finance/all`)
+    const res = await fetch(`${API_BASE}/finance/all`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
     const data = await res.json();
     const tbody = document.getElementById("history-body");
+
+    if (!tbody) return;
 
     tbody.innerHTML = data
       .map(
@@ -177,7 +190,6 @@ async function loadHistory() {
       </tr>`
       )
       .join("");
-
   } catch (err) {
     console.error("History load error:", err);
     showToast("Error loading history", "error");
@@ -433,18 +445,23 @@ function renderMoodJournal() {
 // Page Initialization
 // -------------------------------
 document.addEventListener("DOMContentLoaded", () => {
+  loadUser();
   if (document.getElementById("totalIncome")) loadDashboard();
   if (document.getElementById("history-body")) loadHistory();
   renderMoodJournal();
 });
+
+// -------------------------------
+// Money Personality Survey
+// -------------------------------
 function openMoneyPersonalitySurvey() {
   const modal = document.getElementById("moneyPersonalityModal");
-  modal.style.display = "block";
+  if (modal) modal.style.display = "block";
 }
 
 function closeMoneyPersonalitySurvey() {
   const modal = document.getElementById("moneyPersonalityModal");
-  modal.style.display = "none";
+  if (modal) modal.style.display = "none";
 }
 
 async function submitMoneyPersonalitySurvey() {
@@ -478,10 +495,4 @@ async function submitMoneyPersonalitySurvey() {
     console.error("Money Personality submit error:", err);
     alert("Error submitting survey.");
   }
-}
-function toggleSection(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  el.style.display = el.style.display === "block" ? "none" : "block";
 }
