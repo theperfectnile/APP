@@ -48,7 +48,6 @@ async function loadUser() {
     logout();
   }
 }
-
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "/APP/login.html";
