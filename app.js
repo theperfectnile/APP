@@ -34,13 +34,27 @@ async function registerUser(email, password) {
 // ===============================
 // LOGIN
 // ===============================
-async function loginUser(email, password) {
-  const res = await fetch(`${API}/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+const loginForm = document.querySelector("#loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.querySelector("#email").value.trim();
+    const password = document.querySelector("#password").value.trim();
+
+    const data = await loginUser(email, password);
+
+    // Accept ANY token field the backend might return
+    const token = data.token || data.accessToken || data.jwt;
+
+    if (!token) {
+      alert(data.message || "Login failed");
+      return;
+    }
+
+    saveToken(token);
+    window.location.href = "dashboard.html";
   });
-  return res.json();
 }
 
 // ===============================
