@@ -20,6 +20,19 @@ function logout() {
 }
 
 // ===============================
+// LOGIN FUNCTION (THIS WAS MISSING)
+// ===============================
+async function loginUser(email, password) {
+  const res = await fetch(`${API}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  return res.json();
+}
+
+// ===============================
 // REGISTER
 // ===============================
 async function registerUser(email, password) {
@@ -32,7 +45,7 @@ async function registerUser(email, password) {
 }
 
 // ===============================
-// LOGIN
+// LOGIN HANDLER (ONLY ONE VERSION)
 // ===============================
 const loginForm = document.querySelector("#loginForm");
 if (loginForm) {
@@ -118,7 +131,6 @@ async function initDashboard() {
   const summary = await fetchSummary();
   const history = await fetchHistory();
 
-  // MATCHES YOUR HTML IDs
   document.getElementById("totalIncome").innerText = `$${summary.totalIncome ?? 0}`;
   document.getElementById("totalExpenses").innerText = `$${summary.totalExpenses ?? 0}`;
   document.getElementById("totalPortfolio").innerText = `$${summary.totalPortfolio ?? 0}`;
@@ -171,23 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         alert("Network error");
       }
-    });
-  }
-
-  // LOGIN PAGE
-  const loginForm = document.querySelector("#loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.querySelector("#email").value.trim();
-      const password = document.querySelector("#password").value.trim();
-      const data = await loginUser(email, password);
-      if (!data.token) {
-        alert(data.message || "Login failed");
-        return;
-      }
-      saveToken(data.token);
-      window.location.href = "dashboard.html";
     });
   }
 
