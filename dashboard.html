@@ -31,146 +31,112 @@
       </div>
     </header>
 
-  <!-- PREMIUM‑LOCKED FINANCE AREA -->
-<div class="premium-lock" data-feature="finance">
+    <!-- PREMIUM‑LOCKED FINANCE AREA -->
+    <div class="premium-lock" data-feature="finance">
 
-  <!-- 🔒 PREMIUM OVERLAY -->
-  <div id="premiumOverlay" class="premium-overlay hidden">
-    <div class="premium-box">
-      <h2>🔒 Premium Feature</h2>
-      <p>Monthly Summary & Finance History are available with Premium.</p>
-      <p>Start your <strong>7‑day free trial</strong> to unlock full access.</p>
-      <button id="startTrialBtn" class="trial-btn">Start Free Trial</button>
-    </div>
-  </div>
-
-  <!-- 📊 Monthly Summary (collapsible) -->
-  <div class="section" onclick="toggleSection('summarySection')">
-    <h2>📊 Monthly Summary</h2>
-  </div>
-  <div id="summarySection" class="section-content premium-content">
-    <div class="summary-container">
-      <div class="summary-card">
-        <h3>Total Income</h3>
-        <span id="totalIncome">$0</span>
-      </div>
-
-      <div class="summary-card">
-        <h3>Total Expenses</h3>
-        <span id="totalExpenses">$0</span>
-      </div>
-
-      <div class="summary-card">
-        <h3>Net Cash Flow</h3>
-        <span id="netCashFlow">$0</span>
-      </div>
-
-      <div class="summary-card">
-        <h3>Savings Rate</h3>
-        <span id="savingsRate">0%</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 📜 Finance History (collapsible) -->
-  <div class="section" onclick="toggleSection('historySection')">
-    <h2>📜 Finance History</h2>
-  </div>
-  <div id="historySection" class="section-content premium-content">
-    <table class="history-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Category</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody id="historyTableBody"></tbody>
-    </table>
-  </div>
-<!-- 💡 Financial Habits Survey -->
-<div class="section" onclick="toggleSection('surveySection')">
-  <h2>💡 Financial Habits Survey</h2>
-</div>
-<div id="surveySection" class="section-content">
-  <form id="surveyForm">
-    <p><strong>Survey 1 – Spending Awareness</strong></p>
-    <label>How often do you track your expenses?</label>
-    <select name="q1">
-      <option value="3">Always</option>
-      <option value="2">Sometimes</option>
-      <option value="1">Rarely</option>
-    </select>
-
-    <p><strong>Survey 2 – Saving Discipline</strong></p>
-    <label>Do you set aside money for savings each month?</label>
-    <select name="q2">
-      <option value="3">Yes, consistently</option>
-      <option value="2">Occasionally</option>
-      <option value="1">Never</option>
-    </select>
-
-    <p><strong>Survey 3 – Investment Confidence</strong></p>
-    <label>How confident are you in making investment decisions?</label>
-    <select name="q3">
-      <option value="3">Very confident</option>
-      <option value="2">Somewhat confident</option>
-      <option value="1">Not confident</option>
-    </select>
-
-    <button type="submit" class="survey-btn">Submit Surveys</button>
-  </form>
-</div>
-
-<!-- 🧠 Money Personality Result -->
-<div class="section" onclick="toggleSection('personalitySection')">
-  <h2>🧠 Money Personality Result</h2>
-</div>
-<div id="personalitySection" class="section-content">
-  <div id="personalityResult" class="personality-box">
-    <p>Complete the surveys above to reveal your money personality.</p>
-  </div>
-</div>
-</div>
-      <!-- 📝 Surveys (collapsible) -->
-      <div class="section" onclick="toggleSection('surveySection')">
-        <h2>📝 Surveys</h2>
-      </div>
-      <div id="surveySection" class="section-content">
-        <div class="survey-actions">
-          <button class="primary-btn" onclick="openMoneyPersonalityModal()">
-            Money Personality Survey
-          </button>
-          <!-- Add other survey buttons here if you have them -->
+      <!-- 🔒 PREMIUM OVERLAY -->
+      <div id="premiumOverlay" class="premium-overlay hidden">
+        <div class="premium-box">
+          <h2>🔒 Premium Feature</h2>
+          <p>Monthly Summary & Finance History are available with Premium.</p>
+          <p>Start your <strong>7‑day free trial</strong> to unlock full access.</p>
+          <button id="startTrialBtn" class="trial-btn">Start Free Trial</button>
         </div>
+      </div>
 
-        <!-- Money Personality Modal -->
-        <div id="moneyPersonalityModal" class="modal" style="display: none;">
-          <div class="modal-content">
-            <span class="close" onclick="closeMoneyPersonalityModal()">&times;</span>
-            <h2>Money Personality Survey</h2>
-            <p>Answer the questions to discover your money personality.</p>
-            <form id="moneyPersonalityForm">
-              <!-- Your existing survey questions/inputs go here -->
-            </form>
-            <button type="button" class="primary-btn" onclick="submitMoneyPersonalitySurvey()">
-              Submit Survey
-            </button>
+      <!-- 📊 Monthly Summary -->
+      <div class="section" onclick="toggleSection('summarySection')">
+        <h2>📊 Monthly Summary</h2>
+      </div>
+      <div id="summarySection" class="section-content premium-content">
+        <div class="summary-container">
+          <div class="summary-card">
+            <h3>Total Income</h3>
+            <span id="totalIncome">$0</span>
+          </div>
+
+          <div class="summary-card">
+            <h3>Total Expenses</h3>
+            <span id="totalExpenses">$0</span>
+          </div>
+
+          <div class="summary-card">
+            <h3>Net Cash Flow</h3>
+            <span id="netCashFlow">$0</span>
+          </div>
+
+          <div class="summary-card">
+            <h3>Savings Rate</h3>
+            <span id="savingsRate">0%</span>
           </div>
         </div>
       </div>
 
-      <!-- 💡 Money Personality Result (collapsible) -->
-      <div class="section" onclick="toggleSection('mpResultSection')">
-        <h2>💡 Money Personality Result</h2>
+      <!-- 📜 Finance History -->
+      <div class="section" onclick="toggleSection('historySection')">
+        <h2>📜 Finance History</h2>
       </div>
-      <div id="mpResultSection" class="section-content">
-        <div id="mpResult" class="result-card">
-          <!-- JS will populate this with the user’s money personality result -->
+      <div id="historySection" class="section-content premium-content">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 💡 Financial Habits Survey -->
+      <div class="section" onclick="toggleSection('surveySection')">
+        <h2>💡 Financial Habits Survey</h2>
+      </div>
+      <div id="surveySection" class="section-content">
+        <form id="surveyForm">
+          <p><strong>Survey 1 – Spending Awareness</strong></p>
+          <label>How often do you track your expenses?</label>
+          <select name="q1">
+            <option value="3">Always</option>
+            <option value="2">Sometimes</option>
+            <option value="1">Rarely</option>
+          </select>
+
+          <p><strong>Survey 2 – Saving Discipline</strong></p>
+          <label>Do you set aside money for savings each month?</label>
+          <select name="q2">
+            <option value="3">Yes, consistently</option>
+            <option value="2">Occasionally</option>
+            <option value="1">Never</option>
+          </select>
+
+          <p><strong>Survey 3 – Investment Confidence</strong></p>
+          <label>How confident are you in making investment decisions?</label>
+          <select name="q3">
+            <option value="3">Very confident</option>
+            <option value="2">Somewhat confident</option>
+            <option value="1">Not confident</option>
+          </select>
+
+          <button type="submit" class="survey-btn">Submit Surveys</button>
+        </form>
+      </div>
+
+      <!-- 🧠 Money Personality Result -->
+      <div class="section" onclick="toggleSection('personalitySection')">
+        <h2>🧠 Money Personality Result</h2>
+      </div>
+      <div id="personalitySection" class="section-content">
+        <div id="personalityResult" class="personality-box">
+          <p>Complete the surveys above to reveal your money personality.</p>
         </div>
       </div>
 
+    </div> <!-- END premium-lock -->
+
   </main>
+
   <script src="app.js"></script>
   <script src="dashboard.js"></script>
 </body>
