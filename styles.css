@@ -504,3 +504,14 @@ canvas {
   text-align: center;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s ease, padding 0.3s ease;
+  padding: 0 10px;
+}
+
+.section-content.open {
+  max-height: 2000px;
+  padding: 15px 10px;
+}
