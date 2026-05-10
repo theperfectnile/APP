@@ -515,3 +515,87 @@ canvas {
   max-height: 2000px;
   padding: 15px 10px;
 }
+.group-header {
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.group-header:hover {
+  background: #e6e6e6;
+  transform: translateY(-2px);
+}
+#surveyResults,
+#personalityType,
+#lifeScoreValue,
+#weeklyReportText,
+#kidBudgetValue,
+#mpResult {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  animation: popIn 0.4s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+#moodJournalList li {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #f9f9f9;
+  border-left: 6px solid #ccc;
+}
+
+#moodJournalList li[data-mood="Happy"] {
+  border-color: #4CAF50;
+}
+
+#moodJournalList li[data-mood="Neutral"] {
+  border-color: #FFC107;
+}
+
+#moodJournalList li[data-mood="Sad"] {
+  border-color: #F44336;
+}
+button {
+  transition: transform 0.15s ease, background 0.25s ease;
+}
+
+button:active {
+  transform: scale(0.92);
+}
+#surveyGroup,
+#personalityGroup,
+#moodGroup,
+#threeQGroup {
+  background: linear-gradient(to bottom right, #ffffff, #f7f7f7);
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 10px;
+}
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-header::after {
+  content: "▼";
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.section-content.open + .group-header::after {
+  transform: rotate(180deg);
+}
+.summary-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
