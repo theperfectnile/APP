@@ -433,25 +433,39 @@ canvas {
   font-weight: bold;
   color: #4A6CF7;
 }
-.premium-locked {
-    position: relative;
-    filter: blur(3px);
-    pointer-events: none;
-    opacity: 0.5;
+.premium-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
 }
 
-.premium-locked::after {
-    content: "Premium Feature";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.7);
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
+.premium-overlay.hidden {
+  display: none;
+}
+
+.premium-box {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80%;
+  max-width: 350px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.trial-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
 }
 /* Collapsible Dashboard Sections */
 .section {
