@@ -426,9 +426,9 @@ function renderMoodJournal() {
   document.getElementById("moodJournalList").innerHTML = journal
     .slice(0, 5)
     .map(entry => `
-      <li>
+           <li data-mood="${entry.mood}">
         <strong>${entry.timestamp}</strong><br>
-        Mood: ${entry.mood}<br>
+        Mood: ${entry.mood} ${entry.mood === "Happy" ? "😊" : entry.mood === "Neutral" ? "😐" : "😢"}<br>
         ${entry.note ? `Note: ${entry.note}` : ""}
       </li>
     `)
