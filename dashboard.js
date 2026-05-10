@@ -22,6 +22,10 @@ function toggleSection(id) {
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.toggle("open");
+function toggleGroup(header, id) {
+  const section = document.getElementById(id);
+  section.classList.toggle("open");
+  header.classList.toggle("open");
 }
 
 // -------------------------------
