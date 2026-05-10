@@ -18,7 +18,30 @@ function logout() {
   localStorage.removeItem("token");
   window.location.href = "login.html";
 }
+// PREMIUM LOCK HANDLING
+const premiumOverlay = document.getElementById("premiumOverlay");
+const premiumContent = document.querySelectorAll(".premium-content");
+const startTrialBtn = document.getElementById("startTrialBtn");
 
+if (premiumOverlay && premiumContent) {
+  const unlocked = isPremium() || isTrialActive();
+
+  if (!unlocked) {
+    premiumOverlay.classList.remove("hidden");
+    premiumContent.forEach(sec => sec.style.filter = "blur(4px)");
+  } else {
+    premiumOverlay.classList.add("hidden");
+    premiumContent.forEach(sec => sec.style.filter = "none");
+  }
+
+  if (startTrialBtn) {
+    startTrialBtn.addEventListener("click", () => {
+      startTrial();
+      alert("Your 7‑day free trial has started!");
+      window.location.reload();
+    });
+  }
+}
 // ===============================
 // LOGIN FUNCTION (THIS WAS MISSING)
 // ===============================
