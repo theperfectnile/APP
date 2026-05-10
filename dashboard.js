@@ -444,6 +444,42 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("totalIncome")) loadDashboard();
   if (document.getElementById("history-body")) loadHistory();
   renderMoodJournal();
+
+  // ===============================
+  // SURVEY + PERSONALITY LOGIC
+  // ===============================
+  const surveyForm = document.getElementById("surveyForm");
+  const personalityResult = document.getElementById("personalityResult");
+
+  if (surveyForm) {
+    surveyForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const q1 = parseInt(surveyForm.q1.value);
+      const q2 = parseInt(surveyForm.q2.value);
+      const q3 = parseInt(surveyForm.q3.value);
+
+      const total = q1 + q2 + q3;
+      let personality = "";
+
+      if (total >= 8) {
+        personality = "💎 The Investor — disciplined, confident, and focused on long‑term growth.";
+      } else if (total >= 5) {
+        personality = "💰 The Saver — cautious, steady, and values financial security.";
+      } else {
+        personality = "🌀 The Spender — spontaneous, enjoys life now but needs better planning.";
+      }
+
+      localStorage.setItem("moneyPersonality", personality);
+      personalityResult.innerHTML = `<h3>Your Money Personality:</h3><p>${personality}</p>`;
+    });
+
+    // Load saved result if it exists
+    const savedPersonality = localStorage.getItem("moneyPersonality");
+    if (savedPersonality) {
+      personalityResult.innerHTML = `<h3>Your Money Personality:</h3><p>${savedPersonality}</p>`;
+    }
+  }
 });
 
 // -------------------------------
