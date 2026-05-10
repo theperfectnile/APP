@@ -34,25 +34,21 @@ function getToken() {
 
 async function loadUser() {
   try {
-    const res = await fetch(`${API_BASE}/auth/me`, {
+    const res = await fetch(`${API}/api/finance/summary`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     });
 
-    const data = await res.json();
-
-    if (!data || data.message === "Unauthorized") {
-      logout();
+    if (!res.ok) {
+      logout(); // token invalid → log out
+      return;
     }
+
+    const data = await res.json();
+    return data; // user is authenticated
   } catch (err) {
-    console.error("User load error:", err);
     logout();
   }
 }
-function logout() {
-  localStorage.removeItem("token");
-  window.location.href = "/APP/login.html";
-}
-
 // -------------------------------
 // Animated Number Counter
 // -------------------------------
