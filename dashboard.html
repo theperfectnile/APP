@@ -88,7 +88,49 @@
       <tbody id="historyTableBody"></tbody>
     </table>
   </div>
+<!-- 💡 Financial Habits Survey -->
+<div class="section" onclick="toggleSection('surveySection')">
+  <h2>💡 Financial Habits Survey</h2>
+</div>
+<div id="surveySection" class="section-content">
+  <form id="surveyForm">
+    <p><strong>Survey 1 – Spending Awareness</strong></p>
+    <label>How often do you track your expenses?</label>
+    <select name="q1">
+      <option value="3">Always</option>
+      <option value="2">Sometimes</option>
+      <option value="1">Rarely</option>
+    </select>
 
+    <p><strong>Survey 2 – Saving Discipline</strong></p>
+    <label>Do you set aside money for savings each month?</label>
+    <select name="q2">
+      <option value="3">Yes, consistently</option>
+      <option value="2">Occasionally</option>
+      <option value="1">Never</option>
+    </select>
+
+    <p><strong>Survey 3 – Investment Confidence</strong></p>
+    <label>How confident are you in making investment decisions?</label>
+    <select name="q3">
+      <option value="3">Very confident</option>
+      <option value="2">Somewhat confident</option>
+      <option value="1">Not confident</option>
+    </select>
+
+    <button type="submit" class="survey-btn">Submit Surveys</button>
+  </form>
+</div>
+
+<!-- 🧠 Money Personality Result -->
+<div class="section" onclick="toggleSection('personalitySection')">
+  <h2>🧠 Money Personality Result</h2>
+</div>
+<div id="personalitySection" class="section-content">
+  <div id="personalityResult" class="personality-box">
+    <p>Complete the surveys above to reveal your money personality.</p>
+  </div>
+</div>
 </div>
       <!-- 📝 Surveys (collapsible) -->
       <div class="section" onclick="toggleSection('surveySection')">
