@@ -4,9 +4,25 @@
   <meta charset="UTF-8" />
   <title>Vaultwise • Dashboard</title>
   <link rel="stylesheet" href="styles.css?v=3" />
+  <style>
+    body, h1, h2, h3, p, label, span, select, option, button, li {
+      color: #000000 !important;
+    }
+    .section-content { display: none; }
+    .group-header {
+      cursor: pointer;
+      padding: 12px;
+      background: #f2f2f2;
+      border-radius: 6px;
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body id="dashboard">
+
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
@@ -23,7 +39,7 @@
 
   <!-- Main Content -->
   <main class="main-content">
-    <!-- Header -->
+
     <header class="page-header fade-in">
       <div>
         <h1>Dashboard</h1>
@@ -31,113 +47,220 @@
       </div>
     </header>
 
-    <!-- PREMIUM‑LOCKED FINANCE AREA -->
-    <div class="premium-lock" data-feature="finance">
+    <!-- ========================= -->
+    <!-- 📊 GROUP 1 — FINANCE -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleSection('financeGroup')">📊 Finance</div>
+    <div id="financeGroup" class="section-content">
 
-      <!-- 🔒 PREMIUM OVERLAY -->
-      <div id="premiumOverlay" class="premium-overlay hidden">
-        <div class="premium-box">
-          <h2>🔒 Premium Feature</h2>
-          <p>Monthly Summary & Finance History are available with Premium.</p>
-          <p>Start your <strong>7‑day free trial</strong> to unlock full access.</p>
-          <button id="startTrialBtn" class="trial-btn">Start Free Trial</button>
-        </div>
-      </div>
+      <!-- PREMIUM LOCK -->
+      <div class="premium-lock" data-feature="finance">
 
-      <!-- 📊 Monthly Summary -->
-      <div class="section" onclick="toggleSection('summarySection')">
-        <h2>📊 Monthly Summary</h2>
-      </div>
-      <div id="summarySection" class="section-content premium-content">
-        <div class="summary-container">
-          <div class="summary-card">
-            <h3>Total Income</h3>
-            <span id="totalIncome">$0</span>
-          </div>
-
-          <div class="summary-card">
-            <h3>Total Expenses</h3>
-            <span id="totalExpenses">$0</span>
-          </div>
-
-          <div class="summary-card">
-            <h3>Net Cash Flow</h3>
-            <span id="netCashFlow">$0</span>
-          </div>
-
-          <div class="summary-card">
-            <h3>Savings Rate</h3>
-            <span id="savingsRate">0%</span>
+        <div id="premiumOverlay" class="premium-overlay hidden">
+          <div class="premium-box">
+            <h2>🔒 Premium Feature</h2>
+            <p>Monthly Summary & Finance History are available with Premium.</p>
+            <p>Start your <strong>7‑day free trial</strong> to unlock full access.</p>
+            <button id="startTrialBtn" class="trial-btn">Start Free Trial</button>
           </div>
         </div>
-      </div>
 
-      <!-- 📜 Finance History -->
-      <div class="section" onclick="toggleSection('historySection')">
-        <h2>📜 Finance History</h2>
-      </div>
-      <div id="historySection" class="section-content premium-content">
-        <table class="history-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Category</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody id="historyTableBody"></tbody>
-        </table>
-      </div>
-
-      <!-- 💡 Financial Habits Survey -->
-      <div class="section" onclick="toggleSection('surveySection')">
-        <h2>💡 Financial Habits Survey</h2>
-      </div>
-      <div id="surveySection" class="section-content">
-        <form id="surveyForm">
-          <p><strong>Survey 1 – Spending Awareness</strong></p>
-          <label>How often do you track your expenses?</label>
-          <select name="q1">
-            <option value="3">Always</option>
-            <option value="2">Sometimes</option>
-            <option value="1">Rarely</option>
-          </select>
-
-          <p><strong>Survey 2 – Saving Discipline</strong></p>
-          <label>Do you set aside money for savings each month?</label>
-          <select name="q2">
-            <option value="3">Yes, consistently</option>
-            <option value="2">Occasionally</option>
-            <option value="1">Never</option>
-          </select>
-
-          <p><strong>Survey 3 – Investment Confidence</strong></p>
-          <label>How confident are you in making investment decisions?</label>
-          <select name="q3">
-            <option value="3">Very confident</option>
-            <option value="2">Somewhat confident</option>
-            <option value="1">Not confident</option>
-          </select>
-
-          <button type="submit" class="survey-btn">Submit Surveys</button>
-        </form>
-      </div>
-
-      <!-- 🧠 Money Personality Result -->
-      <div class="section" onclick="toggleSection('personalitySection')">
-        <h2>🧠 Money Personality Result</h2>
-      </div>
-      <div id="personalitySection" class="section-content">
-        <div id="personalityResult" class="personality-box">
-          <p>Complete the surveys above to reveal your money personality.</p>
+        <!-- Monthly Summary -->
+        <div class="section" onclick="toggleSection('summarySection')">
+          <h2>📊 Monthly Summary</h2>
         </div>
+        <div id="summarySection" class="section-content premium-content">
+          <div class="summary-container">
+            <div class="summary-card">
+              <h3>Total Income</h3>
+              <span id="totalIncome">$0</span>
+            </div>
+
+            <div class="summary-card">
+              <h3>Total Expenses</h3>
+              <span id="totalExpenses">$0</span>
+            </div>
+
+            <div class="summary-card">
+              <h3>Total Portfolio</h3>
+              <span id="totalPortfolio">$0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Finance History -->
+        <div class="section" onclick="toggleSection('historySection')">
+          <h2>📜 Finance History</h2>
+        </div>
+        <div id="historySection" class="section-content premium-content">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Income</th>
+                <th>Expenses</th>
+                <th>Portfolio</th>
+                <th>Goal</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- 📝 GROUP 2 — 10 QUESTION SURVEY -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleSection('surveyGroup')">📝 10‑Question Survey</div>
+    <div id="surveyGroup" class="section-content">
+
+      <form id="tenQuestionSurvey">
+
+        <label>1. How often do you eat out?</label>
+        <select id="q1"><option value="1">Rarely</option><option value="3">Sometimes</option><option value="5">Often</option></select>
+
+        <label>2. Do you plan meals?</label>
+        <select id="q2"><option value="1">Never</option><option value="3">Sometimes</option><option value="5">Always</option></select>
+
+        <label>3. Do you waste food?</label>
+        <select id="q3"><option value="1">No</option><option value="3">Sometimes</option><option value="5">Yes</option></select>
+
+        <label>4. Do you rely on convenience foods?</label>
+        <select id="q4"><option value="1">No</option><option value="3">Sometimes</option><option value="5">Yes</option></select>
+
+        <label>5. How often do you exercise?</label>
+        <select id="q5"><option value="1">Never</option><option value="3">Sometimes</option><option value="5">Often</option></select>
+
+        <label>6. Energy levels?</label>
+        <select id="q6"><option value="1">High</option><option value="3">Medium</option><option value="5">Low</option></select>
+
+        <label>7. Do you review statements?</label>
+        <select id="q7"><option value="1">Never</option><option value="3">Sometimes</option><option value="5">Often</option></select>
+
+        <label>8. Do you save money?</label>
+        <select id="q8"><option value="1">Never</option><option value="3">Sometimes</option><option value="5">Often</option></select>
+
+        <label>9. Impulse spending?</label>
+        <select id="q9"><option value="1">No</option><option value="3">Sometimes</option><option value="5">Yes</option></select>
+
+        <label>10. Kid spending?</label>
+        <select id="q10"><option value="1">Low</option><option value="3">Medium</option><option value="5">High</option></select>
+
+        <button type="button" onclick="calculateSurvey()">Submit Survey</button>
+      </form>
+
+      <h3>Survey Results</h3>
+      <div id="surveyResults"></div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- 🧠 GROUP 3 — PERSONALITY INSIGHTS -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleSection('personalityGroup')">🧠 Personality Insights</div>
+    <div id="personalityGroup" class="section-content">
+
+      <h3>Personality Type</h3>
+      <div id="personalityType"></div>
+
+      <h3>Life Score</h3>
+      <div id="lifeScoreValue"></div>
+
+      <h3>Micro‑Habits</h3>
+      <ul id="microHabitsList"></ul>
+
+      <h3>Weekly Report</h3>
+      <div id="weeklyReportText"></div>
+
+      <h3>Kid Budget</h3>
+      <div id="kidBudgetValue"></div>
+
+      <h3>Money Personality Result (API)</h3>
+      <div id="moneyPersonalityType"></div>
+
+      <div id="mpResultSection">
+        <h3>API Personality Result</h3>
+        <div id="mpResult"></div>
       </div>
 
-    </div> <!-- END premium-lock -->
-<div id="moodJournal"></div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- 😊 GROUP 4 — MOOD JOURNAL -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleSection('moodGroup')">😊 Mood Journal</div>
+    <div id="moodGroup" class="section-content">
+
+      <label>Mood:</label>
+      <select id="moodSelect">
+        <option value="Happy">Happy</option>
+        <option value="Neutral">Neutral</option>
+        <option value="Sad">Sad</option>
+      </select>
+
+      <label>Note:</label>
+      <textarea id="moodNote"></textarea>
+
+      <button onclick="saveMoodEntry()">Save Entry</button>
+
+      <h3>Recent Entries</h3>
+      <ul id="moodJournalList"></ul>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleSection('threeQGroup')">💡 Quick 3‑Question Survey</div>
+    <div id="threeQGroup" class="section-content">
+
+      <form id="surveyForm">
+        <label>How often do you track expenses?</label>
+        <select name="q1"><option value="3">Always</option><option value="2">Sometimes</option><option value="1">Rarely</option></select>
+
+        <label>Do you save monthly?</label>
+        <select name="q2"><option value="3">Yes</option><option value="2">Sometimes</option><option value="1">Never</option></select>
+
+        <label>Investment confidence?</label>
+        <select name="q3"><option value="3">High</option><option value="2">Medium</option><option value="1">Low</option></select>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <div id="personalityResult"></div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- MONEY PERSONALITY API MODAL -->
+    <!-- ========================= -->
+    <div id="moneyPersonalityModal" style="display:none;">
+      <div class="modal-content">
+        <h2>Money Personality Survey</h2>
+
+        <label>Question 1</label>
+        <select id="mp_q1"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+
+        <label>Question 2</label>
+        <select id="mp_q2"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+
+        <label>Question 3</label>
+        <select id="mp_q3"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+
+        <label>Question 4</label>
+        <select id="mp_q4"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+
+        <button onclick="submitMoneyPersonalitySurvey()">Submit</button>
+        <button onclick="closeMoneyPersonalitySurvey()">Close</button>
+      </div>
+    </div>
+
   </main>
 
   <script src="app.js"></script>
   <script src="dashboard.js"></script>
+
 </body>
 </html>
