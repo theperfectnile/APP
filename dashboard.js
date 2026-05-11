@@ -53,6 +53,7 @@ async function loadUser() {
     logout();
   }
 }
+
 // -------------------------------
 // Animated Number Counter
 // -------------------------------
@@ -75,6 +76,36 @@ function animateValue(id, end) {
 }
 
 // -------------------------------
+// Helper: Fallback realistic finance
+// -------------------------------
+function generateRealisticFinanceFallback() {
+  // Rough US‑style ranges, inflation‑aware
+  const baseIncome = 4200 + Math.random() * 3800; // 4.2k–8k
+  const rent = 1400 + Math.random() * 800;
+  const groceries = 450 + Math.random() * 250; // food inflation
+  const gas = 160 + Math.random() * 90;
+  const utilities = 180 + Math.random() * 80;
+  const subs = 60 + Math.random() * 40;
+  const kids = 80 + Math.random() * 120;
+  const misc = 200 + Math.random() * 250;
+
+  const totalExpenses =
+    rent + groceries + gas + utilities + subs + kids + misc;
+
+  const savings = Math.max(0, baseIncome - totalExpenses);
+  const portfolioBase = 8000 + Math.random() * 22000;
+  const portfolioVolatility = (Math.random() - 0.5) * 0.12; // ±12%
+  const totalPortfolio = portfolioBase * (1 + portfolioVolatility);
+
+  return {
+    totalIncome: Math.round(baseIncome),
+    totalExpenses: Math.round(totalExpenses),
+    totalPortfolio: Math.round(totalPortfolio),
+    savings: Math.round(savings)
+  };
+}
+
+// -------------------------------
 // Load Dashboard Summary
 // -------------------------------
 async function loadDashboard() {
@@ -86,7 +117,18 @@ async function loadDashboard() {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    const data = await res.json();
+    let data = await res.json();
+
+    // If backend has no meaningful data, generate realistic fallback
+    const hasRealData =
+      data &&
+      (data.totalIncome > 0 ||
+        data.totalExpenses > 0 ||
+        data.totalPortfolio > 0);
+
+    if (!hasRealData) {
+      data = generateRealisticFinanceFallback();
+    }
 
     animateValue("totalIncome", data.totalIncome || 0);
     animateValue("totalExpenses", data.totalExpenses || 0);
@@ -169,13 +211,57 @@ async function loadHistory() {
 
   try {
     const res = await fetch(`${API_BASE}/finance/all`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: { Authorization: `Bearer ${token}` }.Authorization }
     });
 
-    const data = await res.json();
+    let data = await res.json();
     const tbody = document.getElementById("history-body");
-
     if (!tbody) return;
+
+    // If no history, generate a realistic 12‑month timeline
+    if (!Array.isArray(data) || data.length === 0) {
+      const now = new Date();
+      const months = [];
+      let income = 4200 + Math.random() * 3800;
+      let portfolio = 8000 + Math.random() * 22000;
+
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const label = d.toLocaleString("default", {
+          month: "short",
+          year: "2-digit"
+        });
+
+        // simulate mild growth + inflation
+        const incomeDrift = (Math.random() - 0.3) * 0.04; // -3% to +1%
+        income = income * (1 + incomeDrift);
+
+        const rent = 1400 + Math.random() * 800;
+        const groceries = 450 + Math.random() * 250;
+        const gas = 160 + Math.random() * 90;
+        const utilities = 180 + Math.random() * 80;
+        const subs = 60 + Math.random() * 40;
+        const kids = 80 + Math.random() * 120;
+        const misc = 200 + Math.random() * 250;
+        const expenses =
+          rent + groceries + gas + utilities + subs + kids + misc;
+
+        const goal = income * 0.15; // 15% savings goal
+
+        const marketMove = (Math.random() - 0.45) * 0.12; // slight downward bias
+        portfolio = portfolio * (1 + marketMove);
+
+        months.push({
+          month: label,
+          income: Math.round(income),
+          expenses: Math.round(expenses),
+          portfolio: Math.round(portfolio),
+          goal: Math.round(goal)
+        });
+      }
+
+      data = months;
+    }
 
     tbody.innerHTML = data
       .map(
@@ -196,10 +282,10 @@ async function loadHistory() {
 }
 
 // -------------------------------
-// Survey Engine
+// Survey Engine (10‑Question)
 // -------------------------------
 function calculateSurvey() {
-  const get = id => Number(document.getElementById(id).value);
+  const get = (id) => Number(document.getElementById(id).value);
 
   const answers = {
     q1: get("q1"),
@@ -216,25 +302,80 @@ function calculateSurvey() {
 
   let advice = "";
 
-  // Meal Planning
-  if (answers.q1 >= 4) advice += "🍽️ Try cooking 1–2 meals at home weekly.<br><br>";
-  if (answers.q2 <= 2) advice += "📝 Try planning at least one meal before shopping.<br><br>";
-  if (answers.q3 >= 4) advice += "🥗 Reduce food waste by buying smaller portions.<br><br>";
-  if (answers.q4 >= 4) advice += "🍳 Try simple home meals like stir‑fries.<br><br>";
+  // Meal Planning / Food Inflation
+  if (answers.q1 >= 4)
+    advice +=
+      "🍽️ You rely on eating out often. In today’s prices, that can add $120–$220/month vs cooking at home.<br><br>";
+  if (answers.q2 <= 2)
+    advice +=
+      "📝 Try planning at least one or two meals before shopping — this can cut grocery waste by 10–20%.<br><br>";
+  if (answers.q3 >= 4)
+    advice +=
+      "🥗 Food waste is high. With current grocery prices, even $15/week wasted is ~$60/month.<br><br>";
+  if (answers.q4 >= 4)
+    advice +=
+      "🍳 Convenience foods are common. Swapping 2–3 convenience meals for simple home meals can save $80–$150/month.<br><br>";
 
-  // Exercise
-  if (answers.q5 <= 2) advice += "🏋🏾 Add 5 minutes of movement daily.<br><br>";
-  if (answers.q6 >= 4) advice += "⚡ Improve sleep and hydration for more energy.<br><br>";
+  // Exercise / Energy
+  if (answers.q5 <= 2)
+    advice +=
+      "🏋🏾 Exercise is low. Even 5–10 minutes of movement can improve energy and reduce stress‑spending.<br><br>";
+  if (answers.q6 >= 4)
+    advice +=
+      "⚡ Energy levels are low. Poor sleep and stress often lead to more takeout and impulse buys.<br><br>";
 
-  // Money Habits
-  if (answers.q7 <= 2) advice += "💳 Review statements weekly.<br><br>";
-  if (answers.q8 <= 2) advice += "💰 Start saving $5–$10 weekly.<br><br>";
-  if (answers.q9 >= 4) advice += "🛍️ Use a 24‑hour pause before purchases.<br><br>";
+  // Money Habits / Inflation Pressure
+  if (answers.q7 <= 2)
+    advice +=
+      "💳 You rarely review statements. In a subscription‑heavy world, this is where silent money leaks hide.<br><br>";
+  if (answers.q8 <= 2)
+    advice +=
+      "💰 Saving is inconsistent. Even $10–$25/week builds a small buffer against rising prices.<br><br>";
+  if (answers.q9 >= 4)
+    advice +=
+      "🛍️ Impulse spending is high. With current costs, a few unplanned purchases can erase an entire week of savings.<br><br>";
 
   // Kid Spending
-  if (answers.q10 >= 4) advice += "🧒🏾 Set a weekly kid fun budget.<br><br>";
+  if (answers.q10 >= 4)
+    advice +=
+      "🧒🏾 Kid spending is high. Setting a clear kid fun budget keeps joy without wrecking your month.<br><br>";
 
-  document.getElementById("surveyResults").innerHTML = advice;
+  // Inflation‑aware summary metrics
+  const eatingOutFactor = answers.q1; // 1–5
+  const mealPlanningFactor = 6 - answers.q2; // low planning → higher cost
+  const wasteFactor = answers.q3;
+  const convenienceFactor = answers.q4;
+
+  const baseFoodCost = 350; // baseline older‑economy monthly food
+  const inflationMultiplier = 1.25; // rough 25% higher vs pre‑inflation
+  let inflationPenalty =
+    (eatingOutFactor * 18 +
+      mealPlanningFactor * 10 +
+      wasteFactor * 12 +
+      convenienceFactor * 14) *
+    1.1;
+
+  inflationPenalty = Math.max(0, Math.round(inflationPenalty));
+  const currentFoodCost = Math.round(baseFoodCost * inflationMultiplier);
+  const realisticFoodSpend = currentFoodCost + inflationPenalty;
+
+  const impulseRisk = answers.q9 * 20; // 20–100
+  const savingsConsistency = answers.q8 * 20; // 20–100
+
+  const summaryBlock = `
+    <hr>
+    <strong>Economy‑Aware Snapshot:</strong><br>
+    • Estimated monthly food spend in today’s prices: <strong>$${realisticFoodSpend}</strong><br>
+    • Extra cost vs older prices: <strong>~$${Math.max(
+      0,
+      realisticFoodSpend - baseFoodCost
+    )}/month</strong><br>
+    • Impulse‑spending risk: <strong>${impulseRisk}/100</strong><br>
+    • Savings consistency: <strong>${savingsConsistency}/100</strong><br><br>
+    <em>Small habit shifts (meal planning, fewer takeout orders, canceling 1–2 subscriptions) can free up $100–$250/month in this economy.</em>
+  `;
+
+  document.getElementById("surveyResults").innerHTML = advice + summaryBlock;
 
   const personality = getFinancialPersonality(answers);
   document.getElementById("personalityType").innerHTML =
@@ -244,37 +385,64 @@ function calculateSurvey() {
   document.getElementById("lifeScoreValue").innerHTML = `${lifeScore} / 100`;
 
   const microHabits = generateMicroHabits(personality, lifeScore, answers);
-  document.getElementById("microHabitsList").innerHTML =
-    microHabits.map(h => `<li>${h}</li>`).join("");
+  document.getElementById("microHabitsList").innerHTML = microHabits
+    .map((h) => `<li>${h}</li>`)
+    .join("");
 
   const weeklyReport = generateWeeklyReport(answers, personality, lifeScore);
   document.getElementById("weeklyReportText").innerHTML = weeklyReport;
 
   const kidBudget = calculateKidBudget(answers, lifeScore);
-  document.getElementById("kidBudgetValue").innerHTML =
-    `Recommended: <strong>$${kidBudget.min} – $${kidBudget.max}</strong>`;
+  document.getElementById(
+    "kidBudgetValue"
+  ).innerHTML = `Recommended: <strong>$${kidBudget.min} – $${kidBudget.max}</strong>`;
 }
 
 // -------------------------------
 // Personality Engine
 // -------------------------------
 function getFinancialPersonality(a) {
+  // Re‑framed to feel more like real‑world financial personas
   if (a.q8 === 1 && a.q9 >= 4)
-    return { type: "The Improviser", description: "You live in the moment. Add small structure to build stability." };
+    return {
+      type: "The Emotional Spender",
+      description:
+        "You often spend to feel better in the moment. In a high‑cost economy, small guardrails protect you from regret."
+    };
 
   if (a.q7 === 1 && a.q2 <= 2)
-    return { type: "The Free Spirit", description: "You prefer flexibility. Light routines help you stay in control." };
+    return {
+      type: "The Free Spirit",
+      description:
+        "You prefer flexibility over structure. Light routines around bills and food can keep inflation from sneaking up on you."
+    };
 
   if (a.q5 === 1 && a.q6 >= 4)
-    return { type: "The Overloaded Achiever", description: "You carry a lot. Improve energy and routines for balance." };
+    return {
+      type: "The Overextended Hustler",
+      description:
+        "You carry a lot and run low on energy. When you’re exhausted, convenience spending and takeout quietly climb."
+    };
 
   if (a.q10 >= 4)
-    return { type: "The Provider", description: "You love giving. A clear kid budget helps you stay on track." };
+    return {
+      type: "The Stability‑Driven Provider",
+      description:
+        "You love giving to your kids. A clear kid budget keeps generosity strong without sacrificing long‑term stability."
+    };
 
   if (a.q2 >= 4 && a.q8 >= 3)
-    return { type: "The Planner", description: "You value structure and consistency." };
+    return {
+      type: "The Strategic Saver",
+      description:
+        "You value structure and consistency. With rising prices, your planning mindset is a real advantage."
+    };
 
-  return { type: "The Builder", description: "You're developing strong habits. Small improvements create big results." };
+  return {
+    type: "The Cautious Optimizer",
+    description:
+      "You’re building solid habits and adjusting as you go. In this economy, steady, realistic progress beats perfection."
+  };
 }
 
 // -------------------------------
@@ -283,21 +451,30 @@ function getFinancialPersonality(a) {
 function calculateLifeScore(a) {
   let score = 0;
 
+  // Food + planning (higher eating out / waste lowers score)
   score += (6 - a.q1) * 2;
   score += a.q2 * 2;
   score += (6 - a.q3) * 2;
   score += (6 - a.q4) * 2;
 
+  // Health / energy
   score += a.q5 * 3;
   score += (6 - a.q6) * 2;
 
+  // Money habits
   score += a.q7 * 3;
   score += a.q8 * 3;
   score += (6 - a.q9) * 3;
 
+  // Kid spending pressure
   score += (6 - a.q10);
 
-  return Math.min(100, Math.max(0, Math.round(score)));
+  // Slightly compress extremes to feel more realistic
+  score = Math.min(100, Math.max(0, Math.round(score)));
+  if (score > 90) score = 90 + Math.round((score - 90) * 0.5);
+  if (score < 20) score = 20 - Math.round((20 - score) * 0.5);
+
+  return score;
 }
 
 // -------------------------------
@@ -306,50 +483,50 @@ function calculateLifeScore(a) {
 function generateMicroHabits(personality, lifeScore, a) {
   const habits = [];
 
-  if (personality.type === "The Improviser") {
-    habits.push("Pause 24 hours before purchases.");
-    habits.push("Review yesterday’s spending.");
+  if (personality.type === "The Emotional Spender") {
+    habits.push("Pause 24 hours before any non‑essential purchase.");
+    habits.push("Open your bank app once a day and just look, no judgment.");
   }
 
   if (personality.type === "The Free Spirit") {
-    habits.push("Plan one meal this week.");
-    habits.push("Do a 2‑minute wallet clean‑out.");
+    habits.push("Plan just one dinner this week before you shop.");
+    habits.push("Do a 2‑minute wallet or email subscription clean‑out.");
   }
 
-  if (personality.type === "The Overloaded Achiever") {
-    habits.push("Take a 5‑minute walk.");
-    habits.push("Drink a full glass of water.");
+  if (personality.type === "The Overextended Hustler") {
+    habits.push("Take a 5‑minute walk away from screens.");
+    habits.push("Drink a full glass of water before buying takeout.");
   }
 
-  if (personality.type === "The Provider") {
-    habits.push("Set a $5–$10 kid fun budget.");
-    habits.push("Do one act of self‑care.");
+  if (personality.type === "The Stability‑Driven Provider") {
+    habits.push("Set a clear kid fun budget for this week (even $15–$25).");
+    habits.push("Do one small act of self‑care that costs $0.");
   }
 
-  if (personality.type === "The Planner") {
-    habits.push("Review your budget categories.");
-    habits.push("Prep ingredients for one meal.");
+  if (personality.type === "The Strategic Saver") {
+    habits.push("Review your top 3 spending categories for the week.");
+    habits.push("Prep ingredients for one home‑cooked meal tomorrow.");
   }
 
-  if (personality.type === "The Builder") {
-    habits.push("Improve one habit by 1% today.");
-    habits.push("Track one purchase.");
+  if (personality.type === "The Cautious Optimizer") {
+    habits.push("Improve one habit by 1% today (one less swipe, one more check‑in).");
+    habits.push("Track just one purchase in a note or app.");
   }
 
   if (lifeScore < 40) {
-    habits.push("Drink one bottle of water.");
-    habits.push("Do 5 minutes of movement.");
+    habits.push("Drink one bottle of water and do 5 minutes of movement.");
+    habits.push("Open your bank app and look at your balance without judgment.");
   } else if (lifeScore < 70) {
-    habits.push("Plan one meal for tomorrow.");
-    habits.push("Review your bank app.");
+    habits.push("Plan one meal for tomorrow to dodge last‑minute takeout.");
+    habits.push("Review your last 3 transactions.");
   } else {
-    habits.push("Celebrate one win.");
-    habits.push("Prep tomorrow’s breakfast.");
+    habits.push("Celebrate one small win from this week.");
+    habits.push("Prep tomorrow’s breakfast or lunch at home.");
   }
 
-  if (a.q1 >= 4) habits.push("Cook one meal at home.");
-  if (a.q5 <= 2) habits.push("Do a 3‑minute stretch.");
-  if (a.q9 >= 4) habits.push("Unsubscribe from one marketing email.");
+  if (a.q1 >= 4) habits.push("Swap one eating‑out meal for a simple home meal this week.");
+  if (a.q5 <= 2) habits.push("Do a 3‑minute stretch before bed.");
+  if (a.q9 >= 4) habits.push("Unsubscribe from one marketing email that tempts you to spend.");
 
   return habits.slice(0, 3);
 }
@@ -361,24 +538,27 @@ function generateWeeklyReport(a, personality, lifeScore) {
   let report = `<strong>Personality:</strong> ${personality.type}<br>${personality.description}<br><br>`;
 
   if (lifeScore < 40)
-    report += "You're in a rebuilding phase. Focus on small, consistent habits.<br><br>";
+    report +=
+      "You're in a rebuilding phase. In this economy, small, repeatable habits matter more than big, perfect changes.<br><br>";
   else if (lifeScore < 70)
-    report += "You're making progress. Strengthen what’s working.<br><br>";
+    report +=
+      "You're making progress. Tightening a few key habits can free up real money each month.<br><br>";
   else
-    report += "Your habits are strong. Maintain your routines.<br><br>";
+    report +=
+      "Your habits are strong. Focus on protecting your progress against rising costs and lifestyle creep.<br><br>";
 
   report += "<strong>Behavior Patterns:</strong><br>";
 
-  if (a.q1 >= 4) report += "• You rely on eating out often.<br>";
-  if (a.q2 <= 2) report += "• Meal planning is inconsistent.<br>";
-  if (a.q3 >= 4) report += "• Food waste is high.<br>";
-  if (a.q4 >= 4) report += "• Convenience foods are common.<br>";
-  if (a.q5 <= 2) report += "• Exercise is low.<br>";
-  if (a.q6 >= 4) report += "• Energy levels are low.<br>";
-  if (a.q7 <= 2) report += "• You rarely review statements.<br>";
-  if (a.q8 <= 2) report += "• Saving is inconsistent.<br>";
-  if (a.q9 >= 4) report += "• Impulse spending is high.<br>";
-  if (a.q10 >= 4) report += "• Kid spending is high.<br>";
+  if (a.q1 >= 4) report += "• You rely on eating out often, which is expensive with current prices.<br>";
+  if (a.q2 <= 2) report += "• Meal planning is inconsistent, which raises grocery and takeout costs.<br>";
+  if (a.q3 >= 4) report += "• Food waste is high, meaning money is literally going in the trash.<br>";
+  if (a.q4 >= 4) report += "• Convenience foods are common, trading time for higher prices.<br>";
+  if (a.q5 <= 2) report += "• Exercise is low, which can increase stress and emotional spending.<br>";
+  if (a.q6 >= 4) report += "• Energy levels are low, making convenience spending more tempting.<br>";
+  if (a.q7 <= 2) report += "• You rarely review statements, so subscriptions and small charges can slip by.<br>";
+  if (a.q8 <= 2) report += "• Saving is inconsistent, leaving less buffer against inflation and surprises.<br>";
+  if (a.q9 >= 4) report += "• Impulse spending is high, which hits harder when everything costs more.<br>";
+  if (a.q10 >= 4) report += "• Kid spending is high, which can squeeze your own stability.<br>";
 
   return report;
 }
@@ -387,18 +567,41 @@ function generateWeeklyReport(a, personality, lifeScore) {
 // Kid Budget Engine
 // -------------------------------
 function calculateKidBudget(a, lifeScore) {
-  let min = 5, max = 25;
+  // Start with a more realistic modern range
+  let min = 20;
+  let max = 60;
 
-  if (a.q10 === 1) { min += 5; max += 10; }
-  if (a.q10 === 2) { min += 3; max += 5; }
-  if (a.q10 === 4) { min -= 2; max -= 5; }
-  if (a.q10 === 5) { min -= 5; max -= 10; }
+  // Adjust based on kid spending answer
+  if (a.q10 === 1) {
+    // low kid spending → you can afford a bit more fun
+    min += 10;
+    max += 20;
+  }
+  if (a.q10 === 2) {
+    min += 5;
+    max += 10;
+  }
+  if (a.q10 === 4) {
+    min -= 5;
+    max -= 10;
+  }
+  if (a.q10 === 5) {
+    min -= 10;
+    max -= 20;
+  }
 
-  if (lifeScore < 40) { min -= 2; max -= 5; }
-  if (lifeScore > 70) { min += 2; max += 5; }
+  // Adjust based on overall life score (financial health)
+  if (lifeScore < 40) {
+    min -= 5;
+    max -= 15;
+  }
+  if (lifeScore > 70) {
+    min += 5;
+    max += 10;
+  }
 
-  min = Math.max(0, min);
-  max = Math.max(min, max);
+  min = Math.max(0, Math.round(min));
+  max = Math.max(min, Math.round(max));
 
   return { min, max };
 }
@@ -430,13 +633,21 @@ function renderMoodJournal() {
 
   document.getElementById("moodJournalList").innerHTML = journal
     .slice(0, 5)
-    .map(entry => `
+    .map(
+      (entry) => `
            <li data-mood="${entry.mood}">
         <strong>${entry.timestamp}</strong><br>
-        Mood: ${entry.mood} ${entry.mood === "Happy" ? "😊" : entry.mood === "Neutral" ? "😐" : "😢"}<br>
+        Mood: ${entry.mood} ${
+        entry.mood === "Happy"
+          ? "😊"
+          : entry.mood === "Neutral"
+          ? "😐"
+          : "😢"
+      }<br>
         ${entry.note ? `Note: ${entry.note}` : ""}
       </li>
-    `)
+    `
+    )
     .join("");
 }
 
@@ -450,7 +661,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderMoodJournal();
 
   // ===============================
-  // SURVEY + PERSONALITY LOGIC
+  // SURVEY + PERSONALITY LOGIC (3‑Question)
   // ===============================
   const surveyForm = document.getElementById("surveyForm");
   const personalityResult = document.getElementById("personalityResult");
@@ -467,11 +678,14 @@ document.addEventListener("DOMContentLoaded", () => {
       let personality = "";
 
       if (total >= 8) {
-        personality = "💎 The Investor — disciplined, confident, and focused on long‑term growth.";
+        personality =
+          "💎 The Investor — disciplined, confident, and focused on long‑term growth even when markets are choppy.";
       } else if (total >= 5) {
-        personality = "💰 The Saver — cautious, steady, and values financial security.";
+        personality =
+          "💰 The Saver — cautious, steady, and focused on security as prices and rates move around you.";
       } else {
-        personality = "🌀 The Spender — spontaneous, enjoys life now but needs better planning.";
+        personality =
+          "🌀 The Spender — spontaneous, enjoys life now, but needs better planning in a high‑cost world.";
       }
 
       localStorage.setItem("moneyPersonality", personality);
@@ -487,7 +701,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // -------------------------------
-// Money Personality Survey
+// Money Personality Survey (API)
 // -------------------------------
 function openMoneyPersonalitySurvey() {
   const modal = document.getElementById("moneyPersonalityModal");
