@@ -581,3 +581,140 @@ button:active {
   transform: translateY(-4px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
+/* --------------------------------------------------
+   FUN + NEON DASHBOARD UPGRADE
+   (Overrides light UI without removing anything)
+-------------------------------------------------- */
+
+/* Group headers → neon cards */
+.group-header {
+  background: rgba(0, 255, 255, 0.12);
+  color: #00eaff;
+  border: 1px solid rgba(0,255,255,0.25);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 20px;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(0,255,255,0.15);
+}
+
+.group-header:hover {
+  background: rgba(0, 255, 255, 0.22);
+  transform: translateY(-3px);
+  box-shadow: 0 0 18px rgba(0,255,255,0.35);
+}
+
+/* Collapsible content → neon glass panels */
+#surveyGroup,
+#personalityGroup,
+#moodGroup,
+#threeQGroup,
+#financeGroup {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 20px rgba(0,255,255,0.08);
+}
+
+/* Finance inner sections */
+.section {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #e6e6e6;
+  border-radius: 10px;
+  padding: 15px;
+  transition: 0.25s ease;
+}
+
+.section:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-3px);
+}
+
+/* Summary cards → neon glow */
+.summary-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.25);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 0 14px rgba(0,255,255,0.15);
+}
+
+.summary-card h3 {
+  color: #00eaff;
+  opacity: 0.9;
+}
+
+.summary-card span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #00faff;
+}
+
+/* Survey result boxes → neon pop */
+#surveyResults,
+#personalityType,
+#lifeScoreValue,
+#weeklyReportText,
+#kidBudgetValue,
+#mpResult {
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(0,255,255,0.25);
+  color: #e6e6e6;
+  box-shadow: 0 0 18px rgba(0,255,255,0.25);
+}
+
+/* Mood journal entries → neon mood colors */
+#moodJournalList li {
+  background: rgba(255,255,255,0.05);
+  border-left-width: 6px;
+  color: #e6e6e6;
+}
+
+#moodJournalList li[data-mood="Happy"] {
+  border-color: #00ff9d;
+}
+
+#moodJournalList li[data-mood="Neutral"] {
+  border-color: #00eaff;
+}
+
+#moodJournalList li[data-mood="Sad"] {
+  border-color: #ff4b4b;
+}
+
+/* Buttons → neon glow */
+button,
+.btn-primary,
+.btn-secondary {
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+button:hover,
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 14px rgba(0,255,255,0.35);
+}
+
+/* Selects + inputs → neon fields */
+select,
+input,
+textarea {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(0,255,255,0.25) !important;
+  color: #e6e6e6 !important;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 12px rgba(0,255,255,0.35) !important;
+  border-color: #00eaff !important;
+}
