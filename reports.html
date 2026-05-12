@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vaultwise • Reports</title>
+  <link rel="stylesheet" href="styles.css?v=3" />
+</head>
+
+<body id="reports">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">Vaultwise</h2>
+
+    <nav class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="reports.html" class="active">Reports</a>
+      <a href="accounts.html">Accounts</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <header class="page-header fade-in">
+      <div>
+        <h1>Reports</h1>
+        <span>Your weekly progress & behavior trends</span>
+      </div>
+    </header>
+
+    <section class="report-section fade-in">
+      <h2>📈 Life Score Trend</h2>
+      <div id="lifeScoreChart" class="chart-container"></div>
+    </section>
+
+    <section class="report-section fade-in">
+      <h2>🛍️ Impulse Spending Trend</h2>
+      <div id="impulseChart" class="chart-container"></div>
+    </section>
+
+    <section class="report-section fade-in">
+      <h2>💰 Savings Consistency Trend</h2>
+      <div id="savingsChart" class="chart-container"></div>
+    </section>
+
+    <section class="report-section fade-in">
+      <h2>🍽️ Food Inflation Impact</h2>
+      <div id="foodChart" class="chart-container"></div>
+    </section>
+
+    <section class="report-section fade-in">
+      <h2>🧠 Personality Timeline</h2>
+      <ul id="personalityTimeline" class="timeline-list"></ul>
+    </section>
+
+    <section class="report-section fade-in">
+      <h2>📅 Weekly Summary</h2>
+      <div id="weeklySummaries"></div>
+    </section>
+
+  </main>
+
+  <script src="reports.js"></script>
+</body>
+</html>
