@@ -397,7 +397,22 @@ function calculateSurvey() {
     "kidBudgetValue"
   ).innerHTML = `Recommended: <strong>$${kidBudget.min} – $${kidBudget.max}</strong>`;
 }
+// -------------------------------
+// SAVE SURVEY HISTORY FOR REPORTS
+// -------------------------------
+const surveySnapshot = {
+  timestamp: Date.now(),
+  lifeScore,
+  personality: personality.type,
+  impulseRisk,
+  savingsConsistency,
+  realisticFoodSpend,
+  kidBudget
+};
 
+let history = JSON.parse(localStorage.getItem("surveyHistory") || "[]");
+history.unshift(surveySnapshot);
+localStorage.setItem("surveyHistory", JSON.stringify(history));
 // -------------------------------
 // Personality Engine
 // -------------------------------
