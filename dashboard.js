@@ -863,3 +863,41 @@ document.addEventListener("change", (e) => {
 
 // Initialize missions on dashboard load
 document.addEventListener("DOMContentLoaded", loadWeeklyMissions);
+// -------------------------------
+// BADGES + TOAST + CONFETTI
+// -------------------------------
+
+// Save earned badges
+function awardBadge(name) {
+  let badges = JSON.parse(localStorage.getItem("vaultBadges") || "[]");
+  if (!badges.includes(name)) {
+    badges.push(name);
+    localStorage.setItem("vaultBadges", JSON.stringify(badges));
+    showToast(`🏅 New Badge Earned: ${name}`);
+  }
+}
+
+// Toast popup
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "vault-toast";
+  toast.innerText = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => toast.classList.remove("show"), 2500);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// Confetti burst
+function confettiBurst() {
+  for (let i = 0; i < 20; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.animationDelay = Math.random() * 0.5 + "s";
+    document.body.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 1500);
+  }
+}
