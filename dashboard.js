@@ -786,6 +786,22 @@ function handleThreeQSurvey() {
   showToast("Quick Survey Saved!");
   loadWeeklyMissions();
 }
+function toggleGroup(header, groupId) {
+  const section = document.getElementById(groupId);
+
+  if (!section) return;
+
+  // Toggle open/closed
+  section.classList.toggle("open");
+
+  // Optional: rotate arrow if you add one later
+  header.classList.toggle("active");
+}
+This is the function your HTML is calling:
+
+html
+onclick="toggleGroup(this, 'threeQGroup')"
+Without this function, the browser throws an 
 // -------------------------------
 // WEEKLY MISSIONS ENGINE
 // -------------------------------
