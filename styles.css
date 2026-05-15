@@ -762,3 +762,28 @@ textarea:focus {
   margin-bottom: 15px;
   border: 1px solid rgba(255,255,255,0.1);
 }
+/* Weekly Missions */
+#weeklyMissionsSection ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+#weeklyMissionsSection li {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+#weeklyMissionsSection input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+#missionRefreshNote {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.7;
+}
