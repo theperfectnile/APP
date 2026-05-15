@@ -801,7 +801,6 @@ This is the function your HTML is calling:
 
 html
 onclick="toggleGroup(this, 'threeQGroup')"
-Without this function, the browser throws an 
 // -------------------------------
 // WEEKLY MISSIONS ENGINE
 // -------------------------------
