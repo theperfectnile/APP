@@ -760,3 +760,106 @@ async function submitMoneyPersonalitySurvey() {
     alert("Error submitting survey.");
   }
 }
+// -------------------------------
+// WEEKLY MISSIONS ENGINE
+// -------------------------------
+
+// Get Monday of the current week
+function getWeekStart() {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday
+  const diff = now.getDate() - day + (day === 0 ? -6 : 1); // Monday start
+  return new Date(now.setDate(diff)).toDateString();
+}
+
+// Generate missions based on latest survey snapshot
+function generateWeeklyMissions(latestSurvey) {
+  const missions = [];
+
+  // Personality-based missions
+  if (latestSurvey.personality === "The Emotional Spender") {
+    missions.push("Pause 24 hours before any non-essential purchase.");
+  }
+  if (latestSurvey.personality === "The Strategic Saver") {
+    missions.push("Review your top 3 spending categories this week.");
+  }
+
+  // Impulse risk missions
+  if (latestSurvey.impulseRisk >= 60) {
+    missions.push("Unsubscribe from 1 marketing email that tempts you.");
+  }
+
+  // Savings consistency missions
+  if (latestSurvey.savingsConsistency <= 40) {
+    missions.push("Move $10 into savings this week.");
+  }
+
+  // Food inflation missions
+  if (latestSurvey.realisticFoodSpend >= 500) {
+    missions.push("Cook 1 meal at home instead of eating out.");
+  }
+
+  // Always ensure 3 missions
+  while (missions.length < 3) {
+    missions.push("Track one purchase this week.");
+  }
+
+  return missions.slice(0, 3);
+}
+
+// Load or regenerate missions
+function loadWeeklyMissions() {
+  const weekStart = getWeekStart();
+  let data = JSON.parse(localStorage.getItem("weeklyMissions") || "null");
+
+  // If no missions or new week → regenerate
+  if (!data || data.weekStart !== weekStart) {
+    const history = JSON.parse(localStorage.getItem("surveyHistory") || "[]");
+    const latest = history[0];
+
+    if (!latest) {
+      document.getElementById("missionsList").innerHTML =
+        "<li>Complete a survey to unlock weekly missions.</li>";
+      return;
+    }
+
+    const missions = generateWeeklyMissions(latest);
+
+    data = {
+      weekStart,
+      missions: missions.map((m) => ({ text: m, completed: false }))
+    };
+
+    localStorage.setItem("weeklyMissions", JSON.stringify(data));
+  }
+
+  // Render missions
+  const list = document.getElementById("missionsList");
+  list.innerHTML = data.missions
+    .map(
+      (m, i) => `
+      <li>
+        <input type="checkbox" data-index="${i}" ${m.completed ? "checked" : ""}>
+        ${m.text}
+      </li>
+    `
+    )
+    .join("");
+
+  document.getElementById(
+    "missionRefreshNote"
+  ).innerText = `New missions arrive next Monday.`;
+}
+
+// Handle checkbox clicks
+document.addEventListener("change", (e) => {
+  if (e.target.matches("#missionsList input[type='checkbox']")) {
+    const index = e.target.dataset.index;
+    let data = JSON.parse(localStorage.getItem("weeklyMissions"));
+    data.missions[index].completed = e.target.checked;
+    localStorage.setItem("weeklyMissions", JSON.stringify(data));
+  }
+});
+
+// Initialize missions on dashboard load
+document.addEventListener("DOMContentLoaded", loadWeeklyMissions);
