@@ -200,7 +200,7 @@
     <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">💡 Quick 3‑Question Survey</div>
    <div id="threeQGroup" class="section-content">
 
-      <form id="surveyForm">
+      <form id="surveyForm"> onsubmit="event.preventDefault(); handleThreeQSurvey();">
         <label>How often do you track expenses?</label>
         <select name="q1"><option value="3">Always</option><option value="2">Sometimes</option><option value="1">Rarely</option></select>
 
