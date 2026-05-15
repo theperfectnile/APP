@@ -797,10 +797,6 @@ function toggleGroup(header, groupId) {
   // Optional: rotate arrow if you add one later
   header.classList.toggle("active");
 }
-This is the function your HTML is calling:
-
-html
-onclick="toggleGroup(this, 'threeQGroup')"
 // -------------------------------
 // WEEKLY MISSIONS ENGINE
 // -------------------------------
@@ -817,56 +813,6 @@ function getWeekStart() {
 function generateWeeklyMissions(latestSurvey) {
   const missionPool = new Set();
 
-  // Personality-based missions
-  if (latestSurvey.personality === "The Emotional Spender") {
-    missionPool.add("Pause 24 hours before any non-essential purchase.");
-    missionPool.add("Review your emotional spending triggers.");
-  }
-
-  if (latestSurvey.personality === "The Strategic Saver") {
-    missionPool.add("Review your top 3 spending categories this week.");
-    missionPool.add("Move $10 into savings today.");
-  }
-
-  // Impulse risk missions
-  if (latestSurvey.impulseRisk >= 60) {
-    missionPool.add("Unsubscribe from 1 marketing email that tempts you.");
-    missionPool.add("Avoid impulse purchases for 48 hours.");
-  }
-
-  // Savings consistency missions
-  if (latestSurvey.savingsConsistency <= 40) {
-    missionPool.add("Move $10 into savings this week.");
-    missionPool.add("Set a reminder to save on payday.");
-  }
-
-  // Food spending missions
-  if (latestSurvey.realisticFoodSpend >= 500) {
-    missionPool.add("Cook 1 meal at home instead of eating out.");
-    missionPool.add("Plan 2 meals before grocery shopping.");
-  }
-
-  // Universal missions (fallbacks)
-  const universal = [
-    "Track one purchase this week.",
-    "Review your bank transactions for the last 3 days.",
-    "Set a small financial goal for the week.",
-    "Avoid eating out for one day.",
-    "Move $5 into savings today."
-  ];
-
-  // Add universal missions until we have at least 5 unique options
-  while (missionPool.size < 5) {
-    missionPool.add(universal[Math.floor(Math.random() * universal.length)]);
-  }
-
-  // Convert Set → Array and shuffle
-  const missions = Array.from(missionPool)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3); // pick 3 unique missions
-
-  return missions;
-}
 
   // Personality-based missions
   if (latestSurvey.personality === "The Emotional Spender") {
