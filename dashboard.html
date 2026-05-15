@@ -194,10 +194,10 @@
 
     </div>
 
-    <!-- ========================= -->
-    <!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
-    <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">💡 Quick 3‑Question Survey</div>
+   <!-- ========================= -->
+<!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
+<!-- ========================= -->
+<div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">💡 Quick 3‑Question Survey</div>
 
 <div id="threeQGroup" class="section-content">
 
@@ -228,43 +228,68 @@
 
   <div id="personalityResult"></div>
 
-</div>
+</div> <!-- closes threeQGroup -->
+
+
+<!-- ========================= -->
+<!-- ⭐ WEEKLY MISSIONS SECTION -->
+<!-- ========================= -->
 <section class="dashboard-card fade-in" id="weeklyMissionsSection">
   <h2>Weekly Missions</h2>
+
   <div id="missionProgressBar">
-  <div id="missionProgressFill"></div>
-</div>
+    <div id="missionProgressFill"></div>
+  </div>
+
   <ul id="missionsList"></ul>
   <p id="missionRefreshNote"></p>
 </section>
-    <!-- ========================= -->
-    <!-- MONEY PERSONALITY API MODAL -->
-    <!-- ========================= -->
-    <div id="moneyPersonalityModal" style="display:none;">
-      <div class="modal-content">
-        <h2>Money Personality Survey</h2>
 
-        <label>Question 1</label>
-        <select id="mp_q1"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
 
-        <label>Question 2</label>
-        <select id="mp_q2"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+<!-- ========================= -->
+<!-- MONEY PERSONALITY API MODAL -->
+<!-- ========================= -->
+<div id="moneyPersonalityModal" style="display:none;">
+  <div class="modal-content">
+    <h2>Money Personality Survey</h2>
 
-        <label>Question 3</label>
-        <select id="mp_q3"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+    <label>Question 1</label>
+    <select id="mp_q1">
+      <option value="1">Low</option>
+      <option value="2">Medium</option>
+      <option value="3">High</option>
+    </select>
 
-        <label>Question 4</label>
-        <select id="mp_q4"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+    <label>Question 2</label>
+    <select id="mp_q2">
+      <option value="1">Low</option>
+      <option value="2">Medium</option>
+      <option value="3">High</option>
+    </select>
 
-        <button onclick="submitMoneyPersonalitySurvey()">Submit</button>
-        <button onclick="closeMoneyPersonalitySurvey()">Close</button>
-      </div>
-    </div>
+    <label>Question 3</label>
+    <select id="mp_q3">
+      <option value="1">Low</option>
+      <option value="2">Medium</option>
+      <option value="3">High</option>
+    </select>
 
-  </main>
+    <label>Question 4</label>
+    <select id="mp_q4">
+      <option value="1">Low</option>
+      <option value="2">Medium</option>
+      <option value="3">High</option>
+    </select>
 
-  <script src="app.js"></script>
-  <script src="dashboard.js"></script>
+    <button onclick="submitMoneyPersonalitySurvey()">Submit</button>
+    <button onclick="closeMoneyPersonalitySurvey()">Close</button>
+  </div>
+</div>
+
+</main>
+
+<script src="app.js"></script>
+<script src="dashboard.js"></script>
 
 </body>
 </html>
