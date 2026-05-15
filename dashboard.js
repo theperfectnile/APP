@@ -760,6 +760,32 @@ async function submitMoneyPersonalitySurvey() {
     alert("Error submitting survey.");
   }
 }
+function handleThreeQSurvey() {
+  const form = document.getElementById("surveyForm");
+  const q1 = parseInt(form.q1.value);
+  const q2 = parseInt(form.q2.value);
+  const q3 = parseInt(form.q3.value);
+
+  // Simple quick score
+  const quickLifeScore = q1 + q2 + q3;
+
+  const surveySnapshot = {
+    timestamp: Date.now(),
+    lifeScore: quickLifeScore,
+    personality: "Quick Survey",
+    impulseRisk: q1,
+    savingsConsistency: q2,
+    realisticFoodSpend: q3,
+    kidBudget: { min: 0, max: 0 }
+  };
+
+  let history = JSON.parse(localStorage.getItem("surveyHistory") || "[]");
+  history.unshift(surveySnapshot);
+  localStorage.setItem("surveyHistory", JSON.stringify(history));
+
+  showToast("Quick Survey Saved!");
+  loadWeeklyMissions();
+}
 // -------------------------------
 // WEEKLY MISSIONS ENGINE
 // -------------------------------
