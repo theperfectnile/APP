@@ -852,12 +852,40 @@ function loadWeeklyMissions() {
 }
 
 // Handle checkbox clicks
+function updateMissionProgress() {
+  const data = JSON.parse(localStorage.getItem("weeklyMissions") || "{}");
+  if (!data.missions) return;
+
+  const total = data.missions.length;
+  const completed = data.missions.filter(m => m.completed).length;
+  const percent = (completed / total) * 100;
+
+  document.getElementById("missionProgressFill").style.width = percent + "%";
+
+  // 100% completion badge
+  if (percent === 100) {
+    awardBadge("Weekly Completion");
+    showToast("🔥 All Missions Completed!");
+    confettiBurst();
+  }
+}
 document.addEventListener("change", (e) => {
   if (e.target.matches("#missionsList input[type='checkbox']")) {
     const index = e.target.dataset.index;
     let data = JSON.parse(localStorage.getItem("weeklyMissions"));
     data.missions[index].completed = e.target.checked;
     localStorage.setItem("weeklyMissions", JSON.stringify(data));
+ updateMissionProgress();
+
+    if (e.target.checked) {
+      confettiBurst();
+      showToast("Mission Completed!");
+
+      // Award badges
+      if (index == 0) awardBadge("Momentum Starter");
+      if (index == 1) awardBadge("Consistency Builder");
+      if (index == 2) awardBadge("Mission Master");
+    }
   }
 });
 
