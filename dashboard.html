@@ -198,24 +198,37 @@
     <!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
     <!-- ========================= -->
     <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">💡 Quick 3‑Question Survey</div>
-   <div id="threeQGroup" class="section-content">
 
-      <form id="surveyForm"> onsubmit="event.preventDefault(); handleThreeQSurvey();">
-        <label>How often do you track expenses?</label>
-        <select name="q1"><option value="3">Always</option><option value="2">Sometimes</option><option value="1">Rarely</option></select>
+<div id="threeQGroup" class="section-content">
 
-        <label>Do you save monthly?</label>
-        <select name="q2"><option value="3">Yes</option><option value="2">Sometimes</option><option value="1">Never</option></select>
+  <form id="surveyForm" onsubmit="event.preventDefault(); handleThreeQSurvey();">
+    <label>How often do you track expenses?</label>
+    <select name="q1">
+      <option value="3">Always</option>
+      <option value="2">Sometimes</option>
+      <option value="1">Rarely</option>
+    </select>
 
-        <label>Investment confidence?</label>
-        <select name="q3"><option value="3">High</option><option value="2">Medium</option><option value="1">Low</option></select>
+    <label>Do you save monthly?</label>
+    <select name="q2">
+      <option value="3">Yes</option>
+      <option value="2">Sometimes</option>
+      <option value="1">Never</option>
+    </select>
 
-        <button type="submit">Submit</button>
-      </form>
+    <label>Investment confidence?</label>
+    <select name="q3">
+      <option value="3">High</option>
+      <option value="2">Medium</option>
+      <option value="1">Low</option>
+    </select>
 
-      <div id="personalityResult"></div>
+    <button type="submit">Submit</button>
+  </form>
 
-    </div>
+  <div id="personalityResult"></div>
+
+</div>
 <section class="dashboard-card fade-in" id="weeklyMissionsSection">
   <h2>Weekly Missions</h2>
   <div id="missionProgressBar">
