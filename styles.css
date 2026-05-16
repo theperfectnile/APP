@@ -869,3 +869,17 @@ textarea:focus {
 .group-header.active .arrow {
   transform: rotate(90deg);
 }
+/* Remove the extra arrow that appears at the far right */
+.group-header::after {
+  content: none !important;
+}
+
+/* Keep the first arrow and make it dark */
+.group-header .arrow {
+  color: #111; /* deep dark gray; use #000 for pure black */
+  transition: transform 0.3s ease;
+}
+
+.group-header.active .arrow {
+  transform: rotate(90deg);
+}
