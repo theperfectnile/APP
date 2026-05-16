@@ -29,7 +29,6 @@ window.toggleGroup = function(header, id) {
   if (!section) return;
   section.classList.toggle("open");
   header.classList.toggle("active");
-};
 
   // Rotate arrow
   const arrow = header.querySelector(".arrow");
