@@ -31,6 +31,16 @@ window.toggleGroup = function(header, id) {
   header.classList.toggle("active");
 };
 
+  // Rotate arrow
+  const arrow = header.querySelector(".arrow");
+  if (arrow) {
+    if (header.classList.contains("active")) {
+      arrow.style.transform = "rotate(90deg)";
+    } else {
+      arrow.style.transform = "rotate(0deg)";
+    }
+  }
+};
 /* -------------------------------
    Auth Helpers
 -------------------------------- */
