@@ -27,17 +27,19 @@ function toggleSection(id) {
 window.toggleGroup = function(header, id) {
   const section = document.getElementById(id);
   if (!section) return;
+
+  // open/close section
   section.classList.toggle("open");
+
+  // toggle active state on header
   header.classList.toggle("active");
 
-  // Rotate arrow
+  // rotate arrow
   const arrow = header.querySelector(".arrow");
   if (arrow) {
-    if (header.classList.contains("active")) {
-      arrow.style.transform = "rotate(90deg)";
-    } else {
-      arrow.style.transform = "rotate(0deg)";
-    }
+    arrow.style.transform = header.classList.contains("active")
+      ? "rotate(90deg)"
+      : "rotate(0deg)";
   }
 };
 /* -------------------------------
