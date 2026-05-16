@@ -35,7 +35,11 @@
     <!-- ========================= -->
     <!-- 📊 GROUP 1 — FINANCE -->
     <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'financeGroup')">📊 Finance</div>
+    <div class="group-header" onclick="toggleGroup(this, 'financeGroup')">
+      <span>📊 Finance</span>
+      <span class="arrow">▼</span>
+    </div>
+
     <div id="financeGroup" class="section-content">
 
       <div class="premium-lock" data-feature="finance">
@@ -97,7 +101,11 @@
     <!-- ========================= -->
     <!-- 📝 GROUP 2 — 10 QUESTION SURVEY -->
     <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">📝 10‑Question Survey</div>
+    <div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
+      <span>📝 10‑Question Survey</span>
+      <span class="arrow">▼</span>
+    </div>
+
     <div id="surveyGroup" class="section-content">
 
       <form id="tenQuestionSurvey">
@@ -143,7 +151,11 @@
     <!-- ========================= -->
     <!-- 🧠 GROUP 3 — PERSONALITY INSIGHTS -->
     <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'personalityGroup')">🧠 Personality Insights</div>
+    <div class="group-header" onclick="toggleGroup(this, 'personalityGroup')">
+      <span>🧠 Personality Insights</span>
+      <span class="arrow">▼</span>
+    </div>
+
     <div id="personalityGroup" class="section-content">
 
       <h3>Personality Type</h3>
@@ -174,7 +186,11 @@
     <!-- ========================= -->
     <!-- 😊 GROUP 4 — MOOD JOURNAL -->
     <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'moodGroup')">😊 Mood Journal</div>
+    <div class="group-header" onclick="toggleGroup(this, 'moodGroup')">
+      <span>😊 Mood Journal</span>
+      <span class="arrow">▼</span>
+    </div>
+
     <div id="moodGroup" class="section-content">
 
       <label>Mood:</label>
@@ -194,102 +210,108 @@
 
     </div>
 
-   <!-- ========================= -->
-<!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
-<!-- ========================= -->
-<div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">💡 Quick 3‑Question Survey</div>
+    <!-- ========================= -->
+    <!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">
+      <span>💡 Quick 3‑Question Survey</span>
+      <span class="arrow">▼</span>
+    </div>
 
-<div id="threeQGroup" class="section-content">
+    <div id="threeQGroup" class="section-content">
 
-  <form id="surveyForm" onsubmit="event.preventDefault(); handleThreeQSurvey();">
-    <label>How often do you track expenses?</label>
-    <select name="q1">
-      <option value="3">Always</option>
-      <option value="2">Sometimes</option>
-      <option value="1">Rarely</option>
-    </select>
+      <form id="surveyForm" onsubmit="event.preventDefault(); handleThreeQSurvey();">
+        <label>How often do you track expenses?</label>
+        <select name="q1">
+          <option value="3">Always</option>
+          <option value="2">Sometimes</option>
+          <option value="1">Rarely</option>
+        </select>
 
-    <label>Do you save monthly?</label>
-    <select name="q2">
-      <option value="3">Yes</option>
-      <option value="2">Sometimes</option>
-      <option value="1">Never</option>
-    </select>
+        <label>Do you save monthly?</label>
+        <select name="q2">
+          <option value="3">Yes</option>
+          <option value="2">Sometimes</option>
+          <option value="1">Never</option>
+        </select>
 
-    <label>Investment confidence?</label>
-    <select name="q3">
-      <option value="3">High</option>
-      <option value="2">Medium</option>
-      <option value="1">Low</option>
-    </select>
+        <label>Investment confidence?</label>
+        <select name="q3">
+          <option value="3">High</option>
+          <option value="2">Medium</option>
+          <option value="1">Low</option>
+        </select>
 
-    <button type="submit">Submit</button>
-  </form>
+        <button type="submit">Submit</button>
+      </form>
 
-  <div id="personalityResult"></div>
+      <div id="personalityResult"></div>
 
-</div> <!-- closes threeQGroup -->
+    </div>
 
-<!-- ========================= -->
-<!-- ⭐ WEEKLY MISSIONS SECTION -->
-<!-- ========================= -->
-<section class="dashboard-card fade-in" id="weeklyMissionsSection">
-  <h2>Weekly Missions</h2>
+    <!-- ========================= -->
+    <!-- ⭐ WEEKLY MISSIONS -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleGroup(this, 'weeklyMissionsSection')">
+      <span>🎯 Weekly Missions</span>
+      <span class="arrow">▼</span>
+    </div>
 
-  <div id="missionProgressBar">
-    <div id="missionProgressFill"></div>
-  </div>
+    <section class="dashboard-card fade-in" id="weeklyMissionsSection">
+      <h2>Weekly Missions</h2>
 
-  <ul id="missionsList"></ul>
-  <p id="missionRefreshNote"></p>
-</section>
+      <div id="missionProgressBar">
+        <div id="missionProgressFill"></div>
+      </div>
 
-<!-- ========================= -->
-<!-- MONEY PERSONALITY API MODAL -->
-<!-- ========================= -->
-<div id="moneyPersonalityModal" style="display:none;">
-  <div class="modal-content">
-    <h2>Money Personality Survey</h2>
+      <ul id="missionsList"></ul>
+      <p id="missionRefreshNote"></p>
+    </section>
 
-    <label>Question 1</label>
-    <select id="mp_q1">
-      <option value="1">Low</option>
-      <option value="2">Medium</option>
-      <option value="3">High</option>
-    </select>
+    <!-- ========================= -->
+    <!-- MONEY PERSONALITY API MODAL -->
+    <!-- ========================= -->
+    <div id="moneyPersonalityModal" style="display:none;">
+      <div class="modal-content">
+        <h2>Money Personality Survey</h2>
 
-    <label>Question 2</label>
-    <select id="mp_q2">
-      <option value="1">Low</option>
-      <option value="2">Medium</option>
-      <option value="3">High</option>
-    </select>
+        <label>Question 1</label>
+        <select id="mp_q1">
+          <option value="1">Low</option>
+          <option value="2">Medium</option>
+          <option value="3">High</option>
+        </select>
 
-    <label>Question 3</label>
-    <select id="mp_q3">
-      <option value="1">Low</option>
-      <option value="2">Medium</option>
-      <option value="3">High</option>
-    </select>
+        <label>Question 2</label>
+        <select id="mp_q2">
+          <option value="1">Low</option>
+          <option value="2">Medium</option>
+          <option value="3">High</option>
+        </select>
 
-    <label>Question 4</label>
-    <select id="mp_q4">
-      <option value="1">Low</option>
-      <option value="2">Medium</option>
-      <option value="3">High</option>
-    </select>
+        <label>Question 3</label>
+        <select id="mp_q3">
+          <option value="1">Low</option>
+          <option value="2">Medium</option>
+          <option value="3">High</option>
+        </select>
 
-    <button onclick="submitMoneyPersonalitySurvey()">Submit</button>
-    <button onclick="closeMoneyPersonalitySurvey()">Close</button>
-  </div>
-</div>
+        <label>Question 4</label>
+        <select id="mp_q4">
+          <option value="1">Low</option>
+          <option value="2">Medium</option>
+          <option value="3">High</option>
+        </select>
 
-</main>
-<script src="dashboard.js"></script>
-<script src="app.js"></script>
+        <button onclick="submitMoneyPersonalitySurvey()">Submit</button>
+        <button onclick="closeMoneyPersonalitySurvey()">Close</button>
+      </div>
+    </div>
 
+  </main>
+
+  <script src="dashboard.js"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
-
-
