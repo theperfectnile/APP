@@ -883,3 +883,34 @@ textarea:focus {
 .group-header.active .arrow {
   transform: rotate(90deg);
 }
+/* Collapsible header — dark mode */
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 14px 18px;
+  background: #121212;        /* deep dark background */
+  color: #00eaff;             /* bright cyan text for contrast */
+  border-radius: 8px;
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Keep only the first arrow and make it dark‑mode friendly */
+.group-header .arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  color: #00eaff;             /* same accent color as text */
+}
+
+.group-header.active .arrow {
+  transform: rotate(90deg);
+}
+
+/* Remove the duplicate arrow at the far right */
+.group-header::after {
+  content: none !important;
+}
