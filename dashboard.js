@@ -519,4 +519,19 @@ function generateMicroHabits(personality, lifeScore, a) {
    Weekly Report Engine
 -------------------------------- */
 function generateWeeklyReport(a, personality, lifeScore) {
-  let report = `<strong>Personality:</strong> ${personality.type}`;
+  let report = `
+    <strong>Personality:</strong> ${personality.type}<br>
+    <strong>Life Score:</strong> ${lifeScore}/100<br><br>
+  `;
+
+  report += `<strong>Key Insights:</strong><br>`;
+
+  if (a.q1 >= 4) report += "• Eating out is high.<br>";
+  if (a.q5 <= 2) report += "• Exercise is low.<br>";
+  if (a.q9 >= 4) report += "• Impulse spending is high.<br>";
+
+  report += `<br><strong>Summary:</strong><br>`;
+  report += `Your habits and personality suggest areas for improvement and opportunities to build stability.`;
+
+  return report;
+}
