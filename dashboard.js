@@ -519,4 +519,4 @@ function generateMicroHabits(personality, lifeScore, a) {
    Weekly Report Engine
 -------------------------------- */
 function generateWeeklyReport(a, personality, lifeScore) {
-  let report = `<strong>Personality:</strong> ${personality.type
+  let report = `<strong>Personality:</strong> ${personality.type}`;
