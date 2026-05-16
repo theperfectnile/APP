@@ -24,12 +24,12 @@ function toggleSection(id) {
   el.classList.toggle("open");
 }
 
-function toggleGroup(header, id) {
+window.toggleGroup = function(header, id) {
   const section = document.getElementById(id);
   if (!section) return;
   section.classList.toggle("open");
   header.classList.toggle("active");
-}
+};
 
 /* -------------------------------
    Auth Helpers
