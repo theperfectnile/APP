@@ -562,3 +562,88 @@ function handleThreeQSurvey() {
 
   document.getElementById("personalityResult").innerText = result;
 }
+/* -------------------------------
+   Weekly Missions Engine
+-------------------------------- */
+
+const MISSIONS = [
+  "Track your expenses for 3 days",
+  "Cook 2 meals at home",
+  "Review your bank statements",
+  "Avoid impulse purchases for 48 hours",
+  "Do a 10‑minute walk 3 times",
+  "Plan meals for 2 days",
+  "Unsubscribe from 3 marketing emails",
+  "Move $10 into savings",
+  "Check your credit score",
+  "Spend zero on takeout for one day"
+];
+
+function generateWeeklyMissions() {
+  const selected = [];
+
+  while (selected.length < 3) {
+    const m = MISSIONS[Math.floor(Math.random() * MISSIONS.length)];
+    if (!selected.includes(m)) selected.push(m);
+  }
+
+  return selected.map(m => ({
+    text: m,
+    completed: false
+  }));
+}
+
+function loadWeeklyMissions() {
+  let data = JSON.parse(localStorage.getItem("weeklyMissions"));
+
+  const now = Date.now();
+
+  if (!data || now - data.timestamp > 7 * 24 * 60 * 60 * 1000) {
+    data = {
+      timestamp: now,
+      missions: generateWeeklyMissions()
+    };
+    localStorage.setItem("weeklyMissions", JSON.stringify(data));
+  }
+
+  renderWeeklyMissions(data.missions, data.timestamp);
+}
+
+function renderWeeklyMissions(missions, timestamp) {
+  const list = document.getElementById("missionsList");
+  const progressFill = document.getElementById("missionProgressFill");
+  const refreshNote = document.getElementById("missionRefreshNote");
+
+  list.innerHTML = "";
+
+  missions.forEach((m, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <label>
+        <input type="checkbox" data-index="${i}" ${m.completed ? "checked" : ""}>
+        ${m.text}
+      </label>
+    `;
+    list.appendChild(li);
+  });
+
+  const completed = missions.filter(m => m.completed).length;
+  const percent = (completed / missions.length) * 100;
+  progressFill.style.width = percent + "%";
+
+  const nextRefresh = new Date(timestamp + 7 * 24 * 60 * 60 * 1000);
+  refreshNote.innerText = `New missions arrive on: ${nextRefresh.toDateString()}`;
+
+  list.querySelectorAll("input").forEach(input => {
+    input.addEventListener("change", () => {
+      missions[input.dataset.index].completed = input.checked;
+      localStorage.setItem("weeklyMissions", JSON.stringify({
+        timestamp,
+        missions
+      }));
+      renderWeeklyMissions(missions, timestamp);
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", loadWeeklyMissions);
