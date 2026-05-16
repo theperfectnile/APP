@@ -514,7 +514,14 @@ function generateMicroHabits(personality, lifeScore, a) {
 
   return habits.slice(0, 3);
 }
+function calculateKidBudget(answers, lifeScore) {
+  // Simple fallback logic
+  const base = 50 + answers.q10 * 20; // q10 = kid spending
+  const min = Math.round(base * 0.8);
+  const max = Math.round(base * 1.4);
 
+  return { min, max };
+}
 /* -------------------------------
    Weekly Report Engine
 -------------------------------- */
@@ -534,4 +541,24 @@ function generateWeeklyReport(a, personality, lifeScore) {
   report += `Your habits and personality suggest areas for improvement and opportunities to build stability.`;
 
   return report;
+}
+function handleThreeQSurvey() {
+  const form = document.getElementById("surveyForm");
+  const q1 = Number(form.q1.value);
+  const q2 = Number(form.q2.value);
+  const q3 = Number(form.q3.value);
+
+  const score = q1 + q2 + q3;
+
+  let result = "";
+
+  if (score >= 8) {
+    result = "You are a Confident Planner.";
+  } else if (score >= 5) {
+    result = "You are a Developing Saver.";
+  } else {
+    result = "You are a Beginner Budgeter.";
+  }
+
+  document.getElementById("personalityResult").innerText = result;
 }
