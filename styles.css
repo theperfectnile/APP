@@ -841,3 +841,11 @@ textarea:focus {
     opacity: 0;
   }
 }
+.collapsible-header .arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.collapsible-header.active .arrow {
+  transform: rotate(90deg);
+}
