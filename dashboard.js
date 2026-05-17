@@ -855,5 +855,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPersonalGreeting();
   renderXP();
   loadWeeklyMissions();
-  renderCoachMessage(); // ⭐ Add this line
+  renderCoachMessage();
+  renderMoodJournal();
+  applyMoodTheme(); // ⭐ Load mood theme on startup
 });
