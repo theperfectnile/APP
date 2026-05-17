@@ -47,8 +47,37 @@ window.toggleGroup = function(header, id) {
 -------------------------------- */
 function getToken() {
   return localStorage.getItem("token");
+   function getTimeOfDayGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
 }
 
+function getLastMood() {
+  const history = JSON.parse(localStorage.getItem("moodHistory") || "[]");
+  return history[0]?.mood || null;
+}
+
+function renderPersonalGreeting() {
+  const el = document.getElementById("personalGreeting");
+  if (!el) return;
+
+  const base = getTimeOfDayGreeting();
+  const mood = getLastMood();
+
+  let message = `${base}.`;
+
+  if (mood === "Happy") {
+    message += " You’re on a roll — keep that momentum.";
+  } else if (mood === "Neutral") {
+    message += " Let’s make one small money win today.";
+  } else if (mood === "Sad") {
+    message += " One small step is enough for today.";
+  }
+
+  el.innerText = message;
+}
 async function loadUser() {
   try {
     const res = await fetch(`${API_BASE}/finance/summary`, {
@@ -657,4 +686,7 @@ function renderWeeklyMissions(missions, timestamp) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", loadWeeklyMissions);
+document.addEventListener("DOMContentLoaded", () => {
+  renderPersonalGreeting();
+  loadWeeklyMissions();
+});
