@@ -933,3 +933,46 @@ textarea:focus {
   font-weight: 600;
   color: #00eaff; /* your accent color */
 }
+/* -------------------------------
+   Mood‑Aware UI Themes
+-------------------------------- */
+
+/* Default / Neutral */
+body.mood-neutral {
+  --accent: #00eaff;
+  --bg: #121212;
+  --card-bg: #1e1e1e;
+}
+
+/* Happy Mood */
+body.mood-happy {
+  --accent: #00ff9d; /* bright green */
+  --bg: #101c14;
+  --card-bg: #14281b;
+}
+
+/* Sad Mood */
+body.mood-sad {
+  --accent: #7aa0ff; /* soft blue */
+  --bg: #0f1320;
+  --card-bg: #151a2b;
+}
+
+/* Apply theme variables */
+body {
+  background: var(--bg);
+  color: #fff;
+}
+
+.dashboard-card,
+.group-header,
+.section-content {
+  background: var(--card-bg);
+  border-left: 3px solid var(--accent);
+}
+
+.group-header .arrow,
+.streak-badge,
+.xp-badge {
+  color: var(--accent);
+}
