@@ -47,7 +47,12 @@ window.toggleGroup = function(header, id) {
 -------------------------------- */
 function getToken() {
   return localStorage.getItem("token");
-   function getTimeOfDayGreeting() {
+}
+
+/* -------------------------------
+   Personalized Greeting
+-------------------------------- */
+function getTimeOfDayGreeting() {
   const hour = new Date().getHours();
   if (hour < 12) return "Good morning";
   if (hour < 18) return "Good afternoon";
