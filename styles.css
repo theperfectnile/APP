@@ -914,3 +914,16 @@ textarea:focus {
 .group-header::after {
   content: none !important;
 }
+/* Smooth collapsible animation */
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+/* When opened */
+.section-content.open {
+  max-height: 1000px; /* large enough for any content */
+  opacity: 1;
+}
