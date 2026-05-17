@@ -127,6 +127,29 @@ function renderStreak() {
     el.innerText = `🔥 ${streak}-day streak`;
   }
 }
+   /* -------------------------------
+   XP + Level System
+-------------------------------- */
+function addXP(amount, reason) {
+  const data = JSON.parse(localStorage.getItem("xpData") || '{"xp":0,"log":[]}');
+  data.xp += amount;
+  data.log.unshift({ amount, reason, time: Date.now() });
+  localStorage.setItem("xpData", JSON.stringify(data));
+}
+
+function getLevel(xp) {
+  return Math.floor(xp / 100) + 1; // 100 XP per level
+}
+
+function renderXP() {
+  const el = document.getElementById("xpBadge");
+  if (!el) return;
+
+  const data = JSON.parse(localStorage.getItem("xpData") || '{"xp":0}');
+  const level = getLevel(data.xp);
+
+  el.innerText = `Level ${level} • ${data.xp} XP`;
+}
 async function loadUser() {
   try {
     const res = await fetch(`${API_BASE}/finance/summary`, {
@@ -755,16 +778,22 @@ function renderWeeklyMissions(missions, timestamp) {
   refreshNote.innerText = `New missions arrive on: ${nextRefresh.toDateString()}`;
 
   list.querySelectorAll("input").forEach(input => {
-    input.addEventListener("change", () => {
-      missions[input.dataset.index].completed = input.checked;
-      localStorage.setItem("weeklyMissions", JSON.stringify({
-        timestamp,
-        missions
-      }));
-      renderWeeklyMissions(missions, timestamp);
-    });
-  });
-}
+   input.addEventListener("change", () => {
+  missions[input.dataset.index].completed = input.checked;
+
+  localStorage.setItem("weeklyMissions", JSON.stringify({
+    timestamp,
+    missions
+  }));
+
+  renderWeeklyMissions(missions, timestamp);
+
+  // ⭐ GIVE XP ONLY WHEN A MISSION IS COMPLETED
+  if (input.checked) {
+    addXP(10, "Completed a weekly mission");
+    renderXP();
+  }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   trackVisit();
