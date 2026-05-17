@@ -380,7 +380,8 @@ function calculateSurvey() {
     q9: get("q9"),
     q10: get("q10")
   };
-
+// Save answers for personalized missions
+localStorage.setItem("lastSurveyAnswers", JSON.stringify(answers));
   let advice = "";
 
   if (answers.q1 >= 4)
@@ -669,12 +670,42 @@ const MISSIONS = [
 ];
 
 function generateWeeklyMissions() {
-  const selected = [];
+  const answers = JSON.parse(localStorage.getItem("lastSurveyAnswers") || "null");
 
-  while (selected.length < 3) {
-    const m = MISSIONS[Math.floor(Math.random() * MISSIONS.length)];
-    if (!selected.includes(m)) selected.push(m);
+  const pool = [];
+
+  // If no survey yet, fallback to simple missions
+  if (!answers) {
+    pool.push(
+      "Track your expenses for 3 days",
+      "Cook 2 meals at home",
+      "Move $10 into savings"
+    );
+  } else {
+    // Personalized missions based on survey behavior
+    if (answers.q1 >= 4) pool.push("Swap one eating‑out meal for a home meal");
+    if (answers.q8 <= 2) pool.push("Move $10 into savings this week");
+    if (answers.q5 <= 2) pool.push("Walk 10 minutes 3 times");
+    if (answers.q9 >= 4) pool.push("Unsubscribe from 3 marketing emails");
+    if (answers.q3 >= 4) pool.push("Plan 2 meals to reduce food waste");
+    if (answers.q4 >= 4) pool.push("Cook one meal without convenience foods");
+    if (answers.q7 <= 2) pool.push("Review your bank statements this week");
+
+    // Always include general improvement options
+    pool.push("Review your top 3 spending categories");
+    pool.push("Prep ingredients for one meal");
   }
+
+  // Pick 3 unique missions
+  const selected = [];
+  while (selected.length < 3 && pool.length > 0) {
+    const idx = Math.floor(Math.random() * pool.length);
+    const m = pool.splice(idx, 1)[0];
+    selected.push({ text: m, completed: false });
+  }
+
+  return selected;
+}
 
   return selected.map(m => ({
     text: m,
