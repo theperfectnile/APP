@@ -150,6 +150,60 @@ function renderXP() {
 
   el.innerText = `Level ${level} • ${data.xp} XP`;
 }
+   /* -------------------------------
+   Vaultwise Coach (Smart Advice)
+-------------------------------- */
+function renderCoachMessage() {
+  const el = document.getElementById("coachMessage");
+  if (!el) return;
+
+  const answers = JSON.parse(localStorage.getItem("lastSurveyAnswers") || "null");
+  const moodHistory = JSON.parse(localStorage.getItem("moodHistory") || "[]");
+  const xpData = JSON.parse(localStorage.getItem("xpData") || '{"xp":0}');
+  const streak = getVisitStreak();
+
+  let msg = "";
+
+  // 1. No survey yet → encourage starting
+  if (!answers) {
+    msg = "Start with the 10‑question survey so I can tailor your plan.";
+    el.innerHTML = msg;
+    return;
+  }
+
+  // 2. Mood‑aware advice
+  const lastMood = moodHistory[0]?.mood;
+  if (lastMood === "Sad") {
+    msg = "Take it slow today. One small financial win is enough.";
+  } else if (lastMood === "Happy") {
+    msg = "You're in a great mindset — perfect time to build momentum.";
+  }
+
+  // 3. Personalized advice based on survey behavior
+  if (answers.q1 >= 4) {
+    msg += "<br>Try swapping one eating‑out meal for a home meal this week.";
+  }
+  if (answers.q8 <= 2) {
+    msg += "<br>Consider moving $10 into savings — small steps add up.";
+  }
+  if (answers.q9 >= 4) {
+    msg += "<br>Impulse spending is high — try a 24‑hour pause before purchases.";
+  }
+  if (answers.q7 <= 2) {
+    msg += "<br>Review your bank statements — it builds awareness.";
+  }
+
+  // 4. XP‑aware coaching
+  const level = getLevel(xpData.xp);
+  msg += `<br>You’re currently Level ${level}. Keep completing missions to level up.`;
+
+  // 5. Streak‑aware coaching
+  if (streak >= 3) {
+    msg += `<br>🔥 You're on a ${streak}-day streak — consistency is your superpower.`;
+  }
+
+  el.innerHTML = msg;
+}
 async function loadUser() {
   try {
     const res = await fetch(`${API_BASE}/finance/summary`, {
@@ -799,5 +853,7 @@ document.addEventListener("DOMContentLoaded", () => {
   trackVisit();
   renderStreak();
   renderPersonalGreeting();
+  renderXP();
   loadWeeklyMissions();
+  renderCoachMessage(); // ⭐ Add this line
 });
