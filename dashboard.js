@@ -78,6 +78,55 @@ function renderPersonalGreeting() {
 
   el.innerText = message;
 }
+   /* -------------------------------
+   Visit Tracking + Streak System
+-------------------------------- */
+function trackVisit() {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  let visits = JSON.parse(localStorage.getItem("visitHistory") || "[]");
+
+  if (!visits.includes(today)) {
+    visits.push(today);
+    localStorage.setItem("visitHistory", JSON.stringify(visits));
+  }
+}
+
+function getVisitStreak() {
+  const visits = JSON.parse(localStorage.getItem("visitHistory") || "[]")
+    .sort()
+    .reverse();
+
+  if (visits.length === 0) return 0;
+
+  let streak = 1;
+  let last = new Date(visits[0]);
+
+  for (let i = 1; i < visits.length; i++) {
+    const d = new Date(visits[i]);
+    const diff = (last - d) / (1000 * 60 * 60 * 24);
+    if (diff === 1) {
+      streak++;
+      last = d;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
+function renderStreak() {
+  const el = document.getElementById("streakBadge");
+  if (!el) return;
+
+  const streak = getVisitStreak();
+
+  if (streak <= 1) {
+    el.innerText = "Day 1 • Showing up matters";
+  } else {
+    el.innerText = `🔥 ${streak}-day streak`;
+  }
+}
 async function loadUser() {
   try {
     const res = await fetch(`${API_BASE}/finance/summary`, {
@@ -687,6 +736,8 @@ function renderWeeklyMissions(missions, timestamp) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  trackVisit();
+  renderStreak();
   renderPersonalGreeting();
   loadWeeklyMissions();
 });
