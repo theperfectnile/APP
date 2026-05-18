@@ -443,26 +443,18 @@ canvas {
 }
 
 /* --------------------------------------------------
-   COLLAPSIBLE CONTENT (FINAL FIXED VERSION)
+   COLLAPSIBLE CONTENT (FINAL WORKING VERSION)
 -------------------------------------------------- */
 .section-content {
   max-height: 0;
   overflow: hidden;
-  padding: 0 10px;
-  transition: max-height 0.45s ease, padding 0.3s ease;
-}
-
-.section-content > * {
-  display: none;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
 }
 
 .section-content.open {
-  max-height: 2000px;
-  padding: 15px 10px;
-}
-
-.section-content.open > * {
-  display: block;
+  max-height: 1000px; /* large enough for content */
+  opacity: 1;
 }
 
 /* --------------------------------------------------
