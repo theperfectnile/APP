@@ -83,6 +83,61 @@ function renderPersonalGreeting() {
 
   el.innerText = message;
 }
+/* -------------------------------
+   Mood Journal
+-------------------------------- */
+function saveMoodEntry() {
+  const mood = document.getElementById("moodSelect")?.value || "Neutral";
+  const note = document.getElementById("moodNote")?.value || "";
+
+  const moodHistory = JSON.parse(localStorage.getItem("moodHistory") || "[]");
+
+  moodHistory.unshift({
+    mood,
+    note,
+    date: new Date().toISOString()
+  });
+
+  localStorage.setItem("moodHistory", JSON.stringify(moodHistory));
+
+  renderMoodJournal();
+  applyMoodTheme();
+}
+
+function renderMoodJournal() {
+  const list = document.getElementById("moodJournalList");
+  if (!list) return;
+
+  const moodHistory = JSON.parse(localStorage.getItem("moodHistory") || "[]");
+
+  list.innerHTML = moodHistory
+    .slice(0, 5)
+    .map(entry => `
+      <li>
+        <strong>${entry.mood}</strong> — ${entry.note || "No note"}
+        <br><small>${new Date(entry.date).toLocaleString()}</small>
+      </li>
+    `)
+    .join("");
+}
+
+/* -------------------------------
+   Mood‑Aware Theme
+-------------------------------- */
+function applyMoodTheme() {
+  const history = JSON.parse(localStorage.getItem("moodHistory") || "[]");
+  const mood = history[0]?.mood || "Neutral";
+
+  document.body.classList.remove("mood-happy", "mood-neutral", "mood-sad");
+
+  if (mood === "Happy") {
+    document.body.classList.add("mood-happy");
+  } else if (mood === "Sad") {
+    document.body.classList.add("mood-sad");
+  } else {
+    document.body.classList.add("mood-neutral");
+  }
+}
    /* -------------------------------
    Visit Tracking + Streak System
 -------------------------------- */
