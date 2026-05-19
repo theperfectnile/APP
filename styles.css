@@ -1095,3 +1095,7 @@ body {
   background: var(--accent);
   box-shadow: 0 0 10px var(--accent);
 }
+.stat-card p {
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent);
+}
