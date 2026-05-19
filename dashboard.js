@@ -393,7 +393,11 @@ async function loadDashboard() {
     showToast("Error loading dashboard summary", "error");
   }
 }
-
+// Dashboard stat cards
+animateValue("statIncome", data.totalIncome || 0);
+animateValue("statExpenses", data.totalExpenses || 0);
+animateValue("statPortfolio", data.totalPortfolio || 0);
+animateValue("statSavings", data.savings || (data.totalIncome - data.totalExpenses));
 /* -------------------------------
    Load Money Personality
 -------------------------------- */
