@@ -848,12 +848,6 @@ function generateWeeklyMissions() {
   return selected;
 }
 
-  return selected.map(m => ({
-    text: m,
-    completed: false
-  }));
-}
-
 function loadWeeklyMissions() {
   let data = JSON.parse(localStorage.getItem("weeklyMissions"));
 
