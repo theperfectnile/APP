@@ -206,13 +206,39 @@ function getLevel(xp) {
 }
 
 function renderXP() {
-  const el = document.getElementById("xpBadge");
-  if (!el) return;
+  const badgeEl = document.getElementById("xpBadge");
+  const levelLabel = document.getElementById("xpLevelLabel");
+  const xpValueLabel = document.getElementById("xpValueLabel");
+  const xpFill = document.getElementById("xpFill");
+  const xpNextLabel = document.getElementById("xpNextLabel");
 
   const data = JSON.parse(localStorage.getItem("xpData") || '{"xp":0}');
-  const level = getLevel(data.xp);
+  const xp = data.xp || 0;
+  const level = getLevel(xp);
+  const nextLevelXP = level * 100;
+  const prevLevelXP = (level - 1) * 100;
+  const progressInLevel = xp - prevLevelXP;
+  const neededThisLevel = nextLevelXP - prevLevelXP;
+  const percent = Math.min((progressInLevel / neededThisLevel) * 100, 100);
 
-  el.innerText = `Level ${level} • ${data.xp} XP`;
+  if (badgeEl) {
+    badgeEl.innerText = `Level ${level} • ${xp} XP`;
+  }
+  if (levelLabel) {
+    levelLabel.textContent = `Level ${level}`;
+  }
+  if (xpValueLabel) {
+    xpValueLabel.textContent = `${xp} XP`;
+  }
+  if (xpFill) {
+    xpFill.style.width = `${percent}%`;
+  }
+  if (xpNextLabel) {
+    xpNextLabel.textContent = `Next level in ${Math.max(
+      nextLevelXP - xp,
+      0
+    )} XP`;
+  }
 }
    /* -------------------------------
    Vaultwise Coach (Smart Advice)
