@@ -891,23 +891,48 @@ function loadWeeklyMissions() {
 }
 
 function renderWeeklyMissions(missions, timestamp) {
-  const list = document.getElementById("missionsList");
+  const grid = document.getElementById("missionsGrid");
   const progressFill = document.getElementById("missionProgressFill");
   const refreshNote = document.getElementById("missionRefreshNote");
 
-  list.innerHTML = "";
+  grid.innerHTML = "";
 
   missions.forEach((m, i) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <label>
-        <input type="checkbox" data-index="${i}" ${m.completed ? "checked" : ""}>
-        ${m.text}
-      </label>
+    const card = document.createElement("div");
+    card.className = "mission-card";
+
+    card.innerHTML = `
+      <div class="mission-title">${m.text}</div>
+      <div class="mission-check ${m.completed ? "completed" : ""}" data-index="${i}"></div>
     `;
-    list.appendChild(li);
+
+    grid.appendChild(card);
   });
 
+  // Progress bar update
+  const completed = missions.filter(m => m.completed).length;
+  const percent = (completed / missions.length) * 100;
+  progressFill.style.width = percent + "%";
+
+  // Refresh date
+  const nextRefresh = new Date(timestamp + 7 * 24 * 60 * 60 * 1000);
+  refreshNote.innerText = `New missions arrive on: ${nextRefresh.toDateString()}`;
+
+  // Click handlers
+  grid.querySelectorAll(".mission-check").forEach(check => {
+    check.addEventListener("click", () => {
+      const index = check.dataset.index;
+      missions[index].completed = !missions[index].completed;
+
+      localStorage.setItem("weeklyMissions", JSON.stringify({
+        timestamp,
+        missions
+      }));
+
+      renderWeeklyMissions(missions, timestamp);
+    });
+  });
+}
   const completed = missions.filter(m => m.completed).length;
   const percent = (completed / missions.length) * 100;
   progressFill.style.width = percent + "%";
