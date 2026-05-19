@@ -1011,3 +1011,6 @@ body {
 .xp-badge {
   color: var(--accent);
 }
+.arrow.rotated {
+  transform: rotate(180deg);
+}
