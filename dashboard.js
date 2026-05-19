@@ -893,11 +893,13 @@ function renderWeeklyMissions(missions, timestamp) {
    input.addEventListener("change", () => {
   missions[input.dataset.index].completed = input.checked;
 
-  localStorage.setItem("weeklyMissions", JSON.stringify({
+ localStorage.setItem("weeklyMissions", JSON.stringify({
     timestamp,
     missions
   }));
-
+    });
+  });
+}
   renderWeeklyMissions(missions, timestamp);
 
   // ⭐ GIVE XP ONLY WHEN A MISSION IS COMPLETED
