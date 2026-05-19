@@ -16,14 +16,18 @@ function showToast(message, type = "info") {
 }
 
 /* -------------------------------
-   Collapsible Sections
+   Collapsible Groups
 -------------------------------- */
-function toggleSection(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.toggle("open");
-}
+function toggleGroup(header, id) {
+  const section = document.getElementById(id);
+  if (!section) return;
 
+  section.classList.toggle("open");
+
+  // Rotate arrow
+  const arrow = header.querySelector(".arrow");
+  if (arrow) arrow.classList.toggle("rotated");
+}
 window.toggleGroup = function(header, id) {
   const section = document.getElementById(id);
   if (!section) return;
