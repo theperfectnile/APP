@@ -1116,3 +1116,49 @@ body {
   font-size: 15px;
   opacity: 0.75;
 }
+.main-content {
+  padding: 40px 40px 60px;
+  max-width: 1200px;
+}
+.dashboard-card,
+.group-header,
+.section-content {
+  margin-bottom: 22px;
+}
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 20px;
+    z-index: 999;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-top: 80px;
+  }
+}
+.group-header {
+  margin-top: 28px;
+}
+
+.section-content {
+  padding: 20px;
+  border-radius: 12px;
+}
+* {
+  scroll-behavior: smooth;
+}
+
+.section-content.open {
+  transition: max-height 0.45s ease, opacity 0.35s ease;
+}
