@@ -1099,3 +1099,20 @@ body {
   color: var(--accent);
   text-shadow: 0 0 12px var(--accent);
 }
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.page-header span {
+  font-size: 15px;
+  opacity: 0.75;
+}
