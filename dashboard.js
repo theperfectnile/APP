@@ -900,14 +900,6 @@ function renderWeeklyMissions(missions, timestamp) {
     });
   });
 }
-  renderWeeklyMissions(missions, timestamp);
-
-  // ⭐ GIVE XP ONLY WHEN A MISSION IS COMPLETED
-  if (input.checked) {
-    addXP(10, "Completed a weekly mission");
-    renderXP();
-  }
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   trackVisit();
