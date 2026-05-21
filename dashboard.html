@@ -25,6 +25,7 @@
   <!-- Main Content -->
   <main class="main-content">
 
+    <!-- HEADER -->
     <header class="page-header fade-in">
       <div>
         <h1>Dashboard</h1>
@@ -48,25 +49,7 @@
       </div>
     </header>
 
-    <!-- Vaultwise Coach -->
-    <section class="dashboard-card fade-in" id="coachPanel">
-      <h2>Vaultwise Coach</h2>
-      <div id="coachMessage"></div>
-    </section>
-
-    <!-- ⭐ MONEY MINDSET MIRROR -->
-    <section class="dashboard-card fade-in" id="mindsetMirror">
-      <h2>🧠 Money Mindset Mirror</h2>
-      <p id="mirrorInsight">Loading your insight...</p>
-
-      <div class="mirror-tags">
-        <span id="mirrorSource1"></span>
-        <span id="mirrorSource2"></span>
-      </div>
-    </section>
-    <!-- ⭐ END MINDSET MIRROR -->
-
-    <!-- Stats Grid -->
+    <!-- STATS GRID -->
     <div class="stats-grid fade-in">
       <div class="stat-card">
         <h3>Total Income</h3>
@@ -166,7 +149,7 @@
     <div id="surveyGroup" class="section-content">
 
       <form id="tenQuestionSurvey">
-        <!-- your 10 questions here -->
+        <!-- your 10 questions remain unchanged -->
       </form>
 
       <h3>Survey Results</h3>
@@ -183,7 +166,30 @@
     </div>
 
     <div id="personalityGroup" class="section-content">
-      <!-- personality content -->
+
+      <h3>Personality Type</h3>
+      <div id="personalityType"></div>
+
+      <h3>Life Score</h3>
+      <div id="lifeScoreValue"></div>
+
+      <h3>Micro‑Habits</h3>
+      <ul id="microHabitsList"></ul>
+
+      <h3>Weekly Report</h3>
+      <div id="weeklyReportText"></div>
+
+      <h3>Kid Budget</h3>
+      <div id="kidBudgetValue"></div>
+
+      <h3>Money Personality Result (API)</h3>
+      <div id="moneyPersonalityType"></div>
+
+      <div id="mpResultSection">
+        <h3>API Personality Result</h3>
+        <div id="mpResult"></div>
+      </div>
+
     </div>
 
     <!-- ========================= -->
@@ -195,7 +201,7 @@
     </div>
 
     <div id="threeQGroup" class="section-content">
-      <!-- 3 question survey -->
+      <!-- 3 question survey stays unchanged -->
     </div>
 
     <!-- ========================= -->
@@ -215,6 +221,27 @@
 
       <div id="missionsGrid" class="missions-grid"></div>
       <p id="missionRefreshNote"></p>
+    </section>
+
+    <!-- ========================= -->
+    <!-- ⭐ VAULTWISE COACH -->
+    <!-- ========================= -->
+    <section class="dashboard-card fade-in" id="coachPanel">
+      <h2>Vaultwise Coach</h2>
+      <div id="coachMessage"></div>
+    </section>
+
+    <!-- ========================= -->
+    <!-- ⭐ MONEY MINDSET MIRROR -->
+    <!-- ========================= -->
+    <section class="dashboard-card fade-in" id="mindsetMirror">
+      <h2>🧠 Money Mindset Mirror</h2>
+      <p id="mirrorInsight">Loading your insight...</p>
+
+      <div class="mirror-tags">
+        <span id="mirrorSource1"></span>
+        <span id="mirrorSource2"></span>
+      </div>
     </section>
 
   </main>
