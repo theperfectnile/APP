@@ -22,60 +22,65 @@
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
 
-  <!-- Main Content -->
-  <main class="main-content">
+ <!-- Main Content -->
+<main class="main-content">
 
-    <header class="page-header fade-in">
-      <div>
-        <h1>Dashboard</h1>
-        <span>Your financial overview at a glance</span>
+  <header class="page-header fade-in">
+    <div>
+      <h1>Dashboard</h1>
+      <span>Your financial overview at a glance</span>
+
       <div id="personalGreeting" class="personal-greeting"></div>
-        <div id="streakBadge" class="streak-badge"></div>
-        <div id="xpBadge" class="xp-badge"></div>
-       </div>
-    <header class="page-header fade-in">
-  <div>
-    <h1>Dashboard</h1>
-    <span>Your financial overview at a glance</span>
-    <div id="personalGreeting" class="personal-greeting"></div>
-    <div id="streakBadge" class="streak-badge"></div>
-    <div id="xpBadge" class="xp-badge"></div>
+      <div id="streakBadge" class="streak-badge"></div>
+      <div id="xpBadge" class="xp-badge"></div>
 
-    <!-- 🔹 Add this block -->
-    <div class="xp-container">
-      <div class="xp-label">
-        <span id="xpLevelLabel">Level 1</span> •
-        <span id="xpValueLabel">0 XP</span>
+      <!-- XP Progress Bar -->
+      <div class="xp-container">
+        <div class="xp-label">
+          <span id="xpLevelLabel">Level 1</span> •
+          <span id="xpValueLabel">0 XP</span>
+        </div>
+        <div class="xp-bar">
+          <div id="xpFill"></div>
+        </div>
+        <span id="xpNextLabel">Next level in 100 XP</span>
       </div>
-      <div class="xp-bar">
-        <div id="xpFill"></div>
-      </div>
-      <span id="xpNextLabel">Next level in 100 XP</span>
     </div>
-    <!-- 🔹 End block -->
-  </div>
-</header>
-<div class="stats-grid fade-in">
-  <div class="stat-card">
-    <h3>Total Income</h3>
-    <p id="statIncome">$0</p>
-  </div>
+  </header>
 
-  <div class="stat-card">
-    <h3>Total Expenses</h3>
-    <p id="statExpenses">$0</p>
-  </div>
+  <!-- ⭐ MONEY MINDSET MIRROR GOES HERE -->
+  <div id="mindsetMirror" class="mirror-card fade-in">
+    <h2>🧠 Money Mindset Mirror</h2>
+    <p id="mirrorInsight">Loading your insight...</p>
 
-  <div class="stat-card">
-    <h3>Total Portfolio</h3>
-    <p id="statPortfolio">$0</p>
+    <div class="mirror-tags">
+      <span id="mirrorSource1"></span>
+      <span id="mirrorSource2"></span>
+    </div>
   </div>
+  <!-- ⭐ END MINDSET MIRROR -->
 
-  <div class="stat-card">
-    <h3>Savings</h3>
-    <p id="statSavings">$0</p>
+  <div class="stats-grid fade-in">
+    <div class="stat-card">
+      <h3>Total Income</h3>
+      <p id="statIncome">$0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Total Expenses</h3>
+      <p id="statExpenses">$0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Total Portfolio</h3>
+      <p id="statPortfolio">$0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Savings</h3>
+      <p id="statSavings">$0</p>
+    </div>
   </div>
-</div>
     <!-- ========================= -->
     <!-- 📊 GROUP 1 — FINANCE -->
     <!-- ========================= -->
