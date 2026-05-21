@@ -138,10 +138,10 @@
       </div>
     </div>
 
-    <!-- ========================= -->
-    <!-- 📝 GROUP 2 — 10 QUESTION SURVEY -->
-    <!-- ========================= -->
-   <div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
+   <!-- ========================= -->
+<!-- 📝 GROUP 2 — 10 QUESTION SURVEY -->
+<!-- ========================= -->
+<div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
   <span>📝 10‑Question Survey</span>
   <span class="arrow">▼</span>
 </div>
@@ -149,14 +149,85 @@
 <div id="surveyGroup" class="section-content">
 
   <form id="tenQuestionSurvey">
-    <!-- your 10 questions here -->
+
+    <label>1. How often do you eat out?</label>
+    <select id="q1">
+      <option value="1">Rarely</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Often</option>
+    </select>
+
+    <label>2. Do you plan meals?</label>
+    <select id="q2">
+      <option value="1">Never</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Always</option>
+    </select>
+
+    <label>3. Do you waste food?</label>
+    <select id="q3">
+      <option value="1">No</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Yes</option>
+    </select>
+
+    <label>4. Do you rely on convenience foods?</label>
+    <select id="q4">
+      <option value="1">No</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Yes</option>
+    </select>
+
+    <label>5. How often do you exercise?</label>
+    <select id="q5">
+      <option value="1">Never</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Often</option>
+    </select>
+
+    <label>6. Energy levels?</label>
+    <select id="q6">
+      <option value="1">High</option>
+      <option value="3">Medium</option>
+      <option value="5">Low</option>
+    </select>
+
+    <label>7. Do you review statements?</label>
+    <select id="q7">
+      <option value="1">Never</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Often</option>
+    </select>
+
+    <label>8. Do you save money?</label>
+    <select id="q8">
+      <option value="1">Never</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Often</option>
+    </select>
+
+    <label>9. Impulse spending?</label>
+    <select id="q9">
+      <option value="1">No</option>
+      <option value="3">Sometimes</option>
+      <option value="5">Yes</option>
+    </select>
+
+    <label>10. Kid spending?</label>
+    <select id="q10">
+      <option value="1">Low</option>
+      <option value="3">Medium</option>
+      <option value="5">High</option>
+    </select>
+
+    <button type="button" onclick="calculateSurvey()">Submit Survey</button>
+
   </form>
 
   <h3>Survey Results</h3>
   <div id="surveyResults"></div>
 
 </div>
-
     <!-- ========================= -->
     <!-- 🧠 GROUP 3 — PERSONALITY INSIGHTS -->
     <!-- ========================= -->
