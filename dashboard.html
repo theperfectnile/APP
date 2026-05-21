@@ -141,21 +141,21 @@
     <!-- ========================= -->
     <!-- 📝 GROUP 2 — 10 QUESTION SURVEY -->
     <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
-      <span>📝 10‑Question Survey</span>
-      <span class="arrow">▼</span>
-    </div>
+   <div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
+  <span>📝 10‑Question Survey</span>
+  <span class="arrow">▼</span>
+</div>
 
-    <div id="surveyGroup" class="section-content">
+<div id="surveyGroup" class="section-content">
 
-      <form id="tenQuestionSurvey">
-        <!-- your 10 questions remain unchanged -->
-      </form>
+  <form id="tenQuestionSurvey">
+    <!-- your 10 questions here -->
+  </form>
 
-      <h3>Survey Results</h3>
-      <div id="surveyResults"></div>
+  <h3>Survey Results</h3>
+  <div id="surveyResults"></div>
 
-    </div>
+</div>
 
     <!-- ========================= -->
     <!-- 🧠 GROUP 3 — PERSONALITY INSIGHTS -->
@@ -195,15 +195,41 @@
     <!-- ========================= -->
     <!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
     <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">
-      <span>💡 Quick 3‑Question Survey</span>
-      <span class="arrow">▼</span>
-    </div>
+  <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">
+  <span>💡 Quick 3‑Question Survey</span>
+  <span class="arrow">▼</span>
+</div>
 
-    <div id="threeQGroup" class="section-content">
-      <!-- 3 question survey stays unchanged -->
-    </div>
+<div id="threeQGroup" class="section-content">
 
+  <form id="surveyForm" onsubmit="event.preventDefault(); handleThreeQSurvey();">
+    <label>How often do you track expenses?</label>
+    <select name="q1">
+      <option value="3">Always</option>
+      <option value="2">Sometimes</option>
+      <option value="1">Rarely</option>
+    </select>
+
+    <label>Do you save monthly?</label>
+    <select name="q2">
+      <option value="3">Yes</option>
+      <option value="2">Sometimes</option>
+      <option value="1">Never</option>
+    </select>
+
+    <label>Investment confidence?</label>
+    <select name="q3">
+      <option value="3">High</option>
+      <option value="2">Medium</option>
+      <option value="1">Low</option>
+    </select>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="personalityResult"></div>
+
+</div>
     <!-- ========================= -->
     <!-- ⭐ WEEKLY MISSIONS -->
     <!-- ========================= -->
