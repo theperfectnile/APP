@@ -1397,6 +1397,10 @@ function renderWeeklyMissions(missions, timestamp) {
    DOMContentLoaded — App Init
 -------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
+  renderTenQuestionSurvey();
+  renderThreeQuestionSurvey();
+
+ // Dashboard Systems
   trackVisit();
   renderStreak();
   renderPersonalGreeting();
