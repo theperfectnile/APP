@@ -417,11 +417,87 @@ function loadDailySurvey() {
     ten: getDailyTenQuestions(),
     three: getDailyThreeQuestions()
   };
-
   // Save today's survey so it stays the same all day
   localStorage.setItem("dailySurvey", JSON.stringify(data));
 
   return data;
+}
+
+function renderTenQuestionSurvey() {
+  const daily = loadDailySurvey();
+  const questions = daily.ten;
+  const container = document.getElementById("tenQuestionSurvey");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  questions.forEach((q, i) => {
+    const block = document.createElement("div");
+    block.className = "survey-question-block";
+
+    const label = document.createElement("p");
+    label.className = "survey-question-text";
+    label.innerText = `${i + 1}. ${q.text}`;
+    block.appendChild(label);
+
+    q.options.forEach(opt => {
+      const row = document.createElement("label");
+      row.className = "survey-option-row";
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `ten_q_${i}`;
+      input.value = opt.value;
+
+      const span = document.createElement("span");
+      span.innerText = opt.label;
+
+      row.appendChild(input);
+      row.appendChild(span);
+      block.appendChild(row);
+    });
+
+    container.appendChild(block);
+  });
+}
+   function renderThreeQuestionSurvey() {
+  const daily = loadDailySurvey();
+  const questions = daily.three;
+  const container = document.getElementById("threeQuestionSurvey");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  questions.forEach((q, i) => {
+    const block = document.createElement("div");
+    block.className = "survey-question-block";
+
+    const label = document.createElement("p");
+    label.className = "survey-question-text";
+    label.innerText = `${i + 1}. ${q.text}`;
+    block.appendChild(label);
+
+    q.options.forEach(opt => {
+      const row = document.createElement("label");
+      row.className = "survey-option-row";
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `three_q_${i}`;
+      input.value = opt.value;
+
+      const span = document.createElement("span");
+      span.innerText = opt.label;
+
+      row.appendChild(input);
+      row.appendChild(span);
+      block.appendChild(row);
+    });
+
+    container.appendChild(block);
+  });
 }
 /* -------------------------------
    Mood Journal
