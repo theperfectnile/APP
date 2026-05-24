@@ -402,6 +402,27 @@ function getDailyThreeQuestions() {
 
   return selected;
 }
+function loadDailySurvey() {
+  const seed = getDailySeed();
+  const saved = JSON.parse(localStorage.getItem("dailySurvey"));
+
+  // If today's survey already exists, return it
+  if (saved && saved.seed === seed) {
+    return saved;
+  }
+
+  // Otherwise generate a new daily survey
+  const data = {
+    seed,
+    ten: getDailyTenQuestions(),
+    three: getDailyThreeQuestions()
+  };
+
+  // Save today's survey so it stays the same all day
+  localStorage.setItem("dailySurvey", JSON.stringify(data));
+
+  return data;
+}
 /* -------------------------------
    Mood Journal
 -------------------------------- */
