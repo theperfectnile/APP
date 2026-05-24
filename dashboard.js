@@ -79,7 +79,647 @@ function renderPersonalGreeting() {
 
   el.innerText = message;
 }
+function getDailySeed() {
+  const today = new Date();
+  return Number(`${today.getFullYear()}${today.getMonth()+1}${today.getDate()}`);
+}
+function seededRandom(seed) {
+  let x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+const TEN_QUESTION_BANK = [
+   {
+    text: "How often do you track your daily spending?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Often", value: 3 },
+      { label: "Every day", value: 4 }
+    ]
+  },
+  {
+    text: "How confident do you feel about your financial decisions?",
+    options: [
+      { label: "Not confident", value: 1 },
+      { label: "Somewhat confident", value: 2 },
+      { label: "Confident", value: 3 },
+      { label: "Very confident", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you spend impulsively?",
+    options: [
+      { label: "Very often", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Rarely", value: 3 },
+      { label: "Never", value: 4 }
+    ]
+  },
+  {
+    text: "How well do you stick to your budget?",
+    options: [
+      { label: "Not at all", value: 1 },
+      { label: "Somewhat", value: 2 },
+      { label: "Mostly", value: 3 },
+      { label: "Always", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you review your bank statements?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Monthly", value: 2 },
+      { label: "Weekly", value: 3 },
+      { label: "Daily", value: 4 }
+    ]
+  },
+  {
+    text: "How prepared do you feel for unexpected expenses?",
+    options: [
+      { label: "Not prepared", value: 1 },
+      { label: "Somewhat prepared", value: 2 },
+      { label: "Prepared", value: 3 },
+      { label: "Very prepared", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you cook at home instead of eating out?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Often", value: 3 },
+      { label: "Almost always", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you save money intentionally?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Occasionally", value: 2 },
+      { label: "Regularly", value: 3 },
+      { label: "Consistently", value: 4 }
+    ]
+  },
+  {
+    text: "How stressed do you feel about money?",
+    options: [
+      { label: "Very stressed", value: 1 },
+      { label: "Somewhat stressed", value: 2 },
+      { label: "A little stressed", value: 3 },
+      { label: "Not stressed", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you plan your purchases ahead of time?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Often", value: 3 },
+      { label: "Always", value: 4 }
+    ]
+  },
+ {
+    text: "How often do you check your credit score?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Yearly", value: 2 },
+      { label: "Every few months", value: 3 },
+      { label: "Monthly", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you compare prices before buying?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Often", value: 3 },
+      { label: "Always", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you set financial goals?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Occasionally", value: 2 },
+      { label: "Regularly", value: 3 },
+      { label: "Consistently", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you overspend your budget?",
+    options: [
+      { label: "Very often", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Rarely", value: 3 },
+      { label: "Never", value: 4 }
+    ]
+  },
+  {
+    text: "How organized do you feel with your finances?",
+    options: [
+      { label: "Not organized", value: 1 },
+      { label: "Somewhat organized", value: 2 },
+      { label: "Organized", value: 3 },
+      { label: "Very organized", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you think about long‑term financial stability?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Often", value: 3 },
+      { label: "Daily", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you spend money to cope with emotions?",
+    options: [
+      { label: "Very often", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Rarely", value: 3 },
+      { label: "Never", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you review your subscriptions?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Yearly", value: 2 },
+      { label: "Every few months", value: 3 },
+      { label: "Monthly", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you set aside money for emergencies?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Occasionally", value: 2 },
+      { label: "Regularly", value: 3 },
+      { label: "Consistently", value: 4 }
+    ]
+  },
+  {
+    text: "How often do you avoid unnecessary purchases?",
+    options: [
+      { label: "Never", value: 1 },
+      { label: "Sometimes", value: 2 },
+      { label: "Often", value: 3 },
+      { label: "Always", value: 4 }
+    {
+  text: "How often do you delay purchases to think them through?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you check your account balances?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Weekly", value: 2 },
+    { label: "Every few days", value: 3 },
+    { label: "Daily", value: 4 }
+  ]
+},
+{
+  text: "How often do you spend more than you planned?",
+  options: [
+    { label: "Very often", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Rarely", value: 3 },
+    { label: "Never", value: 4 }
+  ]
+},
+{
+  text: "How often do you set aside money for future goals?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Occasionally", value: 2 },
+    { label: "Regularly", value: 3 },
+    { label: "Consistently", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel in control of your spending?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you plan meals to save money?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid buying things you don’t need?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you think about improving your financial habits?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Daily", value: 4 }
+  ]
+},
+{
+  text: "How often do you use cash instead of cards to control spending?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Occasionally", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you review your financial goals?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Occasionally", value: 2 },
+    { label: "Regularly", value: 3 },
+    { label: "Consistently", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel overwhelmed by financial decisions?",
+  options: [
+    { label: "Very often", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Rarely", value: 3 },
+    { label: "Never", value: 4 }
+  ]
+},
+{
+  text: "How often do you spend money on things you regret later?",
+  options: [
+    { label: "Very often", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Rarely", value: 3 },
+    { label: "Never", value: 4 }
+  ]
+},
+{
+  text: "How often do you compare your spending to your income?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid emotional spending?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you check for discounts or deals before buying?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid late fees or penalties?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel confident about your financial future?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid unnecessary subscriptions?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you set aside money for fun or leisure?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Occasionally", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel proud of your financial progress?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid comparing your finances to others?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you reflect on your financial habits?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Occasionally", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Daily", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid impulse purchases?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel motivated to improve your finances?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid buying things out of boredom?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel financially disciplined?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid unnecessary upgrades or replacements?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel in control of your financial habits?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you avoid spending to impress others?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+},
+{
+  text: "How often do you feel confident about your money habits?",
+  options: [
+    { label: "Never", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Always", value: 4 }
+  ]
+}
+  },
+];
 
+
+const THREE_QUESTION_BANK = [
+{
+    text: "How do you feel about your spending today?",
+    options: [
+      { label: "Not good", value: 1 },
+      { label: "Okay", value: 2 },
+      { label: "Good", value: 3 },
+      { label: "Great", value: 4 }
+    ]
+  },
+  {
+    text: "How motivated do you feel to improve your finances today?",
+    options: [
+      { label: "Not motivated", value: 1 },
+      { label: "Somewhat motivated", value: 2 },
+      { label: "Motivated", value: 3 },
+      { label: "Very motivated", value: 4 }
+    ]
+  },
+  {
+    text: "How much control do you feel over your money today?",
+    options: [
+      { label: "No control", value: 1 },
+      { label: "Some control", value: 2 },
+      { label: "Good control", value: 3 },
+      { label: "Full control", value: 4 }
+    {
+  text: "How focused do you feel on your financial goals today?",
+  options: [
+    { label: "Not focused", value: 1 },
+    { label: "Somewhat focused", value: 2 },
+    { label: "Focused", value: 3 },
+    { label: "Very focused", value: 4 }
+  ]
+},
+{
+  text: "How disciplined do you feel with money today?",
+  options: [
+    { label: "Not disciplined", value: 1 },
+    { label: "Somewhat disciplined", value: 2 },
+    { label: "Disciplined", value: 3 },
+    { label: "Very disciplined", value: 4 }
+  ]
+},
+{
+  text: "How much clarity do you feel about your financial situation today?",
+  options: [
+    { label: "No clarity", value: 1 },
+    { label: "Some clarity", value: 2 },
+    { label: "Good clarity", value: 3 },
+    { label: "Full clarity", value: 4 }
+  ]
+},
+{
+  text: "How confident do you feel about making smart money choices today?",
+  options: [
+    { label: "Not confident", value: 1 },
+    { label: "Somewhat confident", value: 2 },
+    { label: "Confident", value: 3 },
+    { label: "Very confident", value: 4 }
+  ]
+},
+{
+  text: "How much control do you feel over your spending impulses today?",
+  options: [
+    { label: "No control", value: 1 },
+    { label: "Some control", value: 2 },
+    { label: "Good control", value: 3 },
+    { label: "Full control", value: 4 }
+  ]
+},
+{
+  text: "How motivated do you feel to avoid unnecessary spending today?",
+  options: [
+    { label: "Not motivated", value: 1 },
+    { label: "Somewhat motivated", value: 2 },
+    { label: "Motivated", value: 3 },
+    { label: "Very motivated", value: 4 }
+  ]
+},
+{
+  text: "How mindful do you feel about your money choices today?",
+  options: [
+    { label: "Not mindful", value: 1 },
+    { label: "Somewhat mindful", value: 2 },
+    { label: "Mindful", value: 3 },
+    { label: "Very mindful", value: 4 }
+  ]
+},
+{
+  text: "How positive do you feel about your financial progress today?",
+  options: [
+    { label: "Not positive", value: 1 },
+    { label: "Somewhat positive", value: 2 },
+    { label: "Positive", value: 3 },
+    { label: "Very positive", value: 4 }
+  ]
+},
+{
+  text: "How intentional do you feel with your spending today?",
+  options: [
+    { label: "Not intentional", value: 1 },
+    { label: "Somewhat intentional", value: 2 },
+    { label: "Intentional", value: 3 },
+    { label: "Very intentional", value: 4 }
+  ]
+},
+{
+  text: "How aware do you feel of your financial habits today?",
+  options: [
+    { label: "Not aware", value: 1 },
+    { label: "Somewhat aware", value: 2 },
+    { label: "Aware", value: 3 },
+    { label: "Very aware", value: 4 }
+  ]
+},
+{
+  text: "How much effort do you feel like putting into your finances today?",
+  options: [
+    { label: "No effort", value: 1 },
+    { label: "Some effort", value: 2 },
+    { label: "Good effort", value: 3 },
+    { label: "Full effort", value: 4 }
+  ]
+},
+{
+  text: "How much clarity do you feel about your financial goals today?",
+  options: [
+    { label: "No clarity", value: 1 },
+    { label: "Some clarity", value: 2 },
+    { label: "Clear", value: 3 },
+    { label: "Very clear", value: 4 }
+  ]
+},
+{
+  text: "How much discipline do you feel around spending today?",
+  options: [
+    { label: "No discipline", value: 1 },
+    { label: "Some discipline", value: 2 },
+    { label: "Disciplined", value: 3 },
+    { label: "Very disciplined", value: 4 }
+  ]
+},
+{
+  text: "How much financial stress do you feel today?",
+  options: [
+    { label: "A lot", value: 1 },
+    { label: "Some", value: 2 },
+    { label: "A little", value: 3 },
+    { label: "None", value: 4 }
+  ]
+},
+{
+  text: "How much confidence do you feel in your money habits today?",
+  options: [
+    { label: "No confidence", value: 1 },
+    { label: "Some confidence", value: 2 },
+    { label: "Confident", value: 3 },
+    { label: "Very confident", value: 4 }
+  ]
+},
+{
+  text: "How much intention do you feel toward saving today?",
+  options: [
+    { label: "No intention", value: 1 },
+    { label: "Some intention", value: 2 },
+    { label: "Intentional", value: 3 },
+    { label: "Very intentional", value: 4 }
+  ]
+},
+{
+  text: "How much control do you feel over your financial habits today?",
+  options: [
+    { label: "No control", value: 1 },
+    { label: "Some control", value: 2 },
+    { label: "Good control", value: 3 },
+    { label: "Full control", value: 4 }
+  ]
+  },
+];
 /* -------------------------------
    Mood Journal
 -------------------------------- */
