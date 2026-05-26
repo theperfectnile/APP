@@ -499,6 +499,23 @@ function renderTenQuestionSurvey() {
     container.appendChild(block);
   });
 }
+function renderTenSurveySubmitButton() {
+  const container = document.getElementById("tenSurveySubmitContainer");
+
+  if (!container) return;
+
+  container.innerHTML = `
+    <button id="submitTenSurvey" class="survey-submit-btn">
+      Submit Survey
+    </button>
+  `;
+
+  // Attach click handler
+  const btn = document.getElementById("submitTenSurvey");
+  if (btn) {
+    btn.addEventListener("click", submitTenQuestionSurvey);
+  }
+}
 /* -------------------------------
    Mood Journal
 -------------------------------- */
@@ -1399,6 +1416,7 @@ function renderWeeklyMissions(missions, timestamp) {
 document.addEventListener("DOMContentLoaded", () => {
   renderTenQuestionSurvey();
   renderThreeQuestionSurvey();
+  renderTenSurveySubmitButton();
 
  // Dashboard Systems
   trackVisit();
