@@ -402,7 +402,7 @@ function getDailyThreeQuestions() {
 
   return selected;
 }
-function loadDailySurvey() {
+function loaddailysurvey() {
   const seed = getDailySeed();
   const saved = JSON.parse(localStorage.getItem("dailySurvey"));
 
@@ -422,7 +422,36 @@ function loadDailySurvey() {
 
   return data;
 }
+function submitTenQuestionSurvey() {
+  const daily = loadDailySurvey();
+  const questions = daily.ten;
 
+  let total = 0;
+  let answered = 0;
+
+  questions.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="ten_q_${i}"]:checked`);
+    if (selected) {
+      total += Number(selected.value);
+      answered++;
+    }
+  });
+
+  if (answered < questions.length) {
+    alert("Please answer all 10 questions before submitting.");
+    return;
+  }
+
+  const result = {
+    date: getDailySeed(),
+    score: total,
+    max: questions.length * 4
+  };
+
+  localStorage.setItem("tenSurveyResult", JSON.stringify(result));
+
+  alert("Survey submitted! Your insights will update.");
+}
 function renderTenQuestionSurvey() {
   const daily = loadDailySurvey();
   const questions = daily.ten;
@@ -498,36 +527,6 @@ function renderTenQuestionSurvey() {
 
     container.appendChild(block);
   });
-}
-function submitTenQuestionSurvey() {
-  const daily = loadDailySurvey();
-  const questions = daily.ten;
-
-  let total = 0;
-  let answered = 0;
-
-  questions.forEach((q, i) => {
-    const selected = document.querySelector(`input[name="ten_q_${i}"]:checked`);
-    if (selected) {
-      total += Number(selected.value);
-      answered++;
-    }
-  });
-
-  if (answered < questions.length) {
-    alert("Please answer all 10 questions before submitting.");
-    return;
-  }
-
-  const result = {
-    date: getDailySeed(),
-    score: total,
-    max: questions.length * 4
-  };
-
-  localStorage.setItem("tenSurveyResult", JSON.stringify(result));
-
-  alert("Survey submitted! Your insights will update.");
 }
 function renderTenSurveySubmitButton() {
   const container = document.getElementById("tenSurveySubmitContainer");
@@ -1447,6 +1446,9 @@ document.addEventListener("DOMContentLoaded", () => {
   renderTenQuestionSurvey();
   renderThreeQuestionSurvey();
   renderTenSurveySubmitButton();
+
+   const tenBtn = document.getElementById("submitTenSurvey");
+  if (tenBtn) tenBtn.addEventListener("click", submitTenQuestionSurvey);
 
  // Dashboard Systems
   trackVisit();
