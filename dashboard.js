@@ -1471,7 +1471,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
    const tenBtn = document.getElementById("submitTenSurvey");
   if (tenBtn) tenBtn.addEventListener("click", submitTenQuestionSurvey);
-
+   
+loadPersonalityInsights();
+   
  // Dashboard Systems
   trackVisit();
   renderStreak();
