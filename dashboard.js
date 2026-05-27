@@ -5,6 +5,11 @@
 
 const API_BASE = "https://backend-qkz7.onrender.com/api";
 
+function toggleGroup(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle("open");
+}
 /* -------------------------------
    Toast Notifications
 -------------------------------- */
@@ -483,6 +488,14 @@ function submitTenQuestionSurvey() {
   alert("Survey submitted! Your insights will update.");
   loadPersonalityInsights();
 }
+function renderTenQuestionSurvey() {
+  const daily = loadDailySurvey();
+  const questions = daily.ten;
+  const container = document.getElementById("tenQuestionSurvey");
+
+  if (!container) return;
+
+  container.innerHTML = "";
     // Question block
     const block = document.createElement("div");
     block.className = "survey-question-block";
