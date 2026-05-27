@@ -402,7 +402,7 @@ function getDailyThreeQuestions() {
 
   return selected;
 }
-function loaddailysurvey() {
+function loadDailySurvey() {
   const seed = getDailySeed();
   const saved = JSON.parse(localStorage.getItem("dailySurvey"));
 
@@ -461,7 +461,40 @@ function renderTenQuestionSurvey() {
 
   container.innerHTML = "";
 
+  // Category map
+  const categories = {
+    "SPENDING": "🟦 Spending",
+    "SAVING": "🟩 Saving",
+    "PLANNING": "🟧 Planning",
+    "MINDSET": "🟪 Mindset"
+  };
+
+  // Detect category from question index in original bank
+  function getCategory(questionText) {
+    const index = TEN_QUESTION_BANK.findIndex(q => q.text === questionText);
+
+    if (index <= 6) return "SPENDING";
+    if (index <= 10) return "SAVING";
+    if (index <= 17) return "PLANNING";
+    return "MINDSET";
+  }
+
+  let currentCategory = "";
+
   questions.forEach((q, i) => {
+    const categoryKey = getCategory(q.text);
+
+    // If category changed, print a header
+    if (categoryKey !== currentCategory) {
+      currentCategory = categoryKey;
+
+      const header = document.createElement("h3");
+      header.className = "survey-category-header";
+      header.innerText = categories[categoryKey];
+      container.appendChild(header);
+    }
+
+    // Question block
     const block = document.createElement("div");
     block.className = "survey-question-block";
 
