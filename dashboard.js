@@ -422,6 +422,36 @@ function loadDailySurvey() {
 
   return data;
 }
+function loadPersonalityInsights() {
+  const result = JSON.parse(localStorage.getItem("tenSurveyResult"));
+  const container = document.getElementById("personalityInsights");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!result) {
+    container.innerHTML = "<p>No insights yet — complete today’s survey to unlock them.</p>";
+    return;
+  }
+
+  const score = result.score;
+  const max = result.max;
+  const percent = Math.round((score / max) * 100);
+
+  let insight = "";
+
+  if (percent >= 85) insight = "You’re showing strong financial discipline and confidence.";
+  else if (percent >= 70) insight = "You’re consistent with good habits — keep refining your goals.";
+  else if (percent >= 50) insight = "You’re building awareness — focus on saving and planning.";
+  else insight = "You’re in reflection mode — small daily actions will boost your progress.";
+
+  container.innerHTML = `
+    <h3>💡 Personality Insights</h3>
+    <p><strong>Score:</strong> ${percent}%</p>
+    <p>${insight}</p>
+  `;
+}
 function submitTenQuestionSurvey() {
   const daily = loadDailySurvey();
   const questions = daily.ten;
@@ -451,49 +481,8 @@ function submitTenQuestionSurvey() {
   localStorage.setItem("tenSurveyResult", JSON.stringify(result));
 
   alert("Survey submitted! Your insights will update.");
+  loadPersonalityInsights();
 }
-function renderTenQuestionSurvey() {
-  const daily = loadDailySurvey();
-  const questions = daily.ten;
-  const container = document.getElementById("tenQuestionSurvey");
-
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  // Category map
-  const categories = {
-    "SPENDING": "🟦 Spending",
-    "SAVING": "🟩 Saving",
-    "PLANNING": "🟧 Planning",
-    "MINDSET": "🟪 Mindset"
-  };
-
-  // Detect category from question index in original bank
-  function getCategory(questionText) {
-    const index = TEN_QUESTION_BANK.findIndex(q => q.text === questionText);
-
-    if (index <= 6) return "SPENDING";
-    if (index <= 10) return "SAVING";
-    if (index <= 17) return "PLANNING";
-    return "MINDSET";
-  }
-
-  let currentCategory = "";
-
-  questions.forEach((q, i) => {
-    const categoryKey = getCategory(q.text);
-
-    // If category changed, print a header
-    if (categoryKey !== currentCategory) {
-      currentCategory = categoryKey;
-
-      const header = document.createElement("h3");
-      header.className = "survey-category-header";
-      header.innerText = categories[categoryKey];
-      container.appendChild(header);
-    }
-
     // Question block
     const block = document.createElement("div");
     block.className = "survey-question-block";
