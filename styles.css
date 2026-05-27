@@ -1162,3 +1162,20 @@ body {
 .section-content.open {
   transition: max-height 0.45s ease, opacity 0.35s ease;
 }
+.survey-category-header {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  opacity: 0.9;
+}
+
+.survey-question-block {
+  margin-bottom: 15px;
+}
+
+.survey-option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
