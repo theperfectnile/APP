@@ -5,11 +5,6 @@
 
 const API_BASE = "https://backend-qkz7.onrender.com/api";
 
-function toggleGroup(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.toggle("open");
-}
 /* -------------------------------
    Toast Notifications
 -------------------------------- */
@@ -996,70 +991,6 @@ async function loadHistory() {
    Vaultwise Dashboard — Cleaned Hybrid Version (Part 3)
    Surveys • Personality • Life Score • Micro‑Habits • Reports
    ============================================================ */
-
-/* -------------------------------
-   10‑Question Survey Engine
--------------------------------- */
-function calculateSurvey() {
-  const get = (id) => Number(document.getElementById(id).value);
-
-  const answers = {
-    q1: get("q1"),
-    q2: get("q2"),
-    q3: get("q3"),
-    q4: get("q4"),
-    q5: get("q5"),
-    q6: get("q6"),
-    q7: get("q7"),
-    q8: get("q8"),
-    q9: get("q9"),
-    q10: get("q10")
-  };
-
-  // Save answers for personalized missions
-  localStorage.setItem("lastSurveyAnswers", JSON.stringify(answers));
-
-  let advice = "";
-
-  if (answers.q1 >= 4)
-    advice += "🍽️ Eating out is high — this can add $120–$220/month.<br><br>";
-  if (answers.q2 <= 2)
-    advice += "📝 Try planning at least one or two meals before shopping.<br><br>";
-  if (answers.q3 >= 4)
-    advice += "🥗 Food waste is high.<br><br>";
-  if (answers.q4 >= 4)
-    advice += "🍳 Convenience foods are common.<br><br>";
-
-  if (answers.q5 <= 2)
-    advice += "🏋🏾 Exercise is low.<br><br>";
-  if (answers.q6 >= 4)
-    advice += "⚡ Energy levels are low.<br><br>";
-
-  if (answers.q7 <= 2)
-    advice += "💳 You rarely review statements.<br><br>";
-  if (answers.q8 <= 2)
-    advice += "💰 Saving is inconsistent.<br><br>";
-  if (answers.q9 >= 4)
-    advice += "🛍️ Impulse spending is high.<br><br>";
-
-  if (answers.q10 >= 4)
-    advice += "🧒🏾 Kid spending is high.<br><br>";
-
-  // Economy-aware calculations
-  const eatingOutFactor = answers.q1;
-  const mealPlanningFactor = 6 - answers.q2;
-  const wasteFactor = answers.q3;
-  const convenienceFactor = answers.q4;
-
-  const baseFoodCost = 350;
-  const inflationMultiplier = 1.25;
-
-  let inflationPenalty =
-    (eatingOutFactor * 18 +
-      mealPlanningFactor * 10 +
-      wasteFactor * 12 +
-      convenienceFactor * 14) *
-    1.1;
 
   inflationPenalty = Math.max(0, Math.round(inflationPenalty));
 
