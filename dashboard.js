@@ -110,7 +110,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How often do you avoid impulse purchases?",
     options: [
       { label: "Never", value: 1 },
@@ -119,7 +118,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How often do you avoid unnecessary purchases?",
     options: [
       { label: "Never", value: 1 },
@@ -128,7 +126,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How often do you delay purchases to think them through?",
     options: [
       { label: "Never", value: 1 },
@@ -137,7 +134,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How often do you overspend your budget?",
     options: [
       { label: "Very often", value: 1 },
@@ -146,7 +142,6 @@ const TEN_QUESTION_BANK = [
       { label: "Never", value: 4 }
     ]
   },
-  {
     text: "How often do you spend impulsively?",
     options: [
       { label: "Very often", value: 1 },
@@ -155,7 +150,6 @@ const TEN_QUESTION_BANK = [
       { label: "Never", value: 4 }
     ]
   },
-  {
     text: "How often do you spend more than you planned?",
     options: [
       { label: "Very often", value: 1 },
@@ -164,7 +158,6 @@ const TEN_QUESTION_BANK = [
       { label: "Never", value: 4 }
     ]
   },
-
   // 🟩 SAVING
   {
     text: "How often do you save money intentionally?",
@@ -175,7 +168,6 @@ const TEN_QUESTION_BANK = [
       { label: "Consistently", value: 4 }
     ]
   },
-  {
     text: "How often do you set aside money for emergencies?",
     options: [
       { label: "Never", value: 1 },
@@ -184,7 +176,6 @@ const TEN_QUESTION_BANK = [
       { label: "Consistently", value: 4 }
     ]
   },
-  {
     text: "How often do you set aside money for future goals?",
     options: [
       { label: "Never", value: 1 },
@@ -193,7 +184,6 @@ const TEN_QUESTION_BANK = [
       { label: "Consistently", value: 4 }
     ]
   },
-  {
     text: "How prepared do you feel for unexpected expenses?",
     options: [
       { label: "Not prepared", value: 1 },
@@ -202,7 +192,6 @@ const TEN_QUESTION_BANK = [
       { label: "Very prepared", value: 4 }
     ]
   },
-
   // 🟧 PLANNING
   {
     text: "How often do you compare prices before buying?",
@@ -213,7 +202,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How often do you cook at home instead of eating out?",
     options: [
       { label: "Never", value: 1 },
@@ -222,7 +210,6 @@ const TEN_QUESTION_BANK = [
       { label: "Almost always", value: 4 }
     ]
   },
-  {
     text: "How often do you plan meals to save money?",
     options: [
       { label: "Never", value: 1 },
@@ -231,7 +218,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How often do you plan your purchases ahead of time?",
     options: [
       { label: "Never", value: 1 },
@@ -240,7 +226,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How often do you review your subscriptions?",
     options: [
       { label: "Never", value: 1 },
@@ -249,7 +234,6 @@ const TEN_QUESTION_BANK = [
       { label: "Monthly", value: 4 }
     ]
   },
-  {
     text: "How often do you review your financial goals?",
     options: [
       { label: "Never", value: 1 },
@@ -258,7 +242,6 @@ const TEN_QUESTION_BANK = [
       { label: "Consistently", value: 4 }
     ]
   },
-  {
     text: "How well do you stick to your budget?",
     options: [
       { label: "Not at all", value: 1 },
@@ -267,7 +250,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-
   // 🟪 MINDSET
   {
     text: "How confident do you feel about your financial decisions?",
@@ -278,7 +260,6 @@ const TEN_QUESTION_BANK = [
       { label: "Very confident", value: 4 }
     ]
   },
-  {
     text: "How confident do you feel about your financial future?",
     options: [
       { label: "Never", value: 1 },
@@ -287,7 +268,6 @@ const TEN_QUESTION_BANK = [
       { label: "Always", value: 4 }
     ]
   },
-  {
     text: "How organized do you feel with your finances?",
     options: [
       { label: "Not organized", value: 1 },
@@ -296,7 +276,6 @@ const TEN_QUESTION_BANK = [
       { label: "Very organized", value: 4 }
     ]
   },
-  {
     text: "How stressed do you feel about money?",
     options: [
       { label: "Very stressed", value: 1 },
@@ -305,7 +284,6 @@ const TEN_QUESTION_BANK = [
       { label: "Not stressed", value: 4 }
     ]
   },
-  {
     text: "How often do you think about long‑term financial stability?",
     options: [
       { label: "Never", value: 1 },
@@ -357,7 +335,6 @@ const THREE_QUESTION_BANK = [
       { label: "Very confident", value: 4 }
     ]
   },
-  {
     text: "How positive do you feel about your financial progress today?",
     options: [
       { label: "Not positive", value: 1 },
