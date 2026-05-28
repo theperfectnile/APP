@@ -1,6 +1,6 @@
 /* ============================================================
-   Vaultwise Dashboard — Cleaned Hybrid Version (Part 1)
-   Core Helpers • Greeting • Mood • Streak
+   Vaultwise Dashboard — Cleaned Hybrid Version
+   Core Helpers • Greeting • Mood • Streak • XP • Surveys
    ============================================================ */
 
 const API_BASE = "https://backend-qkz7.onrender.com/api";
@@ -21,9 +21,10 @@ function showToast(message, type = "info") {
 }
 
 /* -------------------------------
-   Collapsible Groups (cleaned)
+   Collapsible Groups
+   (used with: onclick="toggleGroup(this, 'sectionId')")
 -------------------------------- */
-window.toggleGroup = function(header, id) {
+window.toggleGroup = function (header, id) {
   const section = document.getElementById(id);
   if (!section) return;
 
@@ -79,19 +80,27 @@ function renderPersonalGreeting() {
 
   el.innerText = message;
 }
+
+/* -------------------------------
+   Daily Seed + Random
+-------------------------------- */
 function getDailySeed() {
   const today = new Date();
-  return Number(`${today.getFullYear()}${today.getMonth()+1}${today.getDate()}`);
+  return Number(
+    `${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}`
+  );
 }
+
 function seededRandom(seed) {
   let x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
-const TEN_QUESTION_BANK = [
 
-  // ============================
+/* -------------------------------
+   Question Banks
+-------------------------------- */
+const TEN_QUESTION_BANK = [
   // 🟦 SPENDING
-  // ============================
   {
     text: "How often do you avoid buying things you don’t need?",
     options: [
@@ -156,9 +165,7 @@ const TEN_QUESTION_BANK = [
     ]
   },
 
-  // ============================
   // 🟩 SAVING
-  // ============================
   {
     text: "How often do you save money intentionally?",
     options: [
@@ -196,9 +203,7 @@ const TEN_QUESTION_BANK = [
     ]
   },
 
-  // ============================
   // 🟧 PLANNING
-  // ============================
   {
     text: "How often do you compare prices before buying?",
     options: [
@@ -263,9 +268,7 @@ const TEN_QUESTION_BANK = [
     ]
   },
 
-  // ============================
   // 🟪 MINDSET
-  // ============================
   {
     text: "How confident do you feel about your financial decisions?",
     options: [
@@ -313,12 +316,8 @@ const TEN_QUESTION_BANK = [
   }
 ];
 
-
 const THREE_QUESTION_BANK = [
-
-  // ============================
   // 🟦 SPENDING
-  // ============================
   {
     text: "How much control do you feel over your spending impulses today?",
     options: [
@@ -328,10 +327,7 @@ const THREE_QUESTION_BANK = [
       { label: "Full control", value: 4 }
     ]
   },
-
-  // ============================
   // 🟩 SAVING
-  // ============================
   {
     text: "How much intention do you feel toward saving today?",
     options: [
@@ -341,10 +337,7 @@ const THREE_QUESTION_BANK = [
       { label: "Very intentional", value: 4 }
     ]
   },
-
-  // ============================
   // 🟧 PLANNING
-  // ============================
   {
     text: "How focused do you feel on your financial goals today?",
     options: [
@@ -354,10 +347,7 @@ const THREE_QUESTION_BANK = [
       { label: "Very focused", value: 4 }
     ]
   },
-
-  // ============================
   // 🟪 MINDSET
-  // ============================
   {
     text: "How confident do you feel about making smart money choices today?",
     options: [
@@ -377,6 +367,10 @@ const THREE_QUESTION_BANK = [
     ]
   }
 ];
+
+/* -------------------------------
+   Daily Survey Loader
+-------------------------------- */
 function getDailyTenQuestions() {
   const seed = getDailySeed();
   const questions = [...TEN_QUESTION_BANK];
@@ -391,7 +385,7 @@ function getDailyTenQuestions() {
 }
 
 function getDailyThreeQuestions() {
-  const seed = getDailySeed() + 999; // offset so 3‑question survey differs
+  const seed = getDailySeed() + 999;
   const questions = [...THREE_QUESTION_BANK];
   const selected = [];
 
@@ -402,26 +396,28 @@ function getDailyThreeQuestions() {
 
   return selected;
 }
+
 function loadDailySurvey() {
   const seed = getDailySeed();
   const saved = JSON.parse(localStorage.getItem("dailySurvey"));
 
-  // If today's survey already exists, return it
   if (saved && saved.seed === seed) {
     return saved;
   }
 
-  // Otherwise generate a new daily survey
   const data = {
     seed,
     ten: getDailyTenQuestions(),
     three: getDailyThreeQuestions()
   };
-  // Save today's survey so it stays the same all day
-  localStorage.setItem("dailySurvey", JSON.stringify(data));
 
+  localStorage.setItem("dailySurvey", JSON.stringify(data));
   return data;
 }
+
+/* -------------------------------
+   Personality Insights
+-------------------------------- */
 function loadPersonalityInsights() {
   const result = JSON.parse(localStorage.getItem("tenSurveyResult"));
   const container = document.getElementById("personalityInsights");
@@ -431,7 +427,8 @@ function loadPersonalityInsights() {
   container.innerHTML = "";
 
   if (!result) {
-    container.innerHTML = "<p>No insights yet — complete today’s survey to unlock them.</p>";
+    container.innerHTML =
+      "<p>No insights yet — complete today’s survey to unlock them.</p>";
     return;
   }
 
@@ -441,10 +438,15 @@ function loadPersonalityInsights() {
 
   let insight = "";
 
-  if (percent >= 85) insight = "You’re showing strong financial discipline and confidence.";
-  else if (percent >= 70) insight = "You’re consistent with good habits — keep refining your goals.";
-  else if (percent >= 50) insight = "You’re building awareness — focus on saving and planning.";
-  else insight = "You’re in reflection mode — small daily actions will boost your progress.";
+  if (percent >= 85)
+    insight = "You’re showing strong financial discipline and confidence.";
+  else if (percent >= 70)
+    insight = "You’re consistent with good habits — keep refining your goals.";
+  else if (percent >= 50)
+    insight = "You’re building awareness — focus on saving and planning.";
+  else
+    insight =
+      "You’re in reflection mode — small daily actions will boost your progress.";
 
   container.innerHTML = `
     <h3>💡 Personality Insights</h3>
@@ -452,6 +454,10 @@ function loadPersonalityInsights() {
     <p>${insight}</p>
   `;
 }
+
+/* -------------------------------
+   10‑Question Survey (Daily)
+-------------------------------- */
 function submitTenQuestionSurvey() {
   const daily = loadDailySurvey();
   const questions = daily.ten;
@@ -479,10 +485,10 @@ function submitTenQuestionSurvey() {
   };
 
   localStorage.setItem("tenSurveyResult", JSON.stringify(result));
-
   alert("Survey submitted! Your insights will update.");
   loadPersonalityInsights();
 }
+
 function renderTenQuestionSurvey() {
   const daily = loadDailySurvey();
   const questions = daily.ten;
@@ -501,7 +507,7 @@ function renderTenQuestionSurvey() {
     label.innerText = `${i + 1}. ${q.text}`;
     block.appendChild(label);
 
-    q.options.forEach(opt => {
+    q.options.forEach((opt) => {
       const row = document.createElement("label");
       row.className = "survey-option-row";
 
@@ -521,7 +527,11 @@ function renderTenQuestionSurvey() {
     container.appendChild(block);
   });
 }
-   function renderThreeQuestionSurvey() {
+
+/* -------------------------------
+   3‑Question Survey (Daily)
+-------------------------------- */
+function renderThreeQuestionSurvey() {
   const daily = loadDailySurvey();
   const questions = daily.three;
   const container = document.getElementById("threeQuestionSurvey");
@@ -539,7 +549,7 @@ function renderTenQuestionSurvey() {
     label.innerText = `${i + 1}. ${q.text}`;
     block.appendChild(label);
 
-    q.options.forEach(opt => {
+    q.options.forEach((opt) => {
       const row = document.createElement("label");
       row.className = "survey-option-row";
 
@@ -559,6 +569,10 @@ function renderTenQuestionSurvey() {
     container.appendChild(block);
   });
 }
+
+/* -------------------------------
+   Ten Survey Submit Button
+-------------------------------- */
 function renderTenSurveySubmitButton() {
   const container = document.getElementById("tenSurveySubmitContainer");
 
@@ -570,12 +584,12 @@ function renderTenSurveySubmitButton() {
     </button>
   `;
 
-  // Attach click handler
   const btn = document.getElementById("submitTenSurvey");
   if (btn) {
     btn.addEventListener("click", submitTenQuestionSurvey);
   }
 }
+
 /* -------------------------------
    Mood Journal
 -------------------------------- */
@@ -605,12 +619,14 @@ function renderMoodJournal() {
 
   list.innerHTML = moodHistory
     .slice(0, 5)
-    .map(entry => `
+    .map(
+      (entry) => `
       <li>
         <strong>${entry.mood}</strong> — ${entry.note || "No note"}
         <br><small>${new Date(entry.date).toLocaleString()}</small>
       </li>
-    `)
+    `
+    )
     .join("");
 }
 
@@ -681,23 +697,21 @@ function renderStreak() {
     el.innerText = `🔥 ${streak}-day streak`;
   }
 }
-/* ============================================================
-   Vaultwise Dashboard — Cleaned Hybrid Version (Part 2)
-   XP System • Coach • Finance Summary • Finance History
-   ============================================================ */
 
 /* -------------------------------
    XP + Level System
 -------------------------------- */
 function addXP(amount, reason) {
-  const data = JSON.parse(localStorage.getItem("xpData") || '{"xp":0,"log":[]}');
+  const data = JSON.parse(
+    localStorage.getItem("xpData") || '{"xp":0,"log":[]}'
+  );
   data.xp += amount;
   data.log.unshift({ amount, reason, time: Date.now() });
   localStorage.setItem("xpData", JSON.stringify(data));
 }
 
 function getLevel(xp) {
-  return Math.floor(xp / 100) + 1; // 100 XP per level
+  return Math.floor(xp / 100) + 1;
 }
 
 function renderXP() {
@@ -721,7 +735,8 @@ function renderXP() {
   if (levelLabel) levelLabel.textContent = `Level ${level}`;
   if (xpValueLabel) xpValueLabel.textContent = `${xp} XP`;
   if (xpFill) xpFill.style.width = `${percent}%`;
-  if (xpNextLabel) xpNextLabel.textContent = `Next level in ${nextLevelXP - xp} XP`;
+  if (xpNextLabel)
+    xpNextLabel.textContent = `Next level in ${nextLevelXP - xp} XP`;
 }
 
 /* -------------------------------
@@ -731,36 +746,40 @@ function renderCoachMessage() {
   const el = document.getElementById("coachMessage");
   if (!el) return;
 
-  const answers = JSON.parse(localStorage.getItem("lastSurveyAnswers") || "null");
+  const answers = JSON.parse(
+    localStorage.getItem("lastSurveyAnswers") || "null"
+  );
   const moodHistory = JSON.parse(localStorage.getItem("moodHistory") || "[]");
   const xpData = JSON.parse(localStorage.getItem("xpData") || '{"xp":0}');
   const streak = getVisitStreak();
 
   let msg = "";
 
-  // No survey yet
   if (!answers) {
     el.innerHTML = "Start with the 10‑question survey so I can tailor your plan.";
     return;
   }
 
-  // Mood-aware advice
   const lastMood = moodHistory[0]?.mood;
-  if (lastMood === "Sad") msg += "Take it slow today. One small financial win is enough.<br>";
-  if (lastMood === "Happy") msg += "You're in a great mindset — perfect time to build momentum.<br>";
+  if (lastMood === "Sad")
+    msg += "Take it slow today. One small financial win is enough.<br>";
+  if (lastMood === "Happy")
+    msg += "You're in a great mindset — perfect time to build momentum.<br>";
 
-  // Personalized survey-based advice
-  if (answers.q1 >= 4) msg += "Swap one eating‑out meal for a home meal.<br>";
-  if (answers.q8 <= 2) msg += "Move $10 into savings — small steps add up.<br>";
-  if (answers.q9 >= 4) msg += "Try a 24‑hour pause before purchases.<br>";
-  if (answers.q7 <= 2) msg += "Review your bank statements this week.<br>";
+  if (answers.q1 >= 4)
+    msg += "Swap one eating‑out meal for a home meal.<br>";
+  if (answers.q8 <= 2)
+    msg += "Move $10 into savings — small steps add up.<br>";
+  if (answers.q9 >= 4)
+    msg += "Try a 24‑hour pause before purchases.<br>";
+  if (answers.q7 <= 2)
+    msg += "Review your bank statements this week.<br>";
 
-  // XP-aware coaching
   const level = getLevel(xpData.xp);
   msg += `You're Level ${level}. Keep completing missions to level up.<br>`;
 
-  // Streak-aware coaching
-  if (streak >= 3) msg += `🔥 You're on a ${streak}-day streak — consistency is your superpower.`;
+  if (streak >= 3)
+    msg += `🔥 You're on a ${streak}-day streak — consistency is your superpower.`;
 
   el.innerHTML = msg;
 }
@@ -799,7 +818,8 @@ function generateRealisticFinanceFallback() {
   const kids = 80 + Math.random() * 120;
   const misc = 200 + Math.random() * 250;
 
-  const totalExpenses = rent + groceries + gas + utilities + subs + kids + misc;
+  const totalExpenses =
+    rent + groceries + gas + utilities + subs + kids + misc;
   const savings = Math.max(0, baseIncome - totalExpenses);
 
   const portfolioBase = 8000 + Math.random() * 22000;
@@ -831,8 +851,8 @@ async function loadDashboard() {
     const hasRealData =
       data &&
       (data.totalIncome > 0 ||
-       data.totalExpenses > 0 ||
-       data.totalPortfolio > 0);
+        data.totalExpenses > 0 ||
+        data.totalPortfolio > 0);
 
     if (!hasRealData) {
       data = generateRealisticFinanceFallback();
@@ -842,12 +862,13 @@ async function loadDashboard() {
     animateValue("totalExpenses", data.totalExpenses || 0);
     animateValue("totalPortfolio", data.totalPortfolio || 0);
 
-    // ⭐ FIXED: Stat cards moved INSIDE the function
     animateValue("statIncome", data.totalIncome || 0);
     animateValue("statExpenses", data.totalExpenses || 0);
     animateValue("statPortfolio", data.totalPortfolio || 0);
-    animateValue("statSavings", data.savings || (data.totalIncome - data.totalExpenses));
-
+    animateValue(
+      "statSavings",
+      data.savings || (data.totalIncome - data.totalExpenses)
+    );
   } catch (err) {
     console.error("Dashboard summary error:", err);
     showToast("Error loading dashboard summary", "error");
@@ -865,12 +886,14 @@ async function loadMoneyPersonality() {
 
     const data = await res.json();
 
-    document.getElementById("moneyPersonalityType").innerText =
-      data.personalityType || "No results yet";
-
+    const el = document.getElementById("moneyPersonalityType");
+    if (el) {
+      el.innerText = data.personalityType || "No results yet";
+    }
   } catch (err) {
     console.error("Money Personality load error:", err);
-    document.getElementById("moneyPersonalityType").innerText = "Error loading";
+    const el = document.getElementById("moneyPersonalityType");
+    if (el) el.innerText = "Error loading";
   }
 }
 
@@ -926,7 +949,6 @@ async function loadHistory() {
     const tbody = document.getElementById("history-body");
     if (!tbody) return;
 
-    // Fallback if no real data
     if (!Array.isArray(data) || data.length === 0) {
       const now = new Date();
       const months = [];
@@ -950,7 +972,8 @@ async function loadHistory() {
         const subs = 60 + Math.random() * 40;
         const kids = 80 + Math.random() * 120;
         const misc = 200 + Math.random() * 250;
-        const expenses = rent + groceries + gas + utilities + subs + kids + misc;
+        const expenses =
+          rent + groceries + gas + utilities + subs + kids + misc;
 
         const goal = income * 0.15;
 
@@ -981,453 +1004,29 @@ async function loadHistory() {
       </tr>`
       )
       .join("");
-
   } catch (err) {
     console.error("History load error:", err);
     showToast("Error loading history", "error");
   }
 }
-/* ============================================================
-   Vaultwise Dashboard — Cleaned Hybrid Version (Part 3)
-   Surveys • Personality • Life Score • Micro‑Habits • Reports
-   ============================================================ */
-
-  inflationPenalty = Math.max(0, Math.round(inflationPenalty));
-
-  const currentFoodCost = Math.round(baseFoodCost * inflationMultiplier);
-  const realisticFoodSpend = currentFoodCost + inflationPenalty;
-
-  const impulseRisk = answers.q9 * 20;
-  const savingsConsistency = answers.q8 * 20;
-
-  const summaryBlock = `
-    <hr>
-    <strong>Economy‑Aware Snapshot:</strong><br>
-    • Estimated monthly food spend: <strong>$${realisticFoodSpend}</strong><br>
-    • Impulse‑spending risk: <strong>${impulseRisk}/100</strong><br>
-    • Savings consistency: <strong>${savingsConsistency}/100</strong><br><br>
-  `;
-
-  document.getElementById("surveyResults").innerHTML =
-    advice + summaryBlock;
-
-  // Personality
-  const personality = getFinancialPersonality(answers);
-  document.getElementById("personalityType").innerHTML =
-    `<strong>${personality.type}</strong><br>${personality.description}`;
-
-  // Life Score
-  const lifeScore = calculateLifeScore(answers);
-  document.getElementById("lifeScoreValue").innerHTML = `${lifeScore} / 100`;
-
-  // Micro‑Habits
-  const microHabits = generateMicroHabits(personality, lifeScore, answers);
-  document.getElementById("microHabitsList").innerHTML = microHabits
-    .map((h) => `<li>${h}</li>`)
-    .join("");
-
-  // Weekly Report
-  const weeklyReport = generateWeeklyReport(
-    answers,
-    personality,
-    lifeScore
-  );
-  document.getElementById("weeklyReportText").innerHTML = weeklyReport;
-
-  // Kid Budget
-  const kidBudget = calculateKidBudget(answers, lifeScore);
-  document.getElementById("kidBudgetValue").innerHTML =
-    `Recommended: <strong>$${kidBudget.min} – $${kidBudget.max}</strong>`;
-
-  // Save snapshot
-  const surveySnapshot = {
-    timestamp: Date.now(),
-    lifeScore,
-    personality: personality.type,
-    impulseRisk,
-    savingsConsistency,
-    realisticFoodSpend,
-    kidBudget
-  };
-
-  let history = JSON.parse(localStorage.getItem("surveyHistory") || "[]");
-  history.unshift(surveySnapshot);
-  localStorage.setItem("surveyHistory", JSON.stringify(history));
-}
 
 /* -------------------------------
-   Personality Engine
--------------------------------- */
-function getFinancialPersonality(a) {
-  if (a.q8 === 1 && a.q9 >= 4)
-    return {
-      type: "The Emotional Spender",
-      description: "You often spend to feel better in the moment."
-    };
-
-  if (a.q7 === 1 && a.q2 <= 2)
-    return {
-      type: "The Free Spirit",
-      description: "You prefer flexibility over structure."
-    };
-
-  if (a.q5 === 1 && a.q6 >= 4)
-    return {
-      type: "The Overextended Hustler",
-      description: "You carry a lot and run low on energy."
-    };
-
-  if (a.q10 >= 4)
-    return {
-      type: "The Stability‑Driven Provider",
-      description: "You love giving to your kids."
-    };
-
-  if (a.q2 >= 4 && a.q8 >= 3)
-    return {
-      type: "The Strategic Saver",
-      description: "You value structure and consistency."
-    };
-
-  return {
-    type: "The Cautious Optimizer",
-    description: "You’re building solid habits and adjusting as you go."
-  };
-}
-
-/* -------------------------------
-   Life Score Engine
--------------------------------- */
-function calculateLifeScore(a) {
-  let score = 0;
-
-  score += (6 - a.q1) * 2;
-  score += a.q2 * 2;
-  score += (6 - a.q3) * 2;
-  score += (6 - a.q4) * 2;
-
-  score += a.q5 * 3;
-  score += (6 - a.q6) * 2;
-
-  score += a.q7 * 3;
-  score += a.q8 * 3;
-  score += (6 - a.q9) * 3;
-
-  score += (6 - a.q10);
-
-  score = Math.min(100, Math.max(0, Math.round(score)));
-
-  // Soft caps
-  if (score > 90) score = 90 + Math.round((score - 90) * 0.5);
-  if (score < 20) score = 20 - Math.round((20 - score) * 0.5);
-
-  return score;
-}
-
-/* -------------------------------
-   Micro‑Habits Engine
--------------------------------- */
-function generateMicroHabits(personality, lifeScore, a) {
-  const habits = [];
-
-  if (personality.type === "The Emotional Spender") {
-    habits.push("Pause 24 hours before any non‑essential purchase.");
-    habits.push("Open your bank app once a day.");
-  }
-
-  if (personality.type === "The Free Spirit") {
-    habits.push("Plan one dinner this week.");
-    habits.push("Clean out one subscription.");
-  }
-
-  if (personality.type === "The Overextended Hustler") {
-    habits.push("Take a 5‑minute walk.");
-    habits.push("Drink water before buying takeout.");
-  }
-
-  if (personality.type === "The Stability‑Driven Provider") {
-    habits.push("Set a kid fun budget.");
-    habits.push("Do one free self‑care activity.");
-  }
-
-  if (personality.type === "The Strategic Saver") {
-    habits.push("Review your top 3 spending categories.");
-    habits.push("Prep ingredients for one meal.");
-  }
-
-  if (personality.type === "The Cautious Optimizer") {
-    habits.push("Improve one habit by 1% today.");
-    habits.push("Track one purchase.");
-  }
-
-  // Life score adjustments
-  if (lifeScore < 40) habits.push("Drink water and move for 5 minutes.");
-  else if (lifeScore < 70) habits.push("Plan one meal for tomorrow.");
-  else habits.push("Celebrate one small win.");
-
-  // Survey-based habits
-  if (a.q1 >= 4) habits.push("Swap one eating‑out meal for a home meal.");
-  if (a.q5 <= 2) habits.push("Do a 3‑minute stretch.");
-  if (a.q9 >= 4) habits.push("Unsubscribe from one marketing email.");
-
-  return habits.slice(0, 3);
-}
-
-/* -------------------------------
-   Kid Budget Engine
--------------------------------- */
-function calculateKidBudget(answers, lifeScore) {
-  const base = 50 + answers.q10 * 20;
-  const min = Math.round(base * 0.8);
-  const max = Math.round(base * 1.4);
-  return { min, max };
-}
-
-/* -------------------------------
-   Weekly Report Engine
--------------------------------- */
-function generateWeeklyReport(a, personality, lifeScore) {
-  let report = `
-    <strong>Personality:</strong> ${personality.type}<br>
-    <strong>Life Score:</strong> ${lifeScore}/100<br><br>
-  `;
-
-  report += `<strong>Key Insights:</strong><br>`;
-  if (a.q1 >= 4) report += "• Eating out is high.<br>";
-  if (a.q5 <= 2) report += "• Exercise is low.<br>";
-  if (a.q9 >= 4) report += "• Impulse spending is high.<br>";
-
-  report += `<br><strong>Summary:</strong><br>`;
-  report += `Your habits and personality suggest areas for improvement and opportunities to build stability.`;
-
-  return report;
-}
-
-/* -------------------------------
-   3‑Question Mini Survey
--------------------------------- */
-function handleThreeQSurvey() {
-  const form = document.getElementById("surveyForm");
-  const q1 = Number(form.q1.value);
-  const q2 = Number(form.q2.value);
-  const q3 = Number(form.q3.value);
-
-  const score = q1 + q2 + q3;
-
-  let result = "";
-
-  if (score >= 8) result = "You are a Confident Planner.";
-  else if (score >= 5) result = "You are a Developing Saver.";
-  else result = "You are a Beginner Budgeter.";
-
-  document.getElementById("personalityResult").innerText = result;
-}
-/* ============================================================
-   Vaultwise Dashboard — Cleaned Hybrid Version (Part 4)
-   Weekly Missions • Backend Sync (Option B) • Initializer
-   ============================================================ */
-
-/* -------------------------------
-   Weekly Missions — Personalized Pool
--------------------------------- */
-const MISSIONS = [
-  "Track your expenses for 3 days",
-  "Cook 2 meals at home",
-  "Review your bank statements",
-  "Avoid impulse purchases for 48 hours",
-  "Do a 10‑minute walk 3 times",
-  "Plan meals for 2 days",
-  "Unsubscribe from 3 marketing emails",
-  "Move $10 into savings",
-  "Check your credit score",
-  "Spend zero on takeout for one day"
-];
-
-function generateWeeklyMissions() {
-  const answers = JSON.parse(localStorage.getItem("lastSurveyAnswers") || "null");
-  const pool = [];
-
-  if (!answers) {
-    pool.push(
-      "Track your expenses for 3 days",
-      "Cook 2 meals at home",
-      "Move $10 into savings"
-    );
-  } else {
-    if (answers.q1 >= 4) pool.push("Swap one eating‑out meal for a home meal");
-    if (answers.q8 <= 2) pool.push("Move $10 into savings this week");
-    if (answers.q5 <= 2) pool.push("Walk 10 minutes 3 times");
-    if (answers.q9 >= 4) pool.push("Unsubscribe from 3 marketing emails");
-    if (answers.q3 >= 4) pool.push("Plan 2 meals to reduce food waste");
-    if (answers.q4 >= 4) pool.push("Cook one meal without convenience foods");
-    if (answers.q7 <= 2) pool.push("Review your bank statements this week");
-
-    pool.push("Review your top 3 spending categories");
-    pool.push("Prep ingredients for one meal");
-  }
-
-  const selected = [];
-  while (selected.length < 3 && pool.length > 0) {
-    const idx = Math.floor(Math.random() * pool.length);
-    const m = pool.splice(idx, 1)[0];
-    selected.push({ text: m, completed: false });
-  }
-
-  return selected;
-}
-
-/* -------------------------------
-   Weekly Missions — Backend Sync (Option B)
-   LocalStorage FIRST, Backend SECOND
--------------------------------- */
-async function syncMissionsToBackend(missions, timestamp) {
-  const token = getToken();
-  if (!token) return;
-
-  try {
-    await fetch(`${API_BASE}/missions/save`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ missions, timestamp })
-    });
-  } catch (err) {
-    console.warn("Backend mission sync failed — using local only.");
-  }
-}
-
-async function loadMissionsFromBackend() {
-  const token = getToken();
-  if (!token) return null;
-
-  try {
-    const res = await fetch(`${API_BASE}/missions/get`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-    if (!data || !data.missions) return null;
-
-    return data;
-  } catch (err) {
-    return null;
-  }
-}
-
-/* -------------------------------
-   Weekly Missions — Loader
--------------------------------- */
-async function loadWeeklyMissions() {
-  const now = Date.now();
-
-  // 1. Try backend first
-  const backendData = await loadMissionsFromBackend();
-
-  if (backendData && backendData.timestamp) {
-    const expired = now - backendData.timestamp > 7 * 24 * 60 * 60 * 1000;
-
-    if (!expired) {
-      localStorage.setItem("weeklyMissions", JSON.stringify(backendData));
-      return renderWeeklyMissions(backendData.missions, backendData.timestamp);
-    }
-  }
-
-  // 2. Fallback to localStorage
-  let localData = JSON.parse(localStorage.getItem("weeklyMissions"));
-
-  const expiredLocal =
-    !localData || now - localData.timestamp > 7 * 24 * 60 * 60 * 1000;
-
-  if (expiredLocal) {
-    localData = {
-      timestamp: now,
-      missions: generateWeeklyMissions()
-    };
-
-    localStorage.setItem("weeklyMissions", JSON.stringify(localData));
-    syncMissionsToBackend(localData.missions, localData.timestamp);
-  }
-
-  renderWeeklyMissions(localData.missions, localData.timestamp);
-}
-
-/* -------------------------------
-   Weekly Missions — Renderer
--------------------------------- */
-function renderWeeklyMissions(missions, timestamp) {
-  const grid = document.getElementById("missionsGrid");
-  const progressFill = document.getElementById("missionProgressFill");
-  const refreshNote = document.getElementById("missionRefreshNote");
-
-  grid.innerHTML = "";
-
-  missions.forEach((m, i) => {
-    const card = document.createElement("div");
-    card.className = "mission-card";
-
-    card.innerHTML = `
-      <div class="mission-title">${m.text}</div>
-      <div class="mission-check ${m.completed ? "completed" : ""}" data-index="${i}"></div>
-    `;
-
-    grid.appendChild(card);
-  });
-
-  // Progress bar
-  const completed = missions.filter(m => m.completed).length;
-  const percent = (completed / missions.length) * 100;
-  progressFill.style.width = percent + "%";
-
-  // Refresh date
-  const nextRefresh = new Date(timestamp + 7 * 24 * 60 * 60 * 1000);
-  refreshNote.innerText = `New missions arrive on: ${nextRefresh.toDateString()}`;
-
-  // Click handlers
-  grid.querySelectorAll(".mission-check").forEach(check => {
-    check.addEventListener("click", () => {
-      const index = check.dataset.index;
-      missions[index].completed = !missions[index].completed;
-
-      const updated = { timestamp, missions };
-
-      // Save locally
-      localStorage.setItem("weeklyMissions", JSON.stringify(updated));
-
-      // Sync to backend
-      syncMissionsToBackend(missions, timestamp);
-
-      // Re-render
-      renderWeeklyMissions(missions, timestamp);
-    });
-  });
-}
-
-/* -------------------------------
-   DOMContentLoaded — App Init
+   Init
 -------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
+  renderPersonalGreeting();
+  trackVisit();
+  renderStreak();
+  renderXP();
+  renderCoachMessage();
+  applyMoodTheme();
+
+  loadDashboard();
+  loadMoneyPersonality();
+  loadHistory();
+
   renderTenQuestionSurvey();
   renderThreeQuestionSurvey();
   renderTenSurveySubmitButton();
-
-   const tenBtn = document.getElementById("submitTenSurvey");
-  if (tenBtn) tenBtn.addEventListener("click", submitTenQuestionSurvey);
-   
-loadPersonalityInsights();
-   
- // Dashboard Systems
-  trackVisit();
-  renderStreak();
-  renderPersonalGreeting();
-  renderXP();
-  loadWeeklyMissions();
-  renderCoachMessage();
-  renderMoodJournal();
-  applyMoodTheme();
-  loadDashboard();
-  loadMoneyPersonality();
+  loadPersonalityInsights();
 });
