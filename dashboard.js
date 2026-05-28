@@ -526,35 +526,6 @@ function renderTenQuestionSurvey() {
     container.appendChild(block);
   });
 }
-    // Question block
-    const block = document.createElement("div");
-    block.className = "survey-question-block";
-
-    const label = document.createElement("p");
-    label.className = "survey-question-text";
-    label.innerText = `${i + 1}. ${q.text}`;
-    block.appendChild(label);
-
-    q.options.forEach(opt => {
-      const row = document.createElement("label");
-      row.className = "survey-option-row";
-
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.name = `ten_q_${i}`;
-      input.value = opt.value;
-
-      const span = document.createElement("span");
-      span.innerText = opt.label;
-
-      row.appendChild(input);
-      row.appendChild(span);
-      block.appendChild(row);
-    });
-
-    container.appendChild(block);
-  });
-}
    function renderThreeQuestionSurvey() {
   const daily = loadDailySurvey();
   const questions = daily.three;
