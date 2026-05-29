@@ -81,13 +81,7 @@
   <!-- Load your unified app logic -->
   <script src="app.js"></script>
   <script src="premium.js"></script>
-    <script>
-  const path = window.location.pathname;
-  document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-    if (path.includes(item.getAttribute('href'))) {
-      item.classList.add('active');
-    }
-  });
-</script>
+
+  <!-- Removed bottom-nav script because register page has no bottom nav -->
 </body>
 </html>
