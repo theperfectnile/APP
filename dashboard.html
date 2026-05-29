@@ -94,9 +94,10 @@
         </div>
 
         <!-- Monthly Summary -->
-        <div class="section" onclick="toggleSection('summarySection')">
+        <div class="section" onclick="toggleGroup(this, 'summarySection')">
           <h2>📊 Monthly Summary</h2>
         </div>
+
         <div id="summarySection" class="section-content premium-content">
           <div class="summary-container">
             <div class="summary-card">
@@ -117,9 +118,10 @@
         </div>
 
         <!-- Finance History -->
-        <div class="section" onclick="toggleSection('historySection')">
+        <div class="section" onclick="toggleGroup(this, 'historySection')">
           <h2>📜 Finance History</h2>
         </div>
+
         <div id="historySection" class="section-content premium-content">
           <table class="history-table">
             <thead>
@@ -138,97 +140,28 @@
       </div>
     </div>
 
-   <!-- ========================= -->
-<!-- 📝 GROUP 2 — 10 QUESTION SURVEY -->
-<!-- ========================= -->
-<div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
-  <span>📝 10‑Question Survey</span>
-  <span class="arrow">▼</span>
-</div>
+    <!-- ========================= -->
+    <!-- 📝 GROUP 2 — 10 QUESTION SURVEY (DYNAMIC) -->
+    <!-- ========================= -->
+    <div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
+      <span>📝 10‑Question Survey</span>
+      <span class="arrow">▼</span>
+    </div>
 
-<div id="surveyGroup" class="section-content">
-  <button id="submitTenSurvey" class="survey-submit-btn">Submit Survey</button>
+    <div id="surveyGroup" class="section-content">
 
-  <form id="tenQuestionSurvey">
+      <!-- Dynamic Survey Container -->
+      <div id="tenQuestionSurvey"></div>
 
-    <label>1. How often do you eat out?</label>
-    <select id="q1">
-      <option value="1">Rarely</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Often</option>
-    </select>
+      <!-- Submit Button Container -->
+      <div id="tenSurveySubmitContainer"></div>
 
-    <label>2. Do you plan meals?</label>
-    <select id="q2">
-      <option value="1">Never</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Always</option>
-    </select>
+      <!-- Results -->
+      <h3>Survey Results</h3>
+      <div id="surveyResults"></div>
 
-    <label>3. Do you waste food?</label>
-    <select id="q3">
-      <option value="1">No</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Yes</option>
-    </select>
+    </div>
 
-    <label>4. Do you rely on convenience foods?</label>
-    <select id="q4">
-      <option value="1">No</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Yes</option>
-    </select>
-
-    <label>5. How often do you exercise?</label>
-    <select id="q5">
-      <option value="1">Never</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Often</option>
-    </select>
-
-    <label>6. Energy levels?</label>
-    <select id="q6">
-      <option value="1">High</option>
-      <option value="3">Medium</option>
-      <option value="5">Low</option>
-    </select>
-
-    <label>7. Do you review statements?</label>
-    <select id="q7">
-      <option value="1">Never</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Often</option>
-    </select>
-
-    <label>8. Do you save money?</label>
-    <select id="q8">
-      <option value="1">Never</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Often</option>
-    </select>
-
-    <label>9. Impulse spending?</label>
-    <select id="q9">
-      <option value="1">No</option>
-      <option value="3">Sometimes</option>
-      <option value="5">Yes</option>
-    </select>
-
-    <label>10. Kid spending?</label>
-    <select id="q10">
-      <option value="1">Low</option>
-      <option value="3">Medium</option>
-      <option value="5">High</option>
-    </select>
-
-    <button type="button" onclick="calculateSurvey()">Submit Survey</button>
-
-  </form>
-
-  <h3>Survey Results</h3>
-  <div id="surveyResults"></div>
-
-</div>
     <!-- ========================= -->
     <!-- 🧠 GROUP 3 — PERSONALITY INSIGHTS -->
     <!-- ========================= -->
@@ -265,43 +198,26 @@
     </div>
 
     <!-- ========================= -->
-    <!-- 💡 GROUP 5 — 3 QUESTION SURVEY -->
+    <!-- 💡 GROUP 5 — 3 QUESTION SURVEY (DYNAMIC) -->
     <!-- ========================= -->
-  <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">
-  <span>💡 Quick 3‑Question Survey</span>
-  <span class="arrow">▼</span>
-</div>
+    <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">
+      <span>💡 Quick 3‑Question Survey</span>
+      <span class="arrow">▼</span>
+    </div>
 
-<div id="threeQGroup" class="section-content">
+    <div id="threeQGroup" class="section-content">
 
-  <form id="surveyForm" onsubmit="event.preventDefault(); handleThreeQSurvey();">
-    <label>How often do you track expenses?</label>
-    <select name="q1">
-      <option value="3">Always</option>
-      <option value="2">Sometimes</option>
-      <option value="1">Rarely</option>
-    </select>
+      <!-- Dynamic 3‑Question Survey -->
+      <div id="threeQuestionSurvey"></div>
 
-    <label>Do you save monthly?</label>
-    <select name="q2">
-      <option value="3">Yes</option>
-      <option value="2">Sometimes</option>
-      <option value="1">Never</option>
-    </select>
+      <!-- Submit Button -->
+      <div id="threeSurveySubmitContainer"></div>
 
-    <label>Investment confidence?</label>
-    <select name="q3">
-      <option value="3">High</option>
-      <option value="2">Medium</option>
-      <option value="1">Low</option>
-    </select>
+      <!-- Results -->
+      <div id="personalityResult"></div>
 
-    <button type="submit">Submit</button>
-  </form>
+    </div>
 
-  <div id="personalityResult"></div>
-
-</div>
     <!-- ========================= -->
     <!-- ⭐ WEEKLY MISSIONS -->
     <!-- ========================= -->
@@ -328,13 +244,7 @@
       <h2>Vaultwise Coach</h2>
       <div id="coachMessage"></div>
     </section>
-<!-- Daily 10‑Question Survey -->
-<div id="tenQuestionSurvey"></div>
-<div id="tenSurveySubmitContainer"></div>
 
-<!-- Daily 3‑Question Survey -->
-<div id="threeQuestionSurvey"></div>
-<div id="threeSurveySubmitContainer"></div>
     <!-- ========================= -->
     <!-- ⭐ MONEY MINDSET MIRROR -->
     <!-- ========================= -->
