@@ -144,6 +144,12 @@ function renderHabitCards() {
 // COMPLETE HABIT ACTION
 // -------------------------------
 async function completeHabit(category) {
+    const card = document.querySelector(`.habit-card h3:contains("${category.toUpperCase()}")`)?.parentElement;
+    if (card) {
+        card.classList.add("completed");
+        setTimeout(() => card.classList.remove("completed"), 600);
+    }
+
     habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
     await apiPost("/xp/add", { amount: 10 });
@@ -204,7 +210,14 @@ async function renderCoachMessage() {
         <p>${coach.message}</p>
     `;
 }
-
+// -------------------------------
+// XP LEVEL-UP POPUP
+// -------------------------------
+function showLevelUp() {
+    const el = document.getElementById("xp-level-up");
+    el.classList.add("show");
+    setTimeout(() => el.classList.remove("show"), 1500);
+}
 // -------------------------------
 // MAIN DASHBOARD RENDER
 // -------------------------------
