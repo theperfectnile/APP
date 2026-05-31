@@ -6,85 +6,90 @@
   <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 
-<body id="dashboard">
-
+<body id="accounts" class="mood-neutral">
+  <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
+
     <nav class="nav-links">
       <a href="dashboard.html">Dashboard</a>
       <a href="reports.html">Reports</a>
       <a href="accounts.html" class="active">Accounts</a>
       <a href="settings.html">Settings</a>
     </nav>
+
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
 
+  <!-- Main Content -->
   <main class="main-content fade-in">
-
-    <!-- Warm lifestyle header image -->
-    <section class="panel">
-      <img
+    <!-- Header Image -->
+    <section class="dashboard-card" style="padding:0;">
+      <img 
         src="accounts-hero.jpg"
-        alt="Black person or family managing accounts"
+        alt="Managing financial accounts"
         style="width:100%;border-radius:12px;object-fit:cover;max-height:260px;"
       />
     </section>
 
     <header class="page-header">
       <h1>Accounts</h1>
-      <span>Manage your linked financial accounts</span>
+      <span>Manage and review your connected financial accounts</span>
     </header>
 
     <!-- Account Cards -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <h3>Checking Account</h3>
-        <p>$4,200</p>
-      </div>
+    <section class="dashboard-card fade-in">
+      <h2>Your Accounts</h2>
+      <p class="section-subtitle">A quick overview of your linked balances.</p>
 
-      <div class="stat-card">
-        <h3>Savings Account</h3>
-        <p>$12,800</p>
-      </div>
+      <div class="habit-cards-grid">
+        <div class="habit-card">
+          <h3>Checking Account</h3>
+          <p class="mission">$4,200</p>
+        </div>
 
-      <div class="stat-card">
-        <h3>Brokerage</h3>
-        <p>$9,450</p>
-      </div>
+        <div class="habit-card">
+          <h3>Savings Account</h3>
+          <p class="mission">$12,800</p>
+        </div>
 
-      <div class="stat-card">
-        <h3>Crypto Wallet</h3>
-        <p>$1,900</p>
+        <div class="habit-card">
+          <h3>Brokerage</h3>
+          <p class="mission">$9,450</p>
+        </div>
+
+        <div class="habit-card">
+          <h3>Crypto Wallet</h3>
+          <p class="mission">$1,900</p>
+        </div>
       </div>
     </section>
 
-    <!-- Optional small illustration strip -->
-    <section class="panel">
+    <!-- Connected Institutions -->
+    <section class="dashboard-card fade-in">
       <h2>Connected Institutions</h2>
+      <p class="section-subtitle">Banks, brokers, and platforms you’ve linked.</p>
+
       <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
-        <img src="accounts-illustration.jpg"
-             alt="Black-themed illustration of financial institutions"
-             style="width:140px;border-radius:12px;object-fit:cover;" />
+        <img 
+          src="accounts-illustration.jpg"
+          alt="Financial institutions illustration"
+          style="width:140px;border-radius:12px;object-fit:cover;"
+        />
       </div>
     </section>
 
     <!-- Add Account -->
-    <section class="panel">
+    <section class="dashboard-card fade-in">
       <h2>Link New Account</h2>
-      <button class="btn-primary" onclick="showToast('Feature coming soon!', 'info')">+ Add Account</button>
-    </section>
+      <p class="section-subtitle">More integrations coming soon.</p>
 
+      <button class="btn-primary" onclick="alert('Feature coming soon!')">
+        + Add Account
+      </button>
+    </section>
   </main>
 
-  <script src="dashboard.js"></script>
-  <script src="premium.js"></script>
-    <script>
-  const path = window.location.pathname;
-  document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-    if (path.includes(item.getAttribute('href'))) {
-      item.classList.add('active');
-    }
-  });
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
