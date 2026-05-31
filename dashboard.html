@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Vaultwise • Dashboard</title>
+  <title>Vaultwise • Habit Dashboard</title>
   <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 
 <body id="dashboard" class="mood-neutral">
-
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
@@ -24,12 +23,11 @@
 
   <!-- Main Content -->
   <main class="main-content">
-
     <!-- HEADER -->
     <header class="page-header fade-in">
       <div>
-        <h1>Dashboard</h1>
-        <span>Your financial overview at a glance</span>
+        <h1>Habit Dashboard</h1>
+        <span>Improve your money, body, home, and daily life—one habit at a time.</span>
 
         <div id="personalGreeting" class="personal-greeting"></div>
         <div id="streakBadge" class="streak-badge"></div>
@@ -49,210 +47,44 @@
       </div>
     </header>
 
-    <!-- STATS GRID -->
-    <div class="stats-grid fade-in">
-      <div class="stat-card">
-        <h3>Total Income</h3>
-        <p id="statIncome">$0</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Total Expenses</h3>
-        <p id="statExpenses">$0</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Total Portfolio</h3>
-        <p id="statPortfolio">$0</p>
-      </div>
-
-      <div class="stat-card">
-        <h3>Savings</h3>
-        <p id="statSavings">$0</p>
-      </div>
-    </div>
-
-    <!-- ========================= -->
-    <!-- 📊 GROUP 1 — FINANCE -->
-    <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'financeGroup')">
-      <span>📊 Finance</span>
-      <span class="arrow">▼</span>
-    </div>
-
-    <div id="financeGroup" class="section-content">
-
-      <div class="premium-lock" data-feature="finance">
-
-        <div id="premiumOverlay" class="premium-overlay hidden">
-          <div class="premium-box">
-            <h2>🔒 Premium Feature</h2>
-            <p>Monthly Summary & Finance History are available with Premium.</p>
-            <p>Start your <strong>7‑day free trial</strong> to unlock full access.</p>
-            <button id="startTrialBtn" class="trial-btn">Start Free Trial</button>
-          </div>
-        </div>
-
-        <!-- Monthly Summary -->
-        <div class="section" onclick="toggleGroup(this, 'summarySection')">
-          <h2>📊 Monthly Summary</h2>
-        </div>
-
-        <div id="summarySection" class="section-content premium-content">
-          <div class="summary-container">
-            <div class="summary-card">
-              <h3>Total Income</h3>
-              <span id="totalIncome">$0</span>
-            </div>
-
-            <div class="summary-card">
-              <h3>Total Expenses</h3>
-              <span id="totalExpenses">$0</span>
-            </div>
-
-            <div class="summary-card">
-              <h3>Total Portfolio</h3>
-              <span id="totalPortfolio">$0</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Finance History -->
-        <div class="section" onclick="toggleGroup(this, 'historySection')">
-          <h2>📜 Finance History</h2>
-        </div>
-
-        <div id="historySection" class="section-content premium-content">
-          <table class="history-table">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Income</th>
-                <th>Expenses</th>
-                <th>Portfolio</th>
-                <th>Goal</th>
-              </tr>
-            </thead>
-            <tbody id="history-body"></tbody>
-          </table>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 📝 GROUP 2 — 10 QUESTION SURVEY -->
-<div class="group-header" onclick="toggleGroup(this, 'surveyGroup')">
-  <span>📝 10‑Question Survey</span>
-  <span class="arrow">▼</span>
-</div>
-
-<div id="surveyGroup" class="section-content">
-  <div id="tenQuestionSurvey"></div>
-  <div id="tenSurveySubmitContainer"></div>
-
-  <h3>Survey Results</h3>
-  <div id="surveyResults"></div>
-</div>
-    <!-- ========================= -->
-    <!-- 🧠 GROUP 3 — PERSONALITY INSIGHTS -->
-    <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'personalityGroup')">
-      <span>🧠 Personality Insights</span>
-      <span class="arrow">▼</span>
-    </div>
-
-    <div id="personalityGroup" class="section-content">
-
-      <h3>Personality Type</h3>
-      <div id="personalityType"></div>
-
-      <h3>Life Score</h3>
-      <div id="lifeScoreValue"></div>
-
-      <h3>Micro‑Habits</h3>
-      <ul id="microHabitsList"></ul>
-
-      <h3>Weekly Report</h3>
-      <div id="weeklyReportText"></div>
-
-      <h3>Kid Budget</h3>
-      <div id="kidBudgetValue"></div>
-
-      <h3>Money Personality Result (API)</h3>
-      <div id="moneyPersonalityType"></div>
-
-      <div id="mpResultSection">
-        <h3>API Personality Result</h3>
-        <div id="mpResult"></div>
-      </div>
-
-    </div>
-
-    <!-- ========================= -->
-    <!-- 💡 GROUP 5 — 3 QUESTION SURVEY (DYNAMIC) -->
-    <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'threeQGroup')">
-      <span>💡 Quick 3‑Question Survey</span>
-      <span class="arrow">▼</span>
-    </div>
-
-    <div id="threeQGroup" class="section-content">
-
-      <!-- Dynamic 3‑Question Survey -->
-      <div id="threeQuestionSurvey"></div>
-
-      <!-- Submit Button -->
-      <div id="threeSurveySubmitContainer"></div>
-
-      <!-- Results -->
-      <div id="personalityResult"></div>
-
-    </div>
-
-    <!-- ========================= -->
-    <!-- ⭐ WEEKLY MISSIONS -->
-    <!-- ========================= -->
-    <div class="group-header" onclick="toggleGroup(this, 'weeklyMissionsSection')">
-      <span>🎯 Weekly Missions</span>
-      <span class="arrow">▼</span>
-    </div>
-
-    <section class="dashboard-card fade-in" id="weeklyMissionsSection">
-      <h2>Weekly Missions</h2>
-
-      <div id="missionProgressBar">
-        <div id="missionProgressFill"></div>
-      </div>
-
-      <div id="missionsGrid" class="missions-grid"></div>
-      <p id="missionRefreshNote"></p>
+    <!-- HABIT RINGS -->
+    <section class="dashboard-card fade-in">
+      <h2>Today's Habit Rings</h2>
+      <p class="section-subtitle">
+        Track your progress across finance, exercise, cleaning, cooking, and lifestyle.
+      </p>
+      <div id="habit-rings" class="habit-rings-grid"></div>
     </section>
 
-    <!-- ========================= -->
-    <!-- ⭐ VAULTWISE COACH -->
-    <!-- ========================= -->
-    <section class="dashboard-card fade-in" id="coachPanel">
+    <!-- HABIT CARDS / DAILY MISSIONS -->
+    <section class="dashboard-card fade-in">
+      <h2>Daily Missions</h2>
+      <p class="section-subtitle">
+        Small, doable actions that move your life forward today.
+      </p>
+      <div id="habit-cards" class="habit-cards-grid"></div>
+    </section>
+
+    <!-- 3‑QUESTION SURVEY -->
+    <section class="dashboard-card fade-in">
+      <h2>Daily Check‑In</h2>
+      <p class="section-subtitle">
+        A quick 3‑question pulse on how you're doing right now.
+      </p>
+      <div id="survey-container"></div>
+    </section>
+
+    <!-- COACH -->
+    <section class="dashboard-card fade-in">
       <h2>Vaultwise Coach</h2>
-      <div id="coachMessage"></div>
+      <p class="section-subtitle">
+        Personalized nudges based on your habits, mood, and progress.
+      </p>
+      <div id="coach"></div>
     </section>
-
-    <!-- ========================= -->
-    <!-- ⭐ MONEY MINDSET MIRROR -->
-    <!-- ========================= -->
-    <section class="dashboard-card fade-in" id="mindsetMirror">
-      <h2>🧠 Money Mindset Mirror</h2>
-      <p id="mirrorInsight">Loading your insight...</p>
-
-      <div class="mirror-tags">
-        <span id="mirrorSource1"></span>
-        <span id="mirrorSource2"></span>
-      </div>
-    </section>
-
   </main>
 
   <script src="dashboard.js"></script>
   <script src="app.js"></script>
-
 </body>
 </html>
