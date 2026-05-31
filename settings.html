@@ -6,29 +6,32 @@
   <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 
-<body id="dashboard">
-
+<body id="settings" class="mood-neutral">
+  <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
+
     <nav class="nav-links">
       <a href="dashboard.html">Dashboard</a>
       <a href="reports.html">Reports</a>
       <a href="accounts.html">Accounts</a>
       <a href="settings.html" class="active">Settings</a>
     </nav>
+
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
 
+  <!-- Main Content -->
   <main class="main-content fade-in">
-
     <header class="page-header">
       <h1>Settings</h1>
       <span>Customize your Vaultwise experience</span>
     </header>
 
     <!-- GENERAL SETTINGS -->
-    <section class="panel">
+    <section class="dashboard-card fade-in">
       <h2>General Settings</h2>
+      <p class="section-subtitle">Personalize how Vaultwise looks and behaves.</p>
 
       <div class="form-group">
         <label>Dark Mode</label>
@@ -37,12 +40,12 @@
 
       <div class="form-group" style="margin-top:15px;">
         <label>Notifications</label>
-        <button class="btn-secondary" onclick="showToast('Notifications enabled', 'success')">Enable</button>
+        <button class="btn-secondary" onclick="alert('Notifications enabled')">Enable</button>
       </div>
 
       <div class="form-group" style="margin-top:15px;">
         <label>Data Sync</label>
-        <button class="btn-secondary" onclick="showToast('Sync complete', 'info')">Sync Now</button>
+        <button class="btn-secondary" onclick="alert('Sync complete')">Sync Now</button>
       </div>
 
       <div class="form-group" style="margin-top:15px;">
@@ -63,42 +66,36 @@
           <option>French</option>
         </select>
       </div>
-
     </section>
 
     <!-- ACCOUNT MANAGEMENT -->
-    <section class="panel">
+    <section class="dashboard-card fade-in">
       <h2>Account Management</h2>
+      <p class="section-subtitle">Security and account preferences.</p>
 
       <div class="form-group">
         <label>Change Password</label>
-        <button class="btn-secondary" onclick="showToast('Password reset link sent', 'info')">Send Reset Link</button>
+        <button class="btn-secondary" onclick="alert('Password reset link sent')">
+          Send Reset Link
+        </button>
       </div>
 
       <div class="form-group" style="margin-top:15px;">
         <label>Delete Account</label>
-        <button class="btn-secondary" onclick="showToast('Account deletion requested', 'error')">Request Deletion</button>
+        <button class="btn-secondary" onclick="alert('Account deletion requested')">
+          Request Deletion
+        </button>
       </div>
     </section>
-
   </main>
 
-  <script src="dashboard.js"></script>
+  <script src="app.js"></script>
 
   <script>
     function toggleDarkMode() {
       document.body.classList.toggle("dark-mode");
-      showToast("Dark mode toggled", "info");
+      alert("Dark mode toggled");
     }
   </script>
- <script src="premium.js"></script>
-  <script>
-  const path = window.location.pathname;
-  document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-    if (path.includes(item.getAttribute('href'))) {
-      item.classList.add('active');
-    }
-  });
-</script>
 </body>
 </html>
