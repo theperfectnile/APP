@@ -6,8 +6,7 @@
   <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 
-<body id="reports">
-
+<body id="reports" class="mood-neutral">
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
@@ -24,46 +23,57 @@
 
   <!-- Main Content -->
   <main class="main-content">
-
     <header class="page-header fade-in">
-      <div>
-        <h1>Reports</h1>
-        <span>Your weekly progress & behavior trends</span>
-      </div>
+      <h1>Reports</h1>
+      <span>Your long‑term habit and wellness trends</span>
     </header>
 
-    <section class="report-section fade-in">
-      <h2>📈 Life Score Trend</h2>
-      <div id="lifeScoreChart" class="chart-container"></div>
+    <!-- HABIT HISTORY -->
+    <section class="dashboard-card fade-in">
+      <h2>Habit Progress Timeline</h2>
+      <p class="section-subtitle">See how your habits have improved over time.</p>
+      <ul id="habitTimeline"></ul>
     </section>
 
-    <section class="report-section fade-in">
-      <h2>🛍️ Impulse Spending Trend</h2>
-      <div id="impulseChart" class="chart-container"></div>
+    <!-- SURVEY TRENDS -->
+    <section class="dashboard-card fade-in">
+      <h2>3‑Question Survey Trends</h2>
+      <p class="section-subtitle">Mood • Energy • Stress</p>
+
+      <div class="chart-row">
+        <div>
+          <h3>Mood</h3>
+          <div id="surveyMoodChart" class="chart-container"></div>
+        </div>
+
+        <div>
+          <h3>Energy</h3>
+          <div id="surveyEnergyChart" class="chart-container"></div>
+        </div>
+
+        <div>
+          <h3>Stress</h3>
+          <div id="surveyStressChart" class="chart-container"></div>
+        </div>
+      </div>
     </section>
 
-    <section class="report-section fade-in">
-      <h2>💰 Savings Consistency Trend</h2>
-      <div id="savingsChart" class="chart-container"></div>
+    <!-- XP TIMELINE -->
+    <section class="dashboard-card fade-in">
+      <h2>XP Progress</h2>
+      <p class="section-subtitle">Track your leveling journey over time.</p>
+      <div id="xpChart" class="chart-container"></div>
     </section>
 
-    <section class="report-section fade-in">
-      <h2>🍽️ Food Inflation Impact</h2>
-      <div id="foodChart" class="chart-container"></div>
+    <!-- STREAK TIMELINE -->
+    <section class="dashboard-card fade-in">
+      <h2>Streak History</h2>
+      <p class="section-subtitle">See how consistent you've been.</p>
+      <div id="streakChart" class="chart-container"></div>
     </section>
-
-    <section class="report-section fade-in">
-      <h2>🧠 Personality Timeline</h2>
-      <ul id="personalityTimeline" class="timeline-list"></ul>
-    </section>
-
-    <section class="report-section fade-in">
-      <h2>📅 Weekly Summary</h2>
-      <div id="weeklySummaries"></div>
-    </section>
-
   </main>
 
   <script src="reports.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
