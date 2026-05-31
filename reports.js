@@ -1,15 +1,40 @@
-// Load survey history from localStorage
-function getSurveyHistory() {
-  return JSON.parse(localStorage.getItem("surveyHistory") || "[]");
+// ========================================
+// REPORTS.JS — NEW HABIT SYSTEM VERSION
+// Tracks:
+// - Habit progress history
+// - 3-question survey trends
+// - XP timeline
+// - Streak history
+// ========================================
+
+// -------------------------------
+// LOCAL STORAGE HELPERS
+// -------------------------------
+function getHabitHistory() {
+  return JSON.parse(localStorage.getItem("habitHistory") || "[]");
 }
 
-// Render simple bar charts
+function getSurvey3History() {
+  return JSON.parse(localStorage.getItem("survey3History") || "[]");
+}
+
+function getXPHistory() {
+  return JSON.parse(localStorage.getItem("xpHistory") || "[]");
+}
+
+function getStreakHistory() {
+  return JSON.parse(localStorage.getItem("streakHistory") || "[]");
+}
+
+// -------------------------------
+// GENERIC BAR CHART RENDERER
+// -------------------------------
 function renderChart(containerId, values, labelFormatter = v => v) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
   if (values.length === 0) {
-    container.innerHTML = "<p>No data yet. Complete a survey to begin tracking.</p>";
+    container.innerHTML = "<p>No data yet.</p>";
     return;
   }
 
@@ -25,78 +50,88 @@ function renderChart(containerId, values, labelFormatter = v => v) {
     .join("");
 }
 
-// Render personality timeline
-function renderPersonalityTimeline(history) {
-  const list = document.getElementById("personalityTimeline");
-  if (!list) return;
-
-  if (history.length === 0) {
-    list.innerHTML = "<p>No personality data yet.</p>";
-    return;
-  }
-
-  list.innerHTML = history
-    .map(entry => `
-      <li>
-        <strong>${new Date(entry.timestamp).toLocaleDateString()}</strong><br>
-        ${entry.personality}
-      </li>
-    `)
-    .join("");
-}
-
-// Render weekly summaries
-function renderWeeklySummaries(history) {
-  const container = document.getElementById("weeklySummaries");
+// -------------------------------
+// HABIT HISTORY TIMELINE
+// -------------------------------
+function renderHabitTimeline(history) {
+  const container = document.getElementById("habitTimeline");
   if (!container) return;
 
   if (history.length === 0) {
-    container.innerHTML = "<p>No weekly summaries yet.</p>";
+    container.innerHTML = "<p>No habit data yet.</p>";
     return;
   }
 
   container.innerHTML = history
     .map(entry => `
-      <div class="summary-card">
-        <h3>${new Date(entry.timestamp).toLocaleDateString()}</h3>
-        <p><strong>Life Score:</strong> ${entry.lifeScore}</p>
-        <p><strong>Impulse Risk:</strong> ${entry.impulseRisk}</p>
-        <p><strong>Savings Consistency:</strong> ${entry.savingsConsistency}</p>
-        <p><strong>Food Cost:</strong> $${entry.realisticFoodSpend}</p>
-        <p><strong>Kid Budget:</strong> $${entry.kidBudget.min} – $${entry.kidBudget.max}</p>
-      </div>
+      <li>
+        <strong>${new Date(entry.timestamp).toLocaleDateString()}</strong><br>
+        Finance: ${entry.finance}%<br>
+        Exercise: ${entry.exercise}%<br>
+        Cleaning: ${entry.cleaning}%<br>
+        Cooking: ${entry.cooking}%<br>
+        Lifestyle: ${entry.lifestyle}%
+      </li>
     `)
     .join("");
 }
 
-// Initialize Reports Page
+// -------------------------------
+// SURVEY (3-QUESTION) TRENDS
+// -------------------------------
+function renderSurvey3Charts(history) {
+  renderChart(
+    "surveyMoodChart",
+    history.map(h => h.mood),
+    v => v
+  );
+
+  renderChart(
+    "surveyEnergyChart",
+    history.map(h => h.energy),
+    v => v
+  );
+
+  renderChart(
+    "surveyStressChart",
+    history.map(h => h.stress),
+    v => v
+  );
+}
+
+// -------------------------------
+// XP TIMELINE
+// -------------------------------
+function renderXPTimeline(history) {
+  renderChart(
+    "xpChart",
+    history.map(h => h.xp),
+    v => `${v} XP`
+  );
+}
+
+// -------------------------------
+// STREAK TIMELINE
+// -------------------------------
+function renderStreakTimeline(history) {
+  renderChart(
+    "streakChart",
+    history.map(h => h.streak),
+    v => `${v} days`
+  );
+}
+
+// -------------------------------
+// INITIALIZE REPORTS PAGE
+// -------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  const history = getSurveyHistory();
+  const habitHistory = getHabitHistory();
+  const survey3History = getSurvey3History();
+  const xpHistory = getXPHistory();
+  const streakHistory = getStreakHistory();
 
-  renderChart(
-    "lifeScoreChart",
-    history.map(h => h.lifeScore),
-    v => `${v}`
-  );
-
-  renderChart(
-    "impulseChart",
-    history.map(h => h.impulseRisk),
-    v => `${v}`
-  );
-
-  renderChart(
-    "savingsChart",
-    history.map(h => h.savingsConsistency),
-    v => `${v}`
-  );
-
-  renderChart(
-    "foodChart",
-    history.map(h => h.realisticFoodSpend),
-    v => `$${v}`
-  );
-
-  renderPersonalityTimeline(history);
-  renderWeeklySummaries(history);
+  renderHabitTimeline(habitHistory);
+  renderSurvey3Charts(survey3History);
+  renderXPTimeline(xpHistory);
+  renderStreakTimeline(streakHistory);
 });
