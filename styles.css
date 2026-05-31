@@ -291,3 +291,55 @@ h1, h2, h3 {
   line-height: 1.5rem;
   opacity: 0.9;
 }
+.progress {
+  transition: stroke-dashoffset 0.8s ease-in-out;
+}
+.habit-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.habit-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+.habit-card.completed {
+  animation: flashComplete 0.6s ease;
+}
+
+@keyframes flashComplete {
+  0% { background:#1a1d22; }
+  50% { background:#2d3f2d; }
+  100% { background:#1a1d22; }
+}
+
+button:active {
+  transform: scale(0.95);
+}
+#xp-level-up {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: #000;
+  font-weight: bold;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+}
+
+#xp-level-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+#coach {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+
+#coach.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
