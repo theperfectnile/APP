@@ -1,36 +1,60 @@
-// premium.js
-const PREMIUM_KEY = "vaultwise_premium";
+// ========================================
+// PREMIUM.JS — CLEAN MODERN VERSION
+// Supports:
+// - Premium status
+// - Trial status
+// - UI indicators (optional)
+// ========================================
 
-// Check if user is premium
+const PREMIUM_KEY = "vaultwise_premium";
+const TRIAL_KEY = "vaultwise_trial_end";
+
+// -------------------------------
+// CHECK PREMIUM
+// -------------------------------
 function isPremiumUser() {
   return localStorage.getItem(PREMIUM_KEY) === "true";
 }
 
-// Enable premium
+// -------------------------------
+// ENABLE / DISABLE PREMIUM
+// -------------------------------
 function enablePremium() {
   localStorage.setItem(PREMIUM_KEY, "true");
 }
 
-// Disable premium
 function disablePremium() {
   localStorage.setItem(PREMIUM_KEY, "false");
 }
-// premium.js
 
-function isPremium() {
-    return localStorage.getItem("vaultwise_premium") === "true";
+// -------------------------------
+// TRIAL LOGIC
+// -------------------------------
+function isTrialActive() {
+  const end = localStorage.getItem(TRIAL_KEY);
+  if (!end) return false;
+  return Date.now() < Number(end);
 }
 
-function applyPremiumLocks() {
-    const premiumSections = document.querySelectorAll(".premium-lock");
+function startTrial() {
+  const end = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
+  localStorage.setItem(TRIAL_KEY, end.toString());
+}
 
-    premiumSections.forEach(section => {
-        if (!isPremium()) {
-            section.classList.add("premium-locked");
-        } else {
-            section.classList.remove("premium-locked");
-        }
-    });
+// -------------------------------
+// APPLY PREMIUM LOCKS (OPTIONAL)
+// Only used if a page includes .premium-lock
+// -------------------------------
+function applyPremiumLocks() {
+  const lockedSections = document.querySelectorAll(".premium-lock");
+
+  lockedSections.forEach(section => {
+    if (!isPremiumUser() && !isTrialActive()) {
+      section.classList.add("premium-locked");
+    } else {
+      section.classList.remove("premium-locked");
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", applyPremiumLocks);
