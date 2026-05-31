@@ -57,7 +57,7 @@ async function apiPost(url, body) {
 // LOADERS
 // -------------------------------
 async function loadUserInfo() {
-    userInfo = await apiGet("/user/info");
+    userInfo = await apiGet("/api/auth/user");
 }
 
 async function loadXP() {
