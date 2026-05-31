@@ -212,5 +212,4 @@ function renderDashboard() {
     renderHabitRings();
     renderHabitCards();
     loadThreeQuestionSurvey();
-}  loadPersonalityInsights();
-});
+}
