@@ -18,32 +18,27 @@ function logout() {
   localStorage.removeItem("token");
   window.location.href = "login.html";
 }
-// PREMIUM LOCK HANDLING
-const premiumOverlay = document.getElementById("premiumOverlay");
-const premiumContent = document.querySelectorAll(".premium-content");
-const startTrialBtn = document.getElementById("startTrialBtn");
 
-if (premiumOverlay && premiumContent) {
-  const unlocked = isPremium() || isTrialActive();
-
-  if (!unlocked) {
-    premiumOverlay.classList.remove("hidden");
-    premiumContent.forEach(sec => sec.style.filter = "blur(4px)");
-  } else {
-    premiumOverlay.classList.add("hidden");
-    premiumContent.forEach(sec => sec.style.filter = "none");
-  }
-
-  if (startTrialBtn) {
-    startTrialBtn.addEventListener("click", () => {
-      startTrial();
-      alert("Your 7‑day free trial has started!");
-      window.location.reload();
-    });
-  }
-}
 // ===============================
-// LOGIN FUNCTION (THIS WAS MISSING)
+// PREMIUM LOGIC (Optional)
+// ===============================
+function isPremium() {
+  return localStorage.getItem("premium") === "true";
+}
+
+function isTrialActive() {
+  const trialEnd = localStorage.getItem("trialEnd");
+  if (!trialEnd) return false;
+  return Date.now() < Number(trialEnd);
+}
+
+function startTrial() {
+  const end = Date.now() + 7 * 24 * 60 * 60 * 1000;
+  localStorage.setItem("trialEnd", end.toString());
+}
+
+// ===============================
+// LOGIN FUNCTION
 // ===============================
 async function loginUser(email, password) {
   const res = await fetch(`${API}/api/auth/login`, {
@@ -56,7 +51,7 @@ async function loginUser(email, password) {
 }
 
 // ===============================
-// REGISTER
+// REGISTER FUNCTION
 // ===============================
 async function registerUser(email, password) {
   const res = await fetch(`${API}/api/auth/register`, {
@@ -64,37 +59,12 @@ async function registerUser(email, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   });
+
   return res.json();
 }
 
 // ===============================
-// LOGIN HANDLER (ONLY ONE VERSION)
-// ===============================
-const loginForm = document.querySelector("#loginForm");
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.querySelector("#email").value.trim();
-    const password = document.querySelector("#password").value.trim();
-
-    const data = await loginUser(email, password);
-
-    // Accept ANY token field the backend might return
-    const token = data.token || data.accessToken || data.jwt;
-
-    if (!token) {
-      alert(data.message || "Login failed");
-      return;
-    }
-
-    saveToken(token);
-    window.location.href = "dashboard.html";
-  });
-}
-
-// ===============================
-// FINANCE HELPERS
+// FINANCE HELPERS (Still Needed)
 // ===============================
 async function fetchSummary() {
   const token = getToken();
@@ -112,9 +82,6 @@ async function fetchHistory() {
   return res.json();
 }
 
-// ===============================
-// SAVE ENTRY
-// ===============================
 async function saveEntry() {
   const token = getToken();
 
@@ -134,15 +101,13 @@ async function saveEntry() {
     body: JSON.stringify(payload)
   });
 
-  if (res.ok) {
-    location.reload();
-  } else {
+  if (!res.ok) {
     alert("Failed to save entry");
   }
 }
 
 // ===============================
-// DASHBOARD INIT
+// DASHBOARD INIT (Simplified)
 // ===============================
 async function initDashboard() {
   const token = getToken();
@@ -151,27 +116,13 @@ async function initDashboard() {
     return;
   }
 
-  const summary = await fetchSummary();
-  const history = await fetchHistory();
-
-  document.getElementById("totalIncome").innerText = `$${summary.totalIncome ?? 0}`;
-  document.getElementById("totalExpenses").innerText = `$${summary.totalExpenses ?? 0}`;
-  document.getElementById("totalPortfolio").innerText = `$${summary.totalPortfolio ?? 0}`;
-
-  const table = document.getElementById("history-body");
-  table.innerHTML = "";
-
-  history.forEach(entry => {
-    table.innerHTML += `
-      <tr>
-        <td>${entry.month}</td>
-        <td>$${entry.income}</td>
-        <td>$${entry.expenses}</td>
-        <td>$${entry.portfolio}</td>
-        <td>$${entry.goal}</td>
-      </tr>
-    `;
-  });
+  // Finance data still loads for backend support
+  try {
+    await fetchSummary();
+    await fetchHistory();
+  } catch (err) {
+    console.warn("Finance API unavailable or not needed on this page.");
+  }
 }
 
 // ===============================
@@ -189,15 +140,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("password").value;
 
       try {
-        const res = await fetch(`${API}/api/auth/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
+        const data = await registerUser(email, password);
 
-        const data = await res.json();
-
-        if (res.ok) {
+        if (data?.message === "User registered successfully") {
           alert("Registered successfully");
           window.location.href = "login.html";
         } else {
@@ -209,10 +154,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // LOGIN PAGE
+  const loginForm = document.querySelector("#loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.querySelector("#email").value.trim();
+      const password = document.querySelector("#password").value.trim();
+
+      const data = await loginUser(email, password);
+
+      const token = data.token || data.accessToken || data.jwt;
+
+      if (!token) {
+        alert(data.message || "Login failed");
+        return;
+      }
+
+      saveToken(token);
+      window.location.href = "dashboard.html";
+    });
+  }
+
   // DASHBOARD PAGE
   if (document.body.id === "dashboard") {
     initDashboard();
   }
-
 });
+
 console.log("app.js loaded");
