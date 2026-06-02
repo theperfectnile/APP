@@ -39,24 +39,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 // -------------------------------
 // LOADERS
 // -------------------------------
+
+// USER INFO
 async function loadUserInfo() {
-    userInfo = await apiGet("https://backend-qkz7.onrender.com/api/auth/user");
+  userInfo = await apiGet("https://backend-qkz7.onrender.com/api/auth/user");
 }
 
+// XP
 async function loadXP() {
-    xpData = await apiGet("/xp/get");
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp/get");
 }
 
+// STREAKS — your backend does NOT have this route
 async function loadStreak() {
-    streakData = await apiGet("/streaks/get");
+  streakData = { streak: 0 }; // placeholder so dashboard doesn't break
 }
 
+// MOOD — your backend does NOT have this route
 async function loadMood() {
-    moodToday = await apiGet("/mood/today");
+  moodToday = null; // placeholder
 }
 
+// FINANCE SUMMARY
 async function loadFinanceSummary() {
-    financeSummary = await apiGet("/finance/summary");
+  financeSummary = await apiGet("https://backend-qkz7.onrender.com/api/finance/summary");
 }
 
 // -------------------------------
@@ -127,71 +133,78 @@ function renderHabitCards() {
 // COMPLETE HABIT ACTION
 // -------------------------------
 async function completeHabit(category) {
-    const card = document.querySelector(`.habit-card h3:contains("${category.toUpperCase()}")`)?.parentElement;
-    if (card) {
-        card.classList.add("completed");
-        setTimeout(() => card.classList.remove("completed"), 600);
+  // Highlight card animation
+  const cards = document.querySelectorAll(".habit-card");
+  cards.forEach(card => {
+    if (card.querySelector("h3")?.textContent === category.toUpperCase()) {
+      card.classList.add("completed");
+      setTimeout(() => card.classList.remove("completed"), 600);
     }
+  });
 
-    habitProgress[category] = Math.min(100, habitProgress[category] + 25);
+  // Update local progress
+  habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
-    await apiPost("/xp/add", { amount: 10 });
-    xpData = await apiGet("/xp/get");
+  // Add XP
+  await apiPost("https://backend-qkz7.onrender.com/api/xp/add", { amount: 10 });
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp/get");
 
-    renderDashboard();
-    renderCoachMessage();
+  // Re-render UI
+  renderDashboard();
+  renderCoachMessage();
 }
-
 // -------------------------------
 // 3‑QUESTION SURVEY ONLY
 // -------------------------------
 async function loadThreeQuestionSurvey() {
-    const survey = await apiGet("/survey/3-question");
-    renderThreeQuestionSurvey(survey.questions);
+  const survey = await apiGet("https://backend-qkz7.onrender.com/api/survey/3-question");
+  renderThreeQuestionSurvey(survey.questions);
 }
 
 function renderThreeQuestionSurvey(questions) {
-    const container = document.getElementById("survey-container");
-    container.innerHTML = `
-        <h2>Daily Check‑In</h2>
-        ${questions
-            .map(
-                q => `
-            <div class="survey-question">
-                <p>${q.text}</p>
-                <input type="range" min="1" max="5" id="q-${q.id}">
-            </div>
-        `
-            )
-            .join("")}
-        <button onclick="submitThreeQuestionSurvey()">Submit</button>
-    `;
+  const container = document.getElementById("survey-container");
+  container.innerHTML = `
+    <h2>Daily Check‑In</h2>
+    ${questions
+      .map(
+        q => `
+        <div class="survey-question">
+          <p>${q.text}</p>
+          <input type="range" min="1" max="5" id="q-${q.id}">
+        </div>
+      `
+      )
+      .join("")}
+    <button onclick="submitThreeQuestionSurvey()">Submit</button>
+  `;
 }
 
 async function submitThreeQuestionSurvey() {
-    const answers = [];
+  const answers = [];
 
-    document.querySelectorAll(".survey-question").forEach(q => {
-        const id = q.querySelector("input").id.replace("q-", "");
-        const value = q.querySelector("input").value;
-        answers.push({ id, value });
-    });
+  document.querySelectorAll(".survey-question").forEach(q => {
+    const id = q.querySelector("input").id.replace("q-", "");
+    const value = q.querySelector("input").value;
+    answers.push({ id, value });
+  });
 
-    await apiPost("/survey/3-question/submit", { answers });
-    document.getElementById("survey-container").innerHTML = "<p>Thanks for checking in!</p>";
+  await apiPost("https://backend-qkz7.onrender.com/api/survey/3-question/submit", { answers });
+
+  document.getElementById("survey-container").innerHTML =
+    "<p>Thanks for checking in!</p>";
 }
 
 // -------------------------------
 // COACH (SYSTEM D)
 // -------------------------------
 async function renderCoachMessage() {
-    const coach = await apiGet("/coach/message");
+  const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
 
-    const container = document.getElementById("coach");
-    container.innerHTML = `
-        <h2>Your Coach</h2>
-        <p>${coach.message}</p>
-    `;
+  const container = document.getElementById("coach");
+  container.innerHTML = `
+    <h2>Your Coach</h2>
+    <p>${coach.message}</p>
+  `;
 }
 // -------------------------------
 // XP LEVEL-UP POPUP
