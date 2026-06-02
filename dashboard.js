@@ -37,34 +37,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // -------------------------------
-// API HELPERS
-// -------------------------------
-async function apiGet(url) {
-    const res = await fetch(url);
-    return res.json();
-}
-
-async function apiGet(url) {
-  const token = localStorage.getItem("token");
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  return res.json();
-}
-
-async function apiPost(url, data) {
-  const token = localStorage.getItem("token");
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(data)
-  });
-  return res.json();
-}
-// -------------------------------
 // LOADERS
 // -------------------------------
 async function loadUserInfo() {
