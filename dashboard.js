@@ -45,29 +45,24 @@ async function apiGet(url) {
 }
 
 async function apiGet(url) {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(url, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    return res.json();
+  const token = localStorage.getItem("token");
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.json();
 }
-async function apiPost(url, body) {
-    const token = localStorage.getItem("token");
 
-    const res = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(body)
-    });
-
-    return res.json();
+async function apiPost(url, data) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  });
+  return res.json();
 }
 // -------------------------------
 // LOADERS
