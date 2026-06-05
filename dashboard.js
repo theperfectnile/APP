@@ -149,10 +149,18 @@ async function completeHabit(category) {
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
- await apiPost("https://backend-qkz7.onrender.com/api/xp", {
-  xp: xpData.xp + 10,
-  log: [...xpData.log, { amount: 10, date: Date.now() }]
-});
+  // Refresh XP before updating
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+
+  // Update XP
+  await apiPost("https://backend-qkz7.onrender.com/api/xp", {
+    xp: xpData.xp + 10,
+    log: [...xpData.log, { amount: 10, date: Date.now() }]
+  });
+
+  // Reload XP after saving
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+
   // Re-render UI
   renderDashboard();
   renderCoachMessage();
@@ -224,7 +232,8 @@ function showLevelUp() {
 // -------------------------------
 // MAIN DASHBOARD RENDER
 // -------------------------------
-function renderDashboard() {
+async function renderDashboard() {
+    await loadXP();          // reload XP
     renderHabitRings();
     renderHabitCards();
     loadThreeQuestionSurvey();
