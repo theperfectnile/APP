@@ -151,6 +151,7 @@ async function completeHabit(category) {
 
   // Refresh XP before updating
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+     if (!Array.isArray(xpData.log)) xpData.log = [];
 
   // Update XP
   await apiPost("https://backend-qkz7.onrender.com/api/xp", {
