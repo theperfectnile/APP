@@ -160,11 +160,17 @@ async function completeHabit(category) {
 // -------------------------------
 // 3‑QUESTION SURVEY ONLY
 // -------------------------------
-async function loadThreeQuestionSurvey() {
-  const latest = await apiGet("https://backend-qkz7.onrender.com/api/survey/latest");
-  renderThreeQuestionSurvey(latest?.answers || []);
-}
 
+// Define the questions (backend does NOT provide them)
+const threeQuestionSurvey = [
+  { id: 1, text: "How stressed do you feel today?" },
+  { id: 2, text: "How motivated are you today?" },
+  { id: 3, text: "How productive do you feel today?" }
+];
+
+async function loadThreeQuestionSurvey() {
+  renderThreeQuestionSurvey(threeQuestionSurvey);
+}
 function renderThreeQuestionSurvey(questions) {
   const container = document.getElementById("survey-container");
   container.innerHTML = `
@@ -197,7 +203,6 @@ async function submitThreeQuestionSurvey() {
   document.getElementById("survey-container").innerHTML =
     "<p>Thanks for checking in!</p>";
 }
-
 // -------------------------------
 // COACH (SYSTEM D)
 // -------------------------------
