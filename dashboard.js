@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadStreak();
     await loadMood();
     await loadFinanceSummary();
-    generateDailyMissions();
+    await loadMissions();
     renderDashboard();
     renderCoachMessage();
 });
@@ -47,7 +47,7 @@ async function loadUserInfo() {
 
 // XP
 async function loadXP() {
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp/get");
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
 }
 
 // STREAKS — your backend does NOT have this route
@@ -87,6 +87,10 @@ function generateDailyMissions() {
 // -------------------------------
 // HABIT RINGS (SYSTEM A)
 // -------------------------------
+async function loadMissions() {
+  const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
+  dailyMissions = res.missions;
+}
 function renderHabitRings() {
     const container = document.getElementById("habit-rings");
     container.innerHTML = "";
@@ -145,10 +149,10 @@ async function completeHabit(category) {
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
-  // Add XP
-  await apiPost("https://backend-qkz7.onrender.com/api/xp/add", { amount: 10 });
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp/get");
-
+ await apiPost("https://backend-qkz7.onrender.com/api/xp", {
+  xp: xpData.xp + 10,
+  log: [...xpData.log, { amount: 10, date: Date.now() }]
+});
   // Re-render UI
   renderDashboard();
   renderCoachMessage();
@@ -157,8 +161,8 @@ async function completeHabit(category) {
 // 3‑QUESTION SURVEY ONLY
 // -------------------------------
 async function loadThreeQuestionSurvey() {
-  const survey = await apiGet("https://backend-qkz7.onrender.com/api/survey/3-question");
-  renderThreeQuestionSurvey(survey.questions);
+  const latest = await apiGet("https://backend-qkz7.onrender.com/api/survey/latest");
+  renderThreeQuestionSurvey(latest?.answers || []);
 }
 
 function renderThreeQuestionSurvey(questions) {
@@ -188,7 +192,7 @@ async function submitThreeQuestionSurvey() {
     answers.push({ id, value });
   });
 
-  await apiPost("https://backend-qkz7.onrender.com/api/survey/3-question/submit", { answers });
+  await apiPost("https://backend-qkz7.onrender.com/api/survey", { answers });
 
   document.getElementById("survey-container").innerHTML =
     "<p>Thanks for checking in!</p>";
@@ -198,12 +202,10 @@ async function submitThreeQuestionSurvey() {
 // COACH (SYSTEM D)
 // -------------------------------
 async function renderCoachMessage() {
-  const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
-
   const container = document.getElementById("coach");
   container.innerHTML = `
     <h2>Your Coach</h2>
-    <p>${coach.message}</p>
+    <p>You're doing great — keep going!</p>
   `;
 }
 // -------------------------------
