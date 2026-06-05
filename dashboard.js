@@ -48,6 +48,10 @@ async function loadUserInfo() {
 // XP
 async function loadXP() {
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+    // SAFETY FIX — always ensure log exists
+  if (!xpData.log || !Array.isArray(xpData.log)) {
+    xpData.log = [];
+  }
 }
 
 // STREAKS — your backend does NOT have this route
@@ -149,18 +153,22 @@ async function completeHabit(category) {
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
-  // Refresh XP before updating
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-     if (!Array.isArray(xpData.log)) xpData.log = [];
-
+ // Refresh XP before updating
+xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+if (!xpData.log || !Array.isArray(xpData.log)) {
+  xpData.log = [];
+}
   // Update XP
   await apiPost("https://backend-qkz7.onrender.com/api/xp", {
     xp: xpData.xp + 10,
     log: [...xpData.log, { amount: 10, date: Date.now() }]
   });
 
-  // Reload XP after saving
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+ // Reload XP after saving
+xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+if (!xpData.log || !Array.isArray(xpData.log)) {
+  xpData.log = [];
+}
 
   // Re-render UI
   renderDashboard();
