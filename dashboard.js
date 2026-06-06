@@ -171,6 +171,7 @@ apiPost("https://backend-qkz7.onrender.com/api/xp", {
 // Re-render UI instantly
 renderDashboard();
 renderCoachMessage();
+}
 // -------------------------------
 // 3‑QUESTION SURVEY ONLY
 // -------------------------------
