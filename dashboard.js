@@ -48,7 +48,7 @@ async function loadUserInfo() {
 // XP
 async function loadXP() {
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-    // SAFETY FIX — always ensure log exists
+  // SAFETY FIX — always ensure log exists
   if (!xpData.log || !Array.isArray(xpData.log)) {
     xpData.log = [];
   }
@@ -95,6 +95,7 @@ async function loadMissions() {
   const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
   dailyMissions = res.missions;
 }
+
 function renderHabitRings() {
     const container = document.getElementById("habit-rings");
     container.innerHTML = "";
@@ -153,27 +154,29 @@ async function completeHabit(category) {
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
- // Refresh XP before updating
-xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-if (!xpData.log || !Array.isArray(xpData.log)) {
-  xpData.log = [];
-}
+  // Refresh XP before updating
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+  if (!xpData.log || !Array.isArray(xpData.log)) {
+    xpData.log = [];
+  }
+
   // Update XP
   await apiPost("https://backend-qkz7.onrender.com/api/xp", {
     xp: xpData.xp + 10,
     log: [...xpData.log, { amount: 10, date: Date.now() }]
   });
 
- // Reload XP after saving
-xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-if (!xpData.log || !Array.isArray(xpData.log)) {
-  xpData.log = [];
-}
+  // Reload XP after saving
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+  if (!xpData.log || !Array.isArray(xpData.log)) {
+    xpData.log = [];
+  }
 
   // Re-render UI
   renderDashboard();
   renderCoachMessage();
 }
+
 // -------------------------------
 // 3‑QUESTION SURVEY ONLY
 // -------------------------------
@@ -188,6 +191,7 @@ const threeQuestionSurvey = [
 async function loadThreeQuestionSurvey() {
   renderThreeQuestionSurvey(threeQuestionSurvey);
 }
+
 function renderThreeQuestionSurvey(questions) {
   const container = document.getElementById("survey-container");
   container.innerHTML = `
@@ -220,6 +224,7 @@ async function submitThreeQuestionSurvey() {
   document.getElementById("survey-container").innerHTML =
     "<p>Thanks for checking in!</p>";
 }
+
 // -------------------------------
 // COACH (SYSTEM D)
 // -------------------------------
@@ -230,6 +235,7 @@ async function renderCoachMessage() {
     <p>You're doing great — keep going!</p>
   `;
 }
+
 // -------------------------------
 // XP LEVEL-UP POPUP
 // -------------------------------
@@ -238,11 +244,12 @@ function showLevelUp() {
     el.classList.add("show");
     setTimeout(() => el.classList.remove("show"), 1500);
 }
+
 // -------------------------------
 // MAIN DASHBOARD RENDER
 // -------------------------------
 async function renderDashboard() {
-    await loadXP();          // reload XP
+    await loadXP();         // reload XP
     renderHabitRings();
     renderHabitCards();
     loadThreeQuestionSurvey();
