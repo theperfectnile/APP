@@ -28,8 +28,6 @@ let habitProgress = {
 document.addEventListener("DOMContentLoaded", async () => {
     await loadUserInfo();
     await loadXP();
-    await loadStreak();
-    await loadMood();
     await loadFinanceSummary();
     await loadMissions();
     renderDashboard();
@@ -154,29 +152,25 @@ async function completeHabit(category) {
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
-  // Refresh XP before updating
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-  if (!xpData.log || !Array.isArray(xpData.log)) {
-    xpData.log = [];
-  }
-
-  // Update XP
-  await apiPost("https://backend-qkz7.onrender.com/api/xp", {
-    xp: xpData.xp + 10,
-    log: [...xpData.log, { amount: 10, date: Date.now() }]
-  });
-
-  // Reload XP after saving
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-  if (!xpData.log || !Array.isArray(xpData.log)) {
-    xpData.log = [];
-  }
-
-  // Re-render UI
-  renderDashboard();
-  renderCoachMessage();
+// Refresh XP once
+xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+if (!xpData.log || !Array.isArray(xpData.log)) {
+  xpData.log = [];
 }
 
+// Update XP locally for instant UI
+xpData.xp += 10;
+xpData.log.push({ amount: 10, date: Date.now() });
+
+// Save XP in background
+apiPost("https://backend-qkz7.onrender.com/api/xp", {
+  xp: xpData.xp,
+  log: xpData.log
+});
+
+// Re-render UI instantly
+renderDashboard();
+renderCoachMessage();
 // -------------------------------
 // 3‑QUESTION SURVEY ONLY
 // -------------------------------
@@ -249,7 +243,7 @@ function showLevelUp() {
 // MAIN DASHBOARD RENDER
 // -------------------------------
 async function renderDashboard() {
-    await loadXP();         // reload XP
+                            // reload XP
     renderHabitRings();
     renderHabitCards();
     loadThreeQuestionSurvey();
