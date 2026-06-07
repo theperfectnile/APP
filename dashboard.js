@@ -234,12 +234,21 @@ async function submitThreeQuestionSurvey() {
 // -------------------------------
 async function renderCoachMessage() {
   const container = document.getElementById("coach");
-  container.innerHTML = `
-    <h2>Your Coach</h2>
-    <p>You're doing great — keep going!</p>
-  `;
-}
 
+  try {
+    const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
+
+    container.innerHTML = `
+      <h2>Vaultwise Coach</h2>
+      <p>${coach.message}</p>
+    `;
+  } catch (err) {
+    container.innerHTML = `
+      <h2>Vaultwise Coach</h2>
+      <p>Keep going — you're making progress!</p>
+    `;
+  }
+}
 // -------------------------------
 // XP LEVEL-UP POPUP
 // -------------------------------
@@ -251,24 +260,52 @@ function showLevelUp() {
 // -------------------------------
 // XP HEADER RENDER
 // -------------------------------
-function renderHeader() {
-  const levelLabel = document.getElementById("xpLevelLabel");
-  const valueLabel = document.getElementById("xpValueLabel");
-  const nextLabel = document.getElementById("xpNextLabel");
-  const fill = document.getElementById("xpFill");
+async function renderCoachMessage() {
+  const container = document.getElementById("coach");
 
   const xp = xpData?.xp || 0;
   const level = Math.floor(xp / 100) + 1;
   const nextLevelXP = level * 100;
-  const progress = Math.min(100, (xp / nextLevelXP) * 100);
+  const xpToNext = nextLevelXP - xp;
 
-  levelLabel.textContent = `Level ${level}`;
-  valueLabel.textContent = `${xp} XP`;
-  nextLabel.textContent = `Next level in ${nextLevelXP - xp} XP`;
+  // Count completed habits
+  const completed = Object.values(habitProgress).filter(v => v >= 100).length;
 
-  fill.style.width = `${progress}%`;
+  let message = "";
+
+  // XP-based coaching
+  if (xpToNext <= 20) {
+    message = "🔥 You're extremely close to leveling up — finish one more habit!";
+  } 
+  else if (xpToNext <= 50) {
+    message = "⚡ You're making great progress — keep pushing toward the next level.";
+  } 
+  else if (xp < 100) {
+    message = "🌱 You're just getting started — small wins add up fast.";
+  }
+
+  // Habit-based coaching
+  if (completed >= 3) {
+    message = "💪 You're on fire today — three habits done already!";
+  } else if (completed === 1) {
+    message = "✨ Nice! You completed your first habit of the day.";
+  }
+
+  // If no dynamic message triggered, fallback to backend
+  if (!message) {
+    try {
+      const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
+      message = coach.message;
+    } catch {
+      message = "You're doing great — keep going!";
+    }
+  }
+
+  container.innerHTML = `
+    <h2>Vaultwise Coach</h2>
+    <p>${message}</p>
+  `;
 }
-
 // -------------------------------
 // MAIN DASHBOARD RENDER
 // -------------------------------
@@ -276,5 +313,6 @@ async function renderDashboard() {
     renderHeader(); // 
     renderHabitRings();
     renderHabitCards();
+    renderCoachMessage();
     loadThreeQuestionSurvey();
 }
