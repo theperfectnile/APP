@@ -245,27 +245,6 @@ function renderHeader() {
   fill.style.width = `${progress}%`;
 }
 // -------------------------------
-// COACH (SYSTEM D)
-// -------------------------------
-console.log("COACH FUNCTION RAN");
-async function renderCoachMessage() {
-  const container = document.getElementById("coach");
-
-  try {
-    const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
-
-    container.innerHTML = `
-      <h2>Vaultwise Coach</h2>
-      <p>${coach.message}</p>
-    `;
-  } catch (err) {
-    container.innerHTML = `
-      <h2>Vaultwise Coach</h2>
-      <p>Keep going — you're making progress!</p>
-    `;
-  }
-}
-// -------------------------------
 // XP LEVEL-UP POPUP
 // -------------------------------
 function showLevelUp() {
