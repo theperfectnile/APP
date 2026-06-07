@@ -92,15 +92,17 @@ function generateDailyMissions() {
 async function loadMissions() {
   const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
 
-  // Your 5 real categories
   const categories = ["finance", "exercise", "cleaning", "cooking", "lifestyle"];
 
-  // Convert array → object with correct keys
-  dailyMissions = {};
-
-  categories.forEach((cat, i) => {
-    dailyMissions[cat] = res.missions[i] || "No mission";
-  });
+  // Map first 5 missions to your 5 categories
+  dailyMissions = {
+    finance: res.missions[0] || "No mission",
+    exercise: res.missions[1] || "No mission",
+    cleaning: res.missions[2] || "No mission",
+    cooking: res.missions[3] || "No mission",
+    lifestyle: res.missions[4] || "No mission"
+  };
+}
 }
 
 function renderHabitRings() {
