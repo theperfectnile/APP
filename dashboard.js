@@ -248,12 +248,30 @@ function showLevelUp() {
     el.classList.add("show");
     setTimeout(() => el.classList.remove("show"), 1500);
 }
+// -------------------------------
+// XP HEADER RENDER
+// -------------------------------
+function renderHeader() {
+  const header = document.getElementById("xp-header");
+  const bar = document.getElementById("xp-bar");
+
+  const xp = xpData?.xp || 0;
+  const level = Math.floor(xp / 100) + 1; // 100 XP per level
+  const nextLevelXP = level * 100;
+  const progress = Math.min(100, (xp / nextLevelXP) * 100);
+
+  header.innerHTML = `Level ${level} • ${xp} XP`;
+  bar.style.width = `${progress}%`;
+
+  const next = document.getElementById("xp-next");
+  next.innerHTML = `Next level in ${nextLevelXP - xp} XP`;
+}
 
 // -------------------------------
 // MAIN DASHBOARD RENDER
 // -------------------------------
 async function renderDashboard() {
-                            // reload XP
+    renderHeader(); // 
     renderHabitRings();
     renderHabitCards();
     loadThreeQuestionSurvey();
