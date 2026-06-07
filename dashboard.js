@@ -355,6 +355,7 @@ async function renderCoachMessage() {
     <h2>Vaultwise Coach</h2>
     <p>${message}</p>
   `;
+    container.classList.add("loaded");
 }
 // -------------------------------
 // MAIN DASHBOARD RENDER
