@@ -362,10 +362,15 @@ async function renderCoachMessage() {
 // MAIN DASHBOARD RENDER
 // -------------------------------
 async function renderDashboard() {
-    loadMissions();
-    renderHeader();  
-    renderHabitRings();
-    renderHabitCards();
-    renderCoachMessage();
-    loadThreeQuestionSurvey();
+  await loadXP();           
+  await loadHabitProgress(); 
+  await loadMissions();     
+  await loadStreaks();       
+  await loadMood();         
+
+  renderHeader();
+  renderHabitRings();
+  renderHabitCards();
+  renderCoachMessage();     
+  loadThreeQuestionSurvey();
 }
