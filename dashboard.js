@@ -133,7 +133,7 @@ function renderHabitCards() {
                 <p class="mission">Today: ${dailyMissions[cat]}</p>
                 <p class="streak">Streak: ${streakData?.streak || 0} days</p>
                 <p class="xp">XP: ${xpData?.xp || 0}</p>
-<button onclick="completeHabit('${cat.toLowerCase()}')">Complete</button>
+<button onclick="completeHabit('${cat.toLowerCase().trim()}')">Complete</button>
             </div>
         `;
     });
