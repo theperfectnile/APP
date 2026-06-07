@@ -251,6 +251,7 @@ function renderHeader() {
 // -------------------------------
 // COACH (SYSTEM D)
 // -------------------------------
+console.log("COACH FUNCTION RAN");
 async function renderCoachMessage() {
   const container = document.getElementById("coach");
 
