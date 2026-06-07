@@ -268,12 +268,21 @@ async function renderCoachMessage() {
   const nextLevelXP = level * 100;
   const xpToNext = nextLevelXP - xp;
 
-  // Count completed habits
+  // Habit progress
   const completed = Object.values(habitProgress).filter(v => v >= 100).length;
+
+  // Category-specific progress
+  const weakestCategory = Object.entries(habitProgress)
+    .sort((a, b) => a[1] - b[1])[0][0];
+
+  // Missions (first 5 mapped)
+  const missions = dailyMissions || {};
 
   let message = "";
 
-  // XP-based coaching
+  // -----------------------------
+  // XP-BASED COACHING
+  // -----------------------------
   if (xpToNext <= 20) {
     message = "🔥 You're extremely close to leveling up — finish one more habit!";
   } 
@@ -284,14 +293,35 @@ async function renderCoachMessage() {
     message = "🌱 You're just getting started — small wins add up fast.";
   }
 
-  // Habit-based coaching
+  // -----------------------------
+  // HABIT-BASED COACHING
+  // -----------------------------
   if (completed >= 3) {
     message = "💪 You're on fire today — three habits done already!";
-  } else if (completed === 1) {
+  } 
+  else if (completed === 1) {
     message = "✨ Nice! You completed your first habit of the day.";
   }
 
-  // If no dynamic message triggered, fallback to backend
+  // -----------------------------
+  // CATEGORY-SPECIFIC COACHING
+  // -----------------------------
+  if (!message && weakestCategory) {
+    message = `🎯 Try focusing on your ${weakestCategory} habit — a small win there boosts your whole day.`;
+  }
+
+  // -----------------------------
+  // MISSION-BASED COACHING
+  // -----------------------------
+  const missionList = Object.values(missions).filter(Boolean);
+  if (!message && missionList.length > 0) {
+    const randomMission = missionList[Math.floor(Math.random() * missionList.length)];
+    message = `📌 Coach Tip: Try completing this mission today — "${randomMission}".`;
+  }
+
+  // -----------------------------
+  // BACKEND FALLBACK
+  // -----------------------------
   if (!message) {
     try {
       const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
@@ -301,6 +331,9 @@ async function renderCoachMessage() {
     }
   }
 
+  // -----------------------------
+  // RENDER
+  // -----------------------------
   container.innerHTML = `
     <h2>Vaultwise Coach</h2>
     <p>${message}</p>
