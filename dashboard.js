@@ -362,6 +362,7 @@ async function renderCoachMessage() {
 // MAIN DASHBOARD RENDER
 // -------------------------------
 async function renderDashboard() {
+    loadMissions();
     renderHeader();  
     renderHabitRings();
     renderHabitCards();
