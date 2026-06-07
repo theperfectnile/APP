@@ -91,7 +91,11 @@ function generateDailyMissions() {
 // -------------------------------
 async function loadMissions() {
   const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
-  dailyMissions = res.missions;
+
+  // FIX: Normalize category keys to lowercase so they match habitProgress
+  dailyMissions = Object.fromEntries(
+    Object.entries(res.missions).map(([k, v]) => [k.toLowerCase(), v])
+  );
 }
 
 function renderHabitRings() {
@@ -99,7 +103,7 @@ function renderHabitRings() {
     container.innerHTML = "";
 
     Object.keys(habitProgress).forEach(cat => {
-        const percent = habitProgress[cat];
+        const percent = habitProgress[cat] ?? 0; // FIX: fallback to 0 if undefined
 
         container.innerHTML += `
             <div class="habit-ring">
@@ -115,7 +119,6 @@ function renderHabitRings() {
         `;
     });
 }
-
 // -------------------------------
 // HABIT CARDS (SYSTEM C)
 // -------------------------------
