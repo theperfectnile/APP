@@ -252,7 +252,6 @@ function renderHeader() {
 // COACH (SYSTEM D)
 // -------------------------------
 console.log("COACH FUNCTION RAN");
-console.log("FINAL COACH MESSAGE:", message);
 async function renderCoachMessage() {
   const container = document.getElementById("coach");
 
@@ -355,7 +354,8 @@ async function renderCoachMessage() {
   // -----------------------------
   // RENDER
   // -----------------------------
-  container.innerHTML = `
+   console.log("FINAL COACH MESSAGE:", message);
+    container.innerHTML = `
     <h2>Vaultwise Coach</h2>
     <p>${message}</p>
   `;
