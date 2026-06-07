@@ -103,7 +103,6 @@ async function loadMissions() {
     lifestyle: res.missions[4] || "No mission"
   };
 }
-}
 
 function renderHabitRings() {
     const container = document.getElementById("habit-rings");
