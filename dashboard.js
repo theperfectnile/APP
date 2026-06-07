@@ -325,15 +325,17 @@ async function renderCoachMessage() {
       message = "You're doing great — keep going!";
     }
   }
-
-  // -----------------------------
-  // RENDER
-  // -----------------------------
-   console.log("FINAL COACH MESSAGE:", message);
-    container.innerHTML = `
-    <h2>Vaultwise Coach</h2>
-    <p>${message}</p>
-  `;
-    container.classList.add("loaded");
+// -------------------------------
+// MAIN DASHBOARD RENDER
+// -------------------------------
+async function renderDashboard() {
+  await loadXP();           
+  await loadMissions();     
+  
+    renderHeader();
+  renderHabitRings();
+  renderHabitCards();
+  renderCoachMessage();     
+  loadThreeQuestionSurvey();
 }
 
