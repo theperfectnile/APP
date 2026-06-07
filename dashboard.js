@@ -228,7 +228,26 @@ async function submitThreeQuestionSurvey() {
   document.getElementById("survey-container").innerHTML =
     "<p>Thanks for checking in!</p>";
 }
+// -------------------------------
+// XP HEADER RENDER
+// -------------------------------
+function renderHeader() {
+  const levelLabel = document.getElementById("xpLevelLabel");
+  const valueLabel = document.getElementById("xpValueLabel");
+  const nextLabel = document.getElementById("xpNextLabel");
+  const fill = document.getElementById("xpFill");
 
+  const xp = xpData?.xp || 0;
+  const level = Math.floor(xp / 100) + 1;
+  const nextLevelXP = level * 100;
+  const progress = Math.min(100, (xp / nextLevelXP) * 100);
+
+  levelLabel.textContent = `Level ${level}`;
+  valueLabel.textContent = `${xp} XP`;
+  nextLabel.textContent = `Next level in ${nextLevelXP - xp} XP`;
+
+  fill.style.width = `${progress}%`;
+}
 // -------------------------------
 // COACH (SYSTEM D)
 // -------------------------------
