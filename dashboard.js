@@ -103,7 +103,7 @@ function renderHabitRings() {
     container.innerHTML = "";
 
     Object.keys(habitProgress).forEach(cat => {
-        const percent = habitProgress[cat] ?? 0; // FIX: fallback to 0 if undefined
+const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefined
 
         container.innerHTML += `
             <div class="habit-ring">
