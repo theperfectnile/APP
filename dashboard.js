@@ -252,19 +252,21 @@ function showLevelUp() {
 // XP HEADER RENDER
 // -------------------------------
 function renderHeader() {
-  const header = document.getElementById("xp-header");
-  const bar = document.getElementById("xp-bar");
+  const levelLabel = document.getElementById("xpLevelLabel");
+  const valueLabel = document.getElementById("xpValueLabel");
+  const nextLabel = document.getElementById("xpNextLabel");
+  const fill = document.getElementById("xpFill");
 
   const xp = xpData?.xp || 0;
-  const level = Math.floor(xp / 100) + 1; // 100 XP per level
+  const level = Math.floor(xp / 100) + 1;
   const nextLevelXP = level * 100;
   const progress = Math.min(100, (xp / nextLevelXP) * 100);
 
-  header.innerHTML = `Level ${level} • ${xp} XP`;
-  bar.style.width = `${progress}%`;
+  levelLabel.textContent = `Level ${level}`;
+  valueLabel.textContent = `${xp} XP`;
+  nextLabel.textContent = `Next level in ${nextLevelXP - xp} XP`;
 
-  const next = document.getElementById("xp-next");
-  next.innerHTML = `Next level in ${nextLevelXP - xp} XP`;
+  fill.style.width = `${progress}%`;
 }
 
 // -------------------------------
