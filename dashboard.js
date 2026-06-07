@@ -336,16 +336,4 @@ async function renderCoachMessage() {
   `;
     container.classList.add("loaded");
 }
-// -------------------------------
-// MAIN DASHBOARD RENDER
-// -------------------------------
-async function renderDashboard() {
-  await loadXP();           
-  await loadMissions();     
-  
-    renderHeader();
-  renderHabitRings();
-  renderHabitCards();
-  renderCoachMessage();     
-  loadThreeQuestionSurvey();
-}
+
