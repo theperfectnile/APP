@@ -92,10 +92,15 @@ function generateDailyMissions() {
 async function loadMissions() {
   const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
 
-  // FIX: Normalize category keys to lowercase so they match habitProgress
-  dailyMissions = Object.fromEntries(
-    Object.entries(res.missions).map(([k, v]) => [k.toLowerCase(), v])
-  );
+  // Your 5 real categories
+  const categories = ["finance", "exercise", "cleaning", "cooking", "lifestyle"];
+
+  // Convert array → object with correct keys
+  dailyMissions = {};
+
+  categories.forEach((cat, i) => {
+    dailyMissions[cat] = res.missions[i] || "No mission";
+  });
 }
 
 function renderHabitRings() {
