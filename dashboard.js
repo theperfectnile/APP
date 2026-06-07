@@ -338,4 +338,3 @@ async function renderDashboard() {
   renderCoachMessage();     
   loadThreeQuestionSurvey();
 }
-
