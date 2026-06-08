@@ -21,7 +21,48 @@ let habitProgress = {
     cooking: 0,
     lifestyle: 0
 };
+// -------------------------------
+// LOCAL STORAGE SAVE HELPERS
+// -------------------------------
+function saveXPHistory(xp) {
+  const history = JSON.parse(localStorage.getItem("xpHistory") || "[]");
+  history.push({
+    xp,
+    timestamp: Date.now()
+  });
+  localStorage.setItem("xpHistory", JSON.stringify(history));
+}
 
+function saveHabitHistory(progress) {
+  const history = JSON.parse(localStorage.getItem("habitHistory") || "[]");
+  history.push({
+    ...progress,
+    timestamp: Date.now()
+  });
+  localStorage.setItem("habitHistory", JSON.stringify(history));
+}
+
+function saveSurvey3History(answers) {
+  const history = JSON.parse(localStorage.getItem("survey3History") || "[]");
+
+  history.push({
+    mood: Number(answers[0].value),
+    energy: Number(answers[1].value),
+    stress: Number(answers[2].value),
+    timestamp: Date.now()
+  });
+
+  localStorage.setItem("survey3History", JSON.stringify(history));
+}
+
+function saveStreakHistory(streak) {
+  const history = JSON.parse(localStorage.getItem("streakHistory") || "[]");
+  history.push({
+    streak,
+    timestamp: Date.now()
+  });
+  localStorage.setItem("streakHistory", JSON.stringify(history));
+}
 // -------------------------------
 // INITIAL LOAD
 // -------------------------------
