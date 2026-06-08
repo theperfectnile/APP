@@ -39,7 +39,14 @@ function saveStreak() {
 
 function loadStreakFromStorage() {
   const saved = JSON.parse(localStorage.getItem("streakData"));
-  if (saved) streakData = saved;
+
+  // If nothing saved yet, initialize cleanly
+  if (!saved) {
+    streakData = { streak: 0, lastCompletedDate: null };
+    return;
+  }
+
+  streakData = saved;
 
   // If user has never completed a habit, do nothing
   if (!streakData.lastCompletedDate) return;
@@ -47,8 +54,8 @@ function loadStreakFromStorage() {
   const last = new Date(streakData.lastCompletedDate).toDateString();
   const today = new Date().toDateString();
 
+  // If the user missed a day, ONLY reset streak — NOT habit progress
   if (last !== today) {
-    // missed a day — ONLY resets streak, NOT habit progress
     streakData.streak = 0;
   }
 }
