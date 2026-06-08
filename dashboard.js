@@ -10,7 +10,7 @@
 // -------------------------------
 let userInfo = null;
 let xpData = null;
-let streakData = null;
+let streakData = { streak: 0, lastCompletedDate: null };
 let moodToday = null;
 let financeSummary = null;
 let dailyMissions = {};
