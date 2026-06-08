@@ -21,7 +21,37 @@ let habitProgress = {
   cooking: 0,
   lifestyle: 0
 };
+// -------------------------------
+// LOCAL PERSISTENCE HELPERS
+// -------------------------------
+function saveHabitProgress() {
+  localStorage.setItem("habitProgress", JSON.stringify(habitProgress));
+}
 
+function loadHabitProgress() {
+  const saved = JSON.parse(localStorage.getItem("habitProgress"));
+  if (saved) habitProgress = saved;
+}
+
+function saveStreak() {
+  localStorage.setItem("streakData", JSON.stringify(streakData));
+}
+
+function loadStreakFromStorage() {
+  const saved = JSON.parse(localStorage.getItem("streakData"));
+  if (saved) streakData = saved;
+
+  // If user has never completed a habit, do nothing
+  if (!streakData.lastCompletedDate) return;
+
+  const last = new Date(streakData.lastCompletedDate).toDateString();
+  const today = new Date().toDateString();
+
+  if (last !== today) {
+    // missed a day — ONLY resets streak, NOT habit progress
+    streakData.streak = 0;
+  }
+}
 // -------------------------------
 // LOCAL STORAGE SAVE HELPERS
 // -------------------------------
@@ -69,6 +99,8 @@ function saveStreakHistory(streak) {
 // INITIAL LOAD
 // -------------------------------
 document.addEventListener("DOMContentLoaded", async () => {
+  loadHabitProgress();
+  loadStreakFromStorage();
   await loadUserInfo();
   await loadXP();
   await loadFinanceSummary();
@@ -204,9 +236,26 @@ async function completeHabit(category) {
 
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
+  saveHabitProgress();
   saveHabitHistory(habitProgress);
   saveStreakHistory(streakData?.streak || 0);
+// -------------------------------
+// STREAK LOGIC
+// -------------------------------
+const today = new Date().toDateString();
 
+if (!streakData.lastCompletedDate) {
+  streakData = { streak: 1, lastCompletedDate: today };
+} else {
+  const last = new Date(streakData.lastCompletedDate).toDateString();
+
+  if (last !== today) {
+    streakData.streak += 1;
+    streakData.lastCompletedDate = today;
+  }
+}
+
+saveStreak();
   // Refresh XP once
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
   if (!xpData.log || !Array.isArray(xpData.log)) {
