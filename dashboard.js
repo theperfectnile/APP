@@ -15,12 +15,13 @@ let moodToday = null;
 let financeSummary = null;
 let dailyMissions = {};
 let habitProgress = {
-    finance: 0,
-    exercise: 0,
-    cleaning: 0,
-    cooking: 0,
-    lifestyle: 0
+  finance: 0,
+  exercise: 0,
+  cleaning: 0,
+  cooking: 0,
+  lifestyle: 0
 };
+
 // -------------------------------
 // LOCAL STORAGE SAVE HELPERS
 // -------------------------------
@@ -63,16 +64,17 @@ function saveStreakHistory(streak) {
   });
   localStorage.setItem("streakHistory", JSON.stringify(history));
 }
+
 // -------------------------------
 // INITIAL LOAD
 // -------------------------------
 document.addEventListener("DOMContentLoaded", async () => {
-    await loadUserInfo();
-    await loadXP();
-    await loadFinanceSummary();
-    await loadMissions();
-    renderDashboard();
-    renderCoachMessage();
+  await loadUserInfo();
+  await loadXP();
+  await loadFinanceSummary();
+  await loadMissions();
+  renderDashboard();
+  renderCoachMessage();
 });
 
 // -------------------------------
@@ -112,19 +114,19 @@ async function loadFinanceSummary() {
 // DAILY MISSIONS (SYSTEM B)
 // -------------------------------
 function generateDailyMissions() {
-    const categories = ["finance", "exercise", "cleaning", "cooking", "lifestyle"];
+  const categories = ["finance", "exercise", "cleaning", "cooking", "lifestyle"];
 
-    const missionTemplates = {
-        finance: ["Review one transaction", "Add an expense", "Check your budget"],
-        exercise: ["Walk 10 minutes", "Stretch 5 minutes", "Do 10 pushups"],
-        cleaning: ["Clean one surface", "5‑minute tidy", "Organize one item"],
-        cooking: ["Cook one meal", "Prep ingredients", "Try a new recipe"],
-        lifestyle: ["Drink water", "Plan tomorrow", "Read 5 minutes"]
-    };
+  const missionTemplates = {
+    finance: ["Review one transaction", "Add an expense", "Check your budget"],
+    exercise: ["Walk 10 minutes", "Stretch 5 minutes", "Do 10 pushups"],
+    cleaning: ["Clean one surface", "5‑minute tidy", "Organize one item"],
+    cooking: ["Cook one meal", "Prep ingredients", "Try a new recipe"],
+    lifestyle: ["Drink water", "Plan tomorrow", "Read 5 minutes"]
+  };
 
-    categories.forEach(cat => {
-        dailyMissions[cat] = missionTemplates[cat][Math.floor(Math.random() * missionTemplates[cat].length)];
-    });
+  categories.forEach(cat => {
+    dailyMissions[cat] = missionTemplates[cat][Math.floor(Math.random() * missionTemplates[cat].length)];
+  });
 }
 
 // -------------------------------
@@ -146,45 +148,45 @@ async function loadMissions() {
 }
 
 function renderHabitRings() {
-    const container = document.getElementById("habit-rings");
-    container.innerHTML = "";
+  const container = document.getElementById("habit-rings");
+  container.innerHTML = "";
 
-    Object.keys(habitProgress).forEach(cat => {
-        const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefined
+  Object.keys(habitProgress).forEach(cat => {
+    const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefined
 
-        container.innerHTML += `
-            <div class="habit-ring">
-                <svg class="ring" width="120" height="120">
-                    <circle class="bg" cx="60" cy="60" r="50"></circle>
-                    <circle class="progress" cx="60" cy="60" r="50"
-                        style="stroke-dashoffset:${314 - (314 * percent) / 100}">
-                    </circle>
-                </svg>
-                <div class="habit-label">${cat.toUpperCase()}</div>
-                <div class="habit-percent">${percent}%</div>
-            </div>
-        `;
-    });
+    container.innerHTML += `
+      <div class="habit-ring">
+        <svg class="ring" width="120" height="120">
+          <circle class="bg" cx="60" cy="60" r="50"></circle>
+          <circle class="progress" cx="60" cy="60" r="50"
+            style="stroke-dashoffset:${314 - (314 * percent) / 100}">
+          </circle>
+        </svg>
+        <div class="habit-label">${cat.toUpperCase()}</div>
+        <div class="habit-percent">${percent}%</div>
+      </div>
+    `;
+  });
 }
 
 // -------------------------------
 // HABIT CARDS (SYSTEM C)
 // -------------------------------
 function renderHabitCards() {
-    const container = document.getElementById("habit-cards");
-    container.innerHTML = "";
+  const container = document.getElementById("habit-cards");
+  container.innerHTML = "";
 
-    Object.keys(dailyMissions).forEach(cat => {
-        container.innerHTML += `
-            <div class="habit-card">
-                <h3>${cat.toUpperCase()}</h3>
-                <p class="mission">Today: ${dailyMissions[cat]}</p>
-                <p class="streak">Streak: ${streakData?.streak || 0} days</p>
-                <p class="xp">XP: ${xpData?.xp || 0}</p>
-                <button onclick="completeHabit('${cat.toLowerCase().trim()}')">Complete</button>
-            </div>
-        `;
-    });
+  Object.keys(dailyMissions).forEach(cat => {
+    container.innerHTML += `
+      <div class="habit-card">
+        <h3>${cat.toUpperCase()}</h3>
+        <p class="mission">Today: ${dailyMissions[cat]}</p>
+        <p class="streak">Streak: ${streakData?.streak || 0} days</p>
+        <p class="xp">XP: ${xpData?.xp || 0}</p>
+        <button onclick="completeHabit('${cat.toLowerCase().trim()}')">Complete</button>
+      </div>
+    `;
+  });
 }
 
 // -------------------------------
@@ -202,8 +204,8 @@ async function completeHabit(category) {
 
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
-    saveHabitHistory(habitProgress);
-    saveStreakHistory(streakData?.streak || 0);
+  saveHabitHistory(habitProgress);
+  saveStreakHistory(streakData?.streak || 0);
 
   // Refresh XP once
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
@@ -264,7 +266,8 @@ async function submitThreeQuestionSurvey() {
   });
 
   saveSurvey3History(answers);
- await apiPost("https://backend-qkz7.onrender.com/api/survey", { answers });
+
+  await apiPost("https://backend-qkz7.onrender.com/api/survey", { answers });
 
   document.getElementById("survey-container").innerHTML =
     "<p>Thanks for checking in!</p>";
@@ -295,9 +298,9 @@ function renderHeader() {
 // XP LEVEL-UP POPUP
 // -------------------------------
 function showLevelUp() {
-    const el = document.getElementById("xp-level-up");
-    el.classList.add("show");
-    setTimeout(() => el.classList.remove("show"), 1500);
+  const el = document.getElementById("xp-level-up");
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 1500);
 }
 
 // -------------------------------
@@ -326,19 +329,16 @@ async function renderCoachMessage() {
   // XP-BASED COACHING
   if (xpToNext <= 20) {
     message = "🔥 You're extremely close to leveling up — finish one more habit!";
-  } 
-  else if (xpToNext <= 50) {
+  } else if (xpToNext <= 50) {
     message = "⚡ You're making great progress — keep pushing toward the next level.";
-  } 
-  else if (xp < 100) {
+  } else if (xp < 100) {
     message = "🌱 You're just getting started — small wins add up fast.";
   }
 
   // HABIT-BASED COACHING
   if (completed >= 3) {
     message = "💪 You're on fire today — three habits done already!";
-  } 
-  else if (completed === 1) {
+  } else if (completed === 1) {
     message = "✨ Nice! You completed your first habit of the day.";
   }
 
@@ -376,12 +376,12 @@ async function renderCoachMessage() {
 // MAIN DASHBOARD RENDER
 // -------------------------------
 async function renderDashboard() {
-  await loadXP();           
-  await loadMissions();     
-  
+  await loadXP();
+  await loadMissions();
+
   renderHeader();
   renderHabitRings();
   renderHabitCards();
-  renderCoachMessage();     
+  renderCoachMessage();
   loadThreeQuestionSurvey();
 }
