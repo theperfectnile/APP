@@ -109,7 +109,7 @@ function renderHabitRings() {
     container.innerHTML = "";
 
     Object.keys(habitProgress).forEach(cat => {
-const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefined
+        const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefined
 
         container.innerHTML += `
             <div class="habit-ring">
@@ -125,6 +125,7 @@ const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefi
         `;
     });
 }
+
 // -------------------------------
 // HABIT CARDS (SYSTEM C)
 // -------------------------------
@@ -139,7 +140,7 @@ function renderHabitCards() {
                 <p class="mission">Today: ${dailyMissions[cat]}</p>
                 <p class="streak">Streak: ${streakData?.streak || 0} days</p>
                 <p class="xp">XP: ${xpData?.xp || 0}</p>
-<button onclick="completeHabit('${cat.toLowerCase().trim()}')">Complete</button>
+                <button onclick="completeHabit('${cat.toLowerCase().trim()}')">Complete</button>
             </div>
         `;
     });
@@ -161,27 +162,26 @@ async function completeHabit(category) {
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
 
-// Refresh XP once
-xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-if (!xpData.log || !Array.isArray(xpData.log)) {
-  xpData.log = [];
+  // Refresh XP once
+  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+  if (!xpData.log || !Array.isArray(xpData.log)) {
+    xpData.log = [];
+  }
+
+  // Update XP locally for instant UI
+  xpData.xp += 10;
+  xpData.log.push({ amount: 10, date: Date.now() });
+
+  // Save XP in background
+  apiPost("https://backend-qkz7.onrender.com/api/xp", {
+    xp: xpData.xp,
+    log: xpData.log
+  });
 }
-
-// Update XP locally for instant UI
-xpData.xp += 10;
-xpData.log.push({ amount: 10, date: Date.now() });
-
-// Save XP in background
-apiPost("https://backend-qkz7.onrender.com/api/xp", {
-  xp: xpData.xp,
-  log: xpData.log
-});
 
 // -------------------------------
 // 3‑QUESTION SURVEY ONLY
 // -------------------------------
-
-// Define the questions (backend does NOT provide them)
 const threeQuestionSurvey = [
   { id: 1, text: "How stressed do you feel today?" },
   { id: 2, text: "How motivated are you today?" },
@@ -224,6 +224,7 @@ async function submitThreeQuestionSurvey() {
   document.getElementById("survey-container").innerHTML =
     "<p>Thanks for checking in!</p>";
 }
+
 // -------------------------------
 // XP HEADER RENDER
 // -------------------------------
@@ -244,6 +245,7 @@ function renderHeader() {
 
   fill.style.width = `${progress}%`;
 }
+
 // -------------------------------
 // XP LEVEL-UP POPUP
 // -------------------------------
@@ -252,8 +254,9 @@ function showLevelUp() {
     el.classList.add("show");
     setTimeout(() => el.classList.remove("show"), 1500);
 }
+
 // -------------------------------
-// XP HEADER RENDER
+// COACH (SYSTEM D)
 // -------------------------------
 async function renderCoachMessage() {
   const container = document.getElementById("coach");
@@ -275,9 +278,7 @@ async function renderCoachMessage() {
 
   let message = "";
 
-  // -----------------------------
   // XP-BASED COACHING
-  // -----------------------------
   if (xpToNext <= 20) {
     message = "🔥 You're extremely close to leveling up — finish one more habit!";
   } 
@@ -288,9 +289,7 @@ async function renderCoachMessage() {
     message = "🌱 You're just getting started — small wins add up fast.";
   }
 
-  // -----------------------------
   // HABIT-BASED COACHING
-  // -----------------------------
   if (completed >= 3) {
     message = "💪 You're on fire today — three habits done already!";
   } 
@@ -298,25 +297,19 @@ async function renderCoachMessage() {
     message = "✨ Nice! You completed your first habit of the day.";
   }
 
-  // -----------------------------
   // CATEGORY-SPECIFIC COACHING
-  // -----------------------------
   if (!message && weakestCategory) {
     message = `🎯 Try focusing on your ${weakestCategory} habit — a small win there boosts your whole day.`;
   }
 
-  // -----------------------------
   // MISSION-BASED COACHING
-  // -----------------------------
   const missionList = Object.values(missions).filter(Boolean);
   if (!message && missionList.length > 0) {
     const randomMission = missionList[Math.floor(Math.random() * missionList.length)];
     message = `📌 Coach Tip: Try completing this mission today — "${randomMission}".`;
   }
 
-  // -----------------------------
   // BACKEND FALLBACK
-  // -----------------------------
   if (!message) {
     try {
       const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
@@ -325,6 +318,15 @@ async function renderCoachMessage() {
       message = "You're doing great — keep going!";
     }
   }
+
+  // RENDER
+  container.innerHTML = `
+    <h2>Vaultwise Coach</h2>
+    <p>${message}</p>
+  `;
+  container.classList.add("loaded");
+}
+
 // -------------------------------
 // MAIN DASHBOARD RENDER
 // -------------------------------
@@ -332,7 +334,7 @@ async function renderDashboard() {
   await loadXP();           
   await loadMissions();     
   
-    renderHeader();
+  renderHeader();
   renderHabitRings();
   renderHabitCards();
   renderCoachMessage();     
