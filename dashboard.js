@@ -202,6 +202,8 @@ async function completeHabit(category) {
 
   // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
+    saveHabitHistory(habitProgress);
+    saveStreakHistory(streakData?.streak || 0);
 
   // Refresh XP once
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
@@ -211,6 +213,7 @@ async function completeHabit(category) {
 
   // Update XP locally for instant UI
   xpData.xp += 10;
+  saveXPHistory(xpData.xp);
   xpData.log.push({ amount: 10, date: Date.now() });
 
   // Save XP in background
@@ -260,7 +263,8 @@ async function submitThreeQuestionSurvey() {
     answers.push({ id, value });
   });
 
-  await apiPost("https://backend-qkz7.onrender.com/api/survey", { answers });
+  saveSurvey3History(answers);
+ await apiPost("https://backend-qkz7.onrender.com/api/survey", { answers });
 
   document.getElementById("survey-container").innerHTML =
     "<p>Thanks for checking in!</p>";
