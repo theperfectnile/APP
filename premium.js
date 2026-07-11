@@ -15,7 +15,7 @@ async function requirePro() {
   const user = await res.json();
 
   // ⭐ YOUR EMAIL — full unlock for developer
-  if (user.email === "seand667@@gmail.com") {
+  if (user.email === "seand667@gmail.com") {
     console.log("🔓 Developer bypass active — premium unlocked.");
     return; // Skip subscription checks
   }
