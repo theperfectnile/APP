@@ -4,27 +4,12 @@
 // Finance • Exercise • Cleaning • Cooking • Lifestyle
 // Dark Mode • Habit Rings • Daily Missions • Coach
 // ===============================
-// 🔒 Subscription Gate — Step 5
+// 🔓 Dashboard unlocked for all users (temporary)
 async function checkSubscription() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return window.location.href = "login.html";
-  }
-
-  const res = await fetch("https://backend-qkz7.onrender.com/api/auth/user", {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
-  const user = await res.json();
-
-  // If user is NOT Pro → redirect to subscribe page
-  if (user.subscription !== "pro") {
-    window.location.href = "subscribe.html";
-  }
+  console.log("🔓 Dashboard unlocked for testing.");
+  return; // Skip all subscription checks
 }
 
-// Run subscription check BEFORE anything else
-checkSubscription();
 // -------------------------------
 // GLOBAL STATE
 // -------------------------------
