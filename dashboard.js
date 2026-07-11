@@ -147,8 +147,15 @@ async function loadUserInfo() {
 
 // XP
 async function loadXP() {
+  // Free users: disable XP system
+  if (userInfo.subscription !== "pro") {
+    xpData = { xp: 0, log: [] };
+    return;
+  }
+
+  // Pro users: load XP normally
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-  // SAFETY FIX — always ensure log exists
+
   if (!xpData.log || !Array.isArray(xpData.log)) {
     xpData.log = [];
   }
@@ -166,6 +173,12 @@ async function loadMood() {
 
 // FINANCE SUMMARY
 async function loadFinanceSummary() {
+  // Free users: disable finance summary
+  if (userInfo.subscription !== "pro") {
+    financeSummary = null;
+    return;
+  }
+
   financeSummary = await apiGet("https://backend-qkz7.onrender.com/api/finance/summary");
 }
 
@@ -192,11 +205,21 @@ function generateDailyMissions() {
 // HABIT RINGS (SYSTEM A)
 // -------------------------------
 async function loadMissions() {
+  // Free users: disable missions
+  if (userInfo.subscription !== "pro") {
+    dailyMissions = {
+      finance: "Upgrade to Pro",
+      exercise: "Upgrade to Pro",
+      cleaning: "Upgrade to Pro",
+      cooking: "Upgrade to Pro",
+      lifestyle: "Upgrade to Pro"
+    };
+    return;
+  }
+
+  // Pro users: load missions normally
   const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
 
-  const categories = ["finance", "exercise", "cleaning", "cooking", "lifestyle"];
-
-  // Map first 5 missions to your 5 categories
   dailyMissions = {
     finance: res.missions[0] || "No mission",
     exercise: res.missions[1] || "No mission",
@@ -205,11 +228,16 @@ async function loadMissions() {
     lifestyle: res.missions[4] || "No mission"
   };
 }
-
 function renderHabitRings() {
-  const container = document.getElementById("habit-rings");
-  container.innerHTML = "";
+ const container = document.getElementById("habit-rings");
 
+// Free users: lock habit rings
+if (userInfo.subscription !== "pro") {
+  container.innerHTML = "<p>Upgrade to Pro to unlock Habit Rings.</p>";
+  return;
+}
+
+container.innerHTML = "";
   Object.keys(habitProgress).forEach(cat => {
     const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefined
 
@@ -233,8 +261,14 @@ function renderHabitRings() {
 // -------------------------------
 function renderHabitCards() {
   const container = document.getElementById("habit-cards");
-  container.innerHTML = "";
 
+  // Free users: lock habit cards
+  if (userInfo.subscription !== "pro") {
+    container.innerHTML = "<p>Upgrade to Pro to unlock Daily Missions.</p>";
+    return;
+  }
+
+  container.innerHTML = "";
   Object.keys(dailyMissions).forEach(cat => {
     container.innerHTML += `
       <div class="habit-card">
@@ -252,6 +286,11 @@ function renderHabitCards() {
 // COMPLETE HABIT ACTION
 // -------------------------------
 async function completeHabit(category) {
+  // Free users cannot complete habits
+  if (userInfo.subscription !== "pro") {
+    alert("Upgrade to Pro to complete habits.");
+    return;
+  }
   // Highlight card animation
   const cards = document.querySelectorAll(".habit-card");
   cards.forEach(card => {
@@ -316,6 +355,11 @@ async function loadThreeQuestionSurvey() {
 
 function renderThreeQuestionSurvey(questions) {
   const container = document.getElementById("survey-container");
+   // Free users: lock survey
+  if (userInfo.subscription !== "pro") {
+    container.innerHTML = "<p>Upgrade to Pro to unlock Daily Check‑In.</p>";
+    return;
+  }
   container.innerHTML = `
     <h2>Daily Check‑In</h2>
     ${questions
@@ -384,6 +428,11 @@ function showLevelUp() {
 // -------------------------------
 async function renderCoachMessage() {
   const container = document.getElementById("coach");
+  // Free users: lock coach
+  if (userInfo.subscription !== "pro") {
+    container.innerHTML = "<p>Upgrade to Pro to unlock Vaultwise Coach.</p>";
+    return;
+  }
 
   const xp = xpData?.xp || 0;
   const level = Math.floor(xp / 100) + 1;
