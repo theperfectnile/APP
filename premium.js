@@ -1,26 +1,27 @@
-// ===============================
-// PREMIUM.JS — GLOBAL SUBSCRIPTION CHECKER
-// Enforces backend subscription status
-// ===============================
-
+// ⭐ Developer Bypass — YOU get full access
 async function requirePro() {
   const token = localStorage.getItem("token");
 
-  // If no token → user is not logged in
+  // If no token, user is not logged in → redirect
   if (!token) {
-    window.location.href = "login.html";
-    return;
+    return window.location.href = "login.html";
   }
 
-  // Fetch user info from backend
+  // Fetch user info
   const res = await fetch("https://backend-qkz7.onrender.com/api/auth/user", {
     headers: { Authorization: `Bearer ${token}` }
   });
 
   const user = await res.json();
 
-  // If user is NOT Pro → redirect to subscribe page
+  // ⭐ YOUR EMAIL — full unlock for developer
+  if (user.email === "seand667@@gmail.com") {
+    console.log("🔓 Developer bypass active — premium unlocked.");
+    return; // Skip subscription checks
+  }
+
+  // ⭐ Normal premium enforcement for all other users
   if (user.subscription !== "pro") {
-    window.location.href = "subscribe.html";
+    return window.location.href = "subscribe.html";
   }
 }
