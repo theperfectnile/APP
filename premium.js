@@ -1,3 +1,20 @@
+// ⭐ GLOBAL DEVELOPER OVERRIDE — runs BEFORE dashboard.js
+(function() {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  fetch("https://backend-qkz7.onrender.com/api/auth/user", {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .then(res => res.json())
+    .then(user => {
+      if (user.email === "theperfectnile@gmail.com") {
+        console.log("🔓 GLOBAL DEV OVERRIDE — forced PRO");
+        window.userInfo = user;
+        window.userInfo.subscription = "pro"; // override BEFORE dashboard loads
+      }
+    });
+})();
 // ⭐ Developer bypass — force PRO for your account
 async function requirePro() {
   const token = localStorage.getItem("token");
