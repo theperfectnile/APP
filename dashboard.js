@@ -4,6 +4,14 @@
 // Finance • Exercise • Cleaning • Cooking • Lifestyle
 // Dark Mode • Habit Rings • Daily Missions • Coach
 // ===============================
+// 🔓 Developer bypass — force PRO inside dashboard.js
+document.addEventListener("DOMContentLoaded", () => {
+  if (!window.userInfo) window.userInfo = {};
+  window.userInfo.email = "seand667@gmail.com";
+  window.userInfo.subscription = "pro";
+  window.userInfo.subscriptionStatus = "active";
+  console.log("🔓 Developer override applied inside dashboard.js");
+});
 // 🔓 Dashboard unlocked for all users (temporary)
 async function checkSubscription() {
   console.log("🔓 Dashboard unlocked for testing.");
