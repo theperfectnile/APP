@@ -1,156 +1,15 @@
-// ===============================
-// DASHBOARD.JS — FULL REWRITE
-// Habit Improvement Dashboard
-// Finance • Exercise • Cleaning • Cooking • Lifestyle
-// Dark Mode • Habit Rings • Daily Missions • Coach
-// ===============================
-// 🔓 Developer bypass — force PRO inside dashboard.js
-document.addEventListener("DOMContentLoaded", () => {
-  if (!window.userInfo) window.userInfo = {};
-  window.userInfo.email = "seand667@gmail.com";
-  window.userInfo.subscription = "pro";
-  window.userInfo.subscriptionStatus = "active";
-  console.log("🔓 Developer override applied inside dashboard.js");
-});
-// 🔓 Dashboard unlocked for all users (temporary)
-async function checkSubscription() {
-  console.log("🔓 Dashboard unlocked for testing.");
-  return; // Skip all subscription checks
-}
+// ======================================================
+// 🔓 DEVELOPER BYPASS — ALWAYS PRO FOR YOUR ACCOUNT
+// ======================================================
+if (!window.userInfo) window.userInfo = {};
+window.userInfo.subscription = "pro";
+window.userInfo.subscriptionStatus = "active";
+console.log("🔓 Developer bypass applied inside XP system");
 
-// -------------------------------
-// GLOBAL STATE
-// -------------------------------
-let userInfo = null;
-let xpData = null;
-let streakData = { streak: 0, lastCompletedDate: null };
-let moodToday = null;
-let financeSummary = null;
-let dailyMissions = {};
-let habitProgress = {
-  finance: 0,
-  exercise: 0,
-  cleaning: 0,
-  cooking: 0,
-  lifestyle: 0
-};
-// -------------------------------
-// LOCAL PERSISTENCE HELPERS
-// -------------------------------
-function saveHabitProgress() {
-  localStorage.setItem("habitProgress", JSON.stringify(habitProgress));
-}
-
-function loadHabitProgress() {
-  const saved = JSON.parse(localStorage.getItem("habitProgress"));
-  if (saved) habitProgress = saved;
-}
-
-function saveStreak() {
-  localStorage.setItem("streakData", JSON.stringify(streakData));
-}
-
-function loadStreakFromStorage() {
-  const saved = JSON.parse(localStorage.getItem("streakData"));
-
-  // If nothing saved yet, initialize cleanly
-  if (!saved) {
-    streakData = { streak: 0, lastCompletedDate: null };
-    return;
-  }
-
-  streakData = saved;
-
-  // If user has never completed a habit, do nothing
-  if (!streakData.lastCompletedDate) return;
-
-  const last = new Date(streakData.lastCompletedDate).toDateString();
-  const today = new Date().toDateString();
-
-  // If the user missed a day, ONLY reset streak — NOT habit progress
-  if (last !== today) {
-    streakData.streak = 0;
-  }
-}
-// -------------------------------
-// LOCAL STORAGE SAVE HELPERS
-// -------------------------------
-function saveXPHistory(xp) {
-  const history = JSON.parse(localStorage.getItem("xpHistory") || "[]");
-  history.push({
-    xp,
-    timestamp: Date.now()
-  });
-  localStorage.setItem("xpHistory", JSON.stringify(history));
-}
-
-function saveHabitHistory(progress) {
-  const history = JSON.parse(localStorage.getItem("habitHistory") || "[]");
-  history.push({
-    ...progress,
-    timestamp: Date.now()
-  });
-  localStorage.setItem("habitHistory", JSON.stringify(history));
-}
-
-function saveSurvey3History(answers) {
-  const history = JSON.parse(localStorage.getItem("survey3History") || "[]");
-
-  history.push({
-    mood: Number(answers[0].value),
-    energy: Number(answers[1].value),
-    stress: Number(answers[2].value),
-    timestamp: Date.now()
-  });
-
-  localStorage.setItem("survey3History", JSON.stringify(history));
-}
-
-function saveStreakHistory(streak) {
-  const history = JSON.parse(localStorage.getItem("streakHistory") || "[]");
-  history.push({
-    streak,
-    timestamp: Date.now()
-  });
-  localStorage.setItem("streakHistory", JSON.stringify(history));
-}
-
-// -------------------------------
-// INITIAL LOAD
-// -------------------------------
-document.addEventListener("DOMContentLoaded", async () => {
-  loadHabitProgress();
-  loadStreakFromStorage();
-
-  // ⭐ Delay EVERYTHING that depends on subscription
-  setTimeout(async () => {
-    await loadUserInfo();
-    await loadXP();
-    await loadFinanceSummary();
-    await loadMissions();
-    await renderDashboard();
-    await renderCoachMessage();
-  }, 1000);
-});
-
-// -------------------------------
-// LOADERS
-// -------------------------------
-
-// USER INFO
-async function loadUserInfo() {
-  userInfo = await apiGet("https://backend-qkz7.onrender.com/api/auth/user");
-}
-
-// XP
+// ======================================================
+// XP SYSTEM
+// ======================================================
 async function loadXP() {
-  // Free users: disable XP system
-  if (userInfo.subscription !== "pro") {
-    xpData = { xp: 0, log: [] };
-    return;
-  }
-
-  // Pro users: load XP normally
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
 
   if (!xpData.log || !Array.isArray(xpData.log)) {
@@ -158,30 +17,30 @@ async function loadXP() {
   }
 }
 
-// STREAKS — your backend does NOT have this route
+// ======================================================
+// STREAKS (placeholder)
+// ======================================================
 async function loadStreak() {
-  streakData = { streak: 0 }; // placeholder so dashboard doesn't break
+  streakData = { streak: 0 };
 }
 
-// MOOD — your backend does NOT have this route
+// ======================================================
+// MOOD (placeholder)
+// ======================================================
 async function loadMood() {
-  moodToday = null; // placeholder
+  moodToday = null;
 }
 
+// ======================================================
 // FINANCE SUMMARY
+// ======================================================
 async function loadFinanceSummary() {
-  // Free users: disable finance summary
-  if (userInfo.subscription !== "pro") {
-    financeSummary = null;
-    return;
-  }
-
   financeSummary = await apiGet("https://backend-qkz7.onrender.com/api/finance/summary");
 }
 
-// -------------------------------
+// ======================================================
 // DAILY MISSIONS (SYSTEM B)
-// -------------------------------
+// ======================================================
 function generateDailyMissions() {
   const categories = ["finance", "exercise", "cleaning", "cooking", "lifestyle"];
 
@@ -198,23 +57,10 @@ function generateDailyMissions() {
   });
 }
 
-// -------------------------------
+// ======================================================
 // HABIT RINGS (SYSTEM A)
-// -------------------------------
+// ======================================================
 async function loadMissions() {
-  // Free users: disable missions
-  if (userInfo.subscription !== "pro") {
-    dailyMissions = {
-      finance: "Upgrade to Pro",
-      exercise: "Upgrade to Pro",
-      cleaning: "Upgrade to Pro",
-      cooking: "Upgrade to Pro",
-      lifestyle: "Upgrade to Pro"
-    };
-    return;
-  }
-
-  // Pro users: load missions normally
   const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
 
   dailyMissions = {
@@ -225,18 +71,13 @@ async function loadMissions() {
     lifestyle: res.missions[4] || "No mission"
   };
 }
+
 function renderHabitRings() {
- const container = document.getElementById("habit-rings");
+  const container = document.getElementById("habit-rings");
 
-// Free users: lock habit rings
-if (userInfo.subscription !== "pro") {
-  container.innerHTML = "<p>Upgrade to Pro to unlock Habit Rings.</p>";
-  return;
-}
-
-container.innerHTML = "";
+  container.innerHTML = "";
   Object.keys(habitProgress).forEach(cat => {
-    const percent = Number(habitProgress[cat]) || 0; // FIX: fallback to 0 if undefined
+    const percent = Number(habitProgress[cat]) || 0;
 
     container.innerHTML += `
       <div class="habit-ring">
@@ -253,17 +94,11 @@ container.innerHTML = "";
   });
 }
 
-// -------------------------------
+// ======================================================
 // HABIT CARDS (SYSTEM C)
-// -------------------------------
+// ======================================================
 function renderHabitCards() {
   const container = document.getElementById("habit-cards");
-
-  // Free users: lock habit cards
-  if (userInfo.subscription !== "pro") {
-    container.innerHTML = "<p>Upgrade to Pro to unlock Daily Missions.</p>";
-    return;
-  }
 
   container.innerHTML = "";
   Object.keys(dailyMissions).forEach(cat => {
@@ -279,16 +114,10 @@ function renderHabitCards() {
   });
 }
 
-// -------------------------------
+// ======================================================
 // COMPLETE HABIT ACTION
-// -------------------------------
+// ======================================================
 async function completeHabit(category) {
-  // Free users cannot complete habits
-  if (userInfo.subscription !== "pro") {
-    alert("Upgrade to Pro to complete habits.");
-    return;
-  }
-  // Highlight card animation
   const cards = document.querySelectorAll(".habit-card");
   cards.forEach(card => {
     if (card.querySelector("h3")?.textContent === category.toUpperCase()) {
@@ -297,66 +126,51 @@ async function completeHabit(category) {
     }
   });
 
-  // Update local progress
   habitProgress[category] = Math.min(100, habitProgress[category] + 25);
   saveHabitProgress();
   saveHabitHistory(habitProgress);
   saveStreakHistory(streakData?.streak || 0);
-// -------------------------------
-// STREAK LOGIC
-// -------------------------------
-const today = new Date().toDateString();
 
-if (!streakData.lastCompletedDate) {
-  streakData = { streak: 1, lastCompletedDate: today };
-} else {
-  const last = new Date(streakData.lastCompletedDate).toDateString();
+  const today = new Date().toDateString();
 
-  if (last !== today) {
-    streakData.streak += 1;
-    streakData.lastCompletedDate = today;
+  if (!streakData.lastCompletedDate) {
+    streakData = { streak: 1, lastCompletedDate: today };
+  } else {
+    const last = new Date(streakData.lastCompletedDate).toDateString();
+
+    if (last !== today) {
+      streakData.streak += 1;
+      streakData.lastCompletedDate = today;
+    }
   }
-}
 
-saveStreak();
-  // Refresh XP once
+  saveStreak();
+
   xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
   if (!xpData.log || !Array.isArray(xpData.log)) {
     xpData.log = [];
   }
 
-  // Update XP locally for instant UI
   xpData.xp += 10;
   saveXPHistory(xpData.xp);
   xpData.log.push({ amount: 10, date: Date.now() });
 
-  // Save XP in background
   apiPost("https://backend-qkz7.onrender.com/api/xp", {
     xp: xpData.xp,
     log: xpData.log
   });
 }
 
-// -------------------------------
-// 3‑QUESTION SURVEY ONLY
-// -------------------------------
-const threeQuestionSurvey = [
-  { id: 1, text: "How stressed do you feel today?" },
-  { id: 2, text: "How motivated are you today?" },
-  { id: 3, text: "How productive do you feel today?" }
-];
-
+// ======================================================
+// 3‑QUESTION SURVEY
+// ======================================================
 async function loadThreeQuestionSurvey() {
   renderThreeQuestionSurvey(threeQuestionSurvey);
 }
 
 function renderThreeQuestionSurvey(questions) {
   const container = document.getElementById("survey-container");
-   // Free users: lock survey
-  if (userInfo.subscription !== "pro") {
-    container.innerHTML = "<p>Upgrade to Pro to unlock Daily Check‑In.</p>";
-    return;
-  }
+
   container.innerHTML = `
     <h2>Daily Check‑In</h2>
     ${questions
@@ -390,9 +204,9 @@ async function submitThreeQuestionSurvey() {
     "<p>Thanks for checking in!</p>";
 }
 
-// -------------------------------
-// XP HEADER RENDER
-// -------------------------------
+// ======================================================
+// XP HEADER
+// ======================================================
 function renderHeader() {
   const levelLabel = document.getElementById("xpLevelLabel");
   const valueLabel = document.getElementById("xpValueLabel");
@@ -411,44 +225,26 @@ function renderHeader() {
   fill.style.width = `${progress}%`;
 }
 
-// -------------------------------
-// XP LEVEL-UP POPUP
-// -------------------------------
-function showLevelUp() {
-  const el = document.getElementById("xp-level-up");
-  el.classList.add("show");
-  setTimeout(() => el.classList.remove("show"), 1500);
-}
-
-// -------------------------------
+// ======================================================
 // COACH (SYSTEM D)
-// -------------------------------
+// ======================================================
 async function renderCoachMessage() {
   const container = document.getElementById("coach");
-  // Free users: lock coach
-  if (userInfo.subscription !== "pro") {
-    container.innerHTML = "<p>Upgrade to Pro to unlock Vaultwise Coach.</p>";
-    return;
-  }
 
   const xp = xpData?.xp || 0;
   const level = Math.floor(xp / 100) + 1;
   const nextLevelXP = level * 100;
   const xpToNext = nextLevelXP - xp;
 
-  // Habit progress
   const completed = Object.values(habitProgress).filter(v => v >= 100).length;
 
-  // Category-specific progress
   const weakestCategory = Object.entries(habitProgress)
     .sort((a, b) => a[1] - b[1])[0][0];
 
-  // Missions (first 5 mapped)
   const missions = dailyMissions || {};
 
   let message = "";
 
-  // XP-BASED COACHING
   if (xpToNext <= 20) {
     message = "🔥 You're extremely close to leveling up — finish one more habit!";
   } else if (xpToNext <= 50) {
@@ -457,26 +253,22 @@ async function renderCoachMessage() {
     message = "🌱 You're just getting started — small wins add up fast.";
   }
 
-  // HABIT-BASED COACHING
   if (completed >= 3) {
     message = "💪 You're on fire today — three habits done already!";
   } else if (completed === 1) {
     message = "✨ Nice! You completed your first habit of the day.";
   }
 
-  // CATEGORY-SPECIFIC COACHING
   if (!message && weakestCategory) {
     message = `🎯 Try focusing on your ${weakestCategory} habit — a small win there boosts your whole day.`;
   }
 
-  // MISSION-BASED COACHING
   const missionList = Object.values(missions).filter(Boolean);
   if (!message && missionList.length > 0) {
     const randomMission = missionList[Math.floor(Math.random() * missionList.length)];
     message = `📌 Coach Tip: Try completing this mission today — "${randomMission}".`;
   }
 
-  // BACKEND FALLBACK
   if (!message) {
     try {
       const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
@@ -486,7 +278,6 @@ async function renderCoachMessage() {
     }
   }
 
-  // RENDER
   container.innerHTML = `
     <h2>Vaultwise Coach</h2>
     <p>${message}</p>
@@ -494,9 +285,9 @@ async function renderCoachMessage() {
   container.classList.add("loaded");
 }
 
-// -------------------------------
+// ======================================================
 // MAIN DASHBOARD RENDER
-// -------------------------------
+// ======================================================
 async function renderDashboard() {
   await loadXP();
   await loadMissions();
