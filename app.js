@@ -26,6 +26,7 @@ async function apiPost(url, data) {
   });
   return res.json();
 }
+
 // ===============================
 // AUTH HELPERS
 // ===============================
@@ -87,7 +88,7 @@ async function registerUser(email, password) {
 }
 
 // ===============================
-// FINANCE HELPERS (Still Needed)
+// FINANCE HELPERS
 // ===============================
 async function fetchSummary() {
   const token = getToken();
@@ -130,7 +131,29 @@ async function saveEntry() {
 }
 
 // ===============================
-// DASHBOARD INIT (Simplified)
+// ⭐ LOAD USER INFO (Developer bypass applied here)
+// ===============================
+async function loadUserInfo() {
+  const token = getToken();
+  const res = await fetch(`${API}/api/auth/user`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const user = await res.json();
+
+  // ⭐ Developer bypass — your account always loads as PRO
+  if (user.email === "seand667@gmail.com") {
+    user.subscription = "pro";
+    user.subscriptionStatus = "active";
+    console.log("🔓 Developer override applied inside loadUserInfo()");
+  }
+
+  window.userInfo = user;
+  return user;
+}
+
+// ===============================
+// DASHBOARD INIT
 // ===============================
 async function initDashboard() {
   const token = getToken();
@@ -138,6 +161,9 @@ async function initDashboard() {
     window.location.href = "login.html";
     return;
   }
+
+  // Load user info FIRST (with override)
+  await loadUserInfo();
 
   // Finance data still loads for backend support
   try {
@@ -189,7 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await loginUser(email, password);
 
       const token = data.token || data.accessToken || data.jwt;
-
       if (!token) {
         alert(data.message || "Login failed");
         return;
