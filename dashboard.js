@@ -1,11 +1,8 @@
-// ======================================================
-// 🔓 DEVELOPER BYPASS — ALWAYS PRO FOR YOUR ACCOUNT
-// ======================================================
+// 🔓 Developer bypass — force PRO inside dashboard.js
 if (!window.userInfo) window.userInfo = {};
 window.userInfo.subscription = "pro";
 window.userInfo.subscriptionStatus = "active";
-console.log("🔓 Developer bypass applied inside XP system");
-
+console.log("🔓 Developer bypass applied inside dashboard.js");
 // ======================================================
 // XP SYSTEM
 // ======================================================
