@@ -113,12 +113,16 @@ function saveStreakHistory(streak) {
 document.addEventListener("DOMContentLoaded", async () => {
   loadHabitProgress();
   loadStreakFromStorage();
-  await loadUserInfo();
-  await loadXP();
-  await loadFinanceSummary();
-  await loadMissions();
-setTimeout(renderDashboard, 1000); // wait 1 second for premium.js override
-  renderCoachMessage();
+
+  // ⭐ Delay EVERYTHING that depends on subscription
+  setTimeout(async () => {
+    await loadUserInfo();
+    await loadXP();
+    await loadFinanceSummary();
+    await loadMissions();
+    await renderDashboard();
+    await renderCoachMessage();
+  }, 1000);
 });
 
 // -------------------------------
