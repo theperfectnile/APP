@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadXP();
   await loadFinanceSummary();
   await loadMissions();
-setTimeout(renderDashboard, 500);
+setTimeout(renderDashboard, 1000); // wait 1 second for premium.js override
   renderCoachMessage();
 });
 
