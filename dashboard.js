@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadXP();
   await loadFinanceSummary();
   await loadMissions();
-  renderDashboard();
+setTimeout(renderDashboard, 500);
   renderCoachMessage();
 });
 
