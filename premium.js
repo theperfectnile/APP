@@ -15,14 +15,12 @@ if (window.userInfo.email === "seand667@gmail.com") {
   })
     .then(res => res.json())
     .then(user => {
-      if (user.email === "seand667@gmail.com") {
-        console.log("🔓 GLOBAL DEV OVERRIDE — forced PRO");
-        window.userInfo = user;
-        window.userInfo.subscription = "pro"; // override BEFORE dashboard loads
-      }
-    });
-})();
-
+     if (user.email === "seand667@gmail.com") {
+  console.log("🔓 GLOBAL DEV OVERRIDE — forced FREE for Sean");
+  window.userInfo = user;
+  window.userInfo.subscription = "free"; // override BEFORE dashboard loads
+  window.userInfo.subscriptionStatus = "active";
+}
 // ⭐ Developer Bypass — YOU get full access
 async function requirePro() {
   const token = localStorage.getItem("token");
