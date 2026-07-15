@@ -44,7 +44,9 @@ async function requirePro() {
   }
 
   // ⭐ Normal premium enforcement for all other users
-  if (user.subscription !== "pro") {
-    return window.location.href = "subscribe.html";
-  }
-}
+        if (user.subscription !== "pro") {
+          return (window.location.href = "subscribe.html");
+        }
+      }
+    });
+})();
