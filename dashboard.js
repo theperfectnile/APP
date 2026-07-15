@@ -5,11 +5,11 @@ if (window.userInfo.email === "seand667@gmail.com") {
     window.userInfo.subscriptionStatus = "active";
     console.log("🔓 Developer override applied for Sean (forced FREE mode)");
 }
-// 🔓 Developer bypass — force PRO inside dashboard.js
+// 🔓 Developer bypass — force FREE inside dashboard.js
 if (!window.userInfo) window.userInfo = {};
-window.userInfo.subscription = "pro";
+window.userInfo.subscription = "free";
 window.userInfo.subscriptionStatus = "active";
-console.log("🔓 Developer bypass applied inside dashboard.js");
+console.log("🔓 Developer bypass applied inside dashboard.js — forced FREE for Sean");
 // ======================================================
 // XP SYSTEM
 // ======================================================
@@ -288,10 +288,10 @@ async function renderCoachMessage() {
   `;
   container.classList.add("loaded");
 }
-// 🔒 Keep developer override persistent
+// 🔓 Keep developer override persistent — Sean stays FREE
 setInterval(() => {
   if (!window.userInfo) window.userInfo = {};
-  window.userInfo.subscription = "pro";
+  window.userInfo.subscription = "free";
   window.userInfo.subscriptionStatus = "active";
 }, 1000);
 // ======================================================
