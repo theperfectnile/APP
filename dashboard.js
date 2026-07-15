@@ -281,7 +281,12 @@ async function renderCoachMessage() {
   `;
   container.classList.add("loaded");
 }
-
+// 🔒 Keep developer override persistent
+setInterval(() => {
+  if (!window.userInfo) window.userInfo = {};
+  window.userInfo.subscription = "pro";
+  window.userInfo.subscriptionStatus = "active";
+}, 1000);
 // ======================================================
 // MAIN DASHBOARD RENDER
 // ======================================================
