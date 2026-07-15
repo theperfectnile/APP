@@ -150,23 +150,23 @@ async function loadUserInfo() {
 
     const user = await res.json();
 
-    // Developer bypass
-    if (user.email === "seand667@gmail.com") {
-      user.subscription = "pro";
-      user.subscriptionStatus = "active";
-      console.log("🔓 Developer override applied inside loadUserInfo()");
-    }
+   // Developer bypass — Sean always loads as FREE
+if (user.email === "seand667@gmail.com") {
+  user.subscription = "free";
+  user.subscriptionStatus = "active";
+  console.log("🔓 Developer override applied inside loadUserInfo() — forced FREE for Sean");
+}
 
     window.userInfo = user;
   } catch (err) {
     console.warn("Backend unreachable — using developer bypass");
 
-    // ⭐ Fallback: keep your PRO override
-    if (!window.userInfo) window.userInfo = {};
-    window.userInfo.email = "seand667@gmail.com";
-    window.userInfo.subscription = "pro";
-    window.userInfo.subscriptionStatus = "active";
-  }
+    // ⭐ Fallback: keep your FREE override
+if (!window.userInfo) window.userInfo = {};
+window.userInfo.email = "seand667@gmail.com";
+window.userInfo.subscription = "free";
+window.userInfo.subscriptionStatus = "active";
+console.log("🔓 Fallback override — Sean forced FREE");
 }
 
 // ===============================
