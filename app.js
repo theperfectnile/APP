@@ -1,3 +1,10 @@
+if (!window.userInfo) window.userInfo = {};
+
+if (window.userInfo.email === "seand667@gmail.com") {
+    window.userInfo.subscription = "free";
+    window.userInfo.subscriptionStatus = "active";
+    console.log("🔓 Developer override applied for Sean (forced FREE mode)");
+}
 // ===============================
 // CONFIG
 // ===============================
