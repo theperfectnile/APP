@@ -135,21 +135,31 @@ async function saveEntry() {
 // ===============================
 async function loadUserInfo() {
   const token = getToken();
-  const res = await fetch(`${API}/api/auth/user`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
 
-  const user = await res.json();
+  try {
+    const res = await fetch(`${API}/api/auth/user`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-  // ⭐ Developer bypass — your account always loads as PRO
-  if (user.email === "seand667@gmail.com") {
-    user.subscription = "pro";
-    user.subscriptionStatus = "active";
-    console.log("🔓 Developer override applied inside loadUserInfo()");
+    const user = await res.json();
+
+    // Developer bypass
+    if (user.email === "seand667@gmail.com") {
+      user.subscription = "pro";
+      user.subscriptionStatus = "active";
+      console.log("🔓 Developer override applied inside loadUserInfo()");
+    }
+
+    window.userInfo = user;
+  } catch (err) {
+    console.warn("Backend unreachable — using developer bypass");
+
+    // ⭐ Fallback: keep your PRO override
+    if (!window.userInfo) window.userInfo = {};
+    window.userInfo.email = "seand667@gmail.com";
+    window.userInfo.subscription = "pro";
+    window.userInfo.subscriptionStatus = "active";
   }
-
-  window.userInfo = user;
-  return user;
 }
 
 // ===============================
