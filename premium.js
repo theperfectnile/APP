@@ -43,5 +43,9 @@ async function requirePro() {
   // Normal premium enforcement for everyone else
   if (user.subscription !== "pro") {
     return window.location.href = "subscribe.html";
-  }
-}
+        }
+      }
+
+    }); 
+
+})(); 
