@@ -166,9 +166,9 @@ if (!window.userInfo) window.userInfo = {};
 window.userInfo.email = "seand667@gmail.com";
 window.userInfo.subscription = "free";
 window.userInfo.subscriptionStatus = "active";
-console.log("🔓 Fallback override — Sean forced FREE");
-
-
+ console.log("🔓 Fallback override — Sean forced FREE");
+  } 
+}
 // ===============================
 // DASHBOARD INIT
 // ===============================
