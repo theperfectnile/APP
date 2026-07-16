@@ -21,32 +21,27 @@ if (window.userInfo.email === "seand667@gmail.com") {
   window.userInfo.subscription = "free"; // override BEFORE dashboard loads
   window.userInfo.subscriptionStatus = "active";
 }
-// ⭐ Developer Bypass — YOU get full access
 async function requirePro() {
   const token = localStorage.getItem("token");
 
-  // If no token, user is not logged in → redirect
   if (!token) {
     return window.location.href = "login.html";
   }
 
-  // Fetch user info
   const res = await fetch("https://backend-qkz7.onrender.com/api/auth/user", {
     headers: { Authorization: `Bearer ${token}` }
   });
 
   const user = await res.json();
 
-  // ⭐ YOUR EMAIL — full unlock for developer
+  // 🔓 Developer bypass — Sean always unlocked
   if (user.email === "seand667@gmail.com") {
-    console.log("🔓 Developer bypass active — premium unlocked.");
-    return; // Skip subscription checks
+    console.log("🔓 Developer bypass active — Sean forced FREE mode");
+    return; // Skip subscription checks entirely
   }
 
-  // ⭐ Normal premium enforcement for all other users
-        if (user.subscription !== "pro") {
-          return (window.location.href = "subscribe.html");
-        }
-      }
-    });
-})();
+  // Normal premium enforcement for everyone else
+  if (user.subscription !== "pro") {
+    return window.location.href = "subscribe.html";
+  }
+}
