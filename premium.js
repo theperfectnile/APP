@@ -1,3 +1,13 @@
+// 🔓 Developer bypass — Sean always unlocked even in FREE mode
+if (!window.userInfo) window.userInfo = {};
+const DEV_EMAIL = "seand667@gmail.com";
+
+if (window.userInfo.email === DEV_EMAIL) {
+  window.userInfo.subscription = "free";
+  window.userInfo.subscriptionStatus = "active";
+  window.userInfo.isDeveloperBypass = true; // custom flag
+  console.log("🔓 Developer bypass active — Sean unlocked FREE mode");
+}
 // 🔓 GLOBAL DEVELOPER BYPASS — Sean always unlocked everywhere
 if (!window.userInfo) window.userInfo = {};
 
@@ -52,8 +62,9 @@ async function requirePro() {
   }
 
   // Normal premium enforcement for everyone else
-  if (user.subscription !== "pro") {
-        return window.location.href = "subscribe.html";
+ if (!window.userInfo.isDeveloperBypass && window.userInfo.subscription !== "pro") {
+  return window.location.href = "subscribe.html";
+}
       }
     }                                   
 
