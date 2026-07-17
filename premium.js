@@ -1,3 +1,14 @@
+// 🔓 GLOBAL DEVELOPER BYPASS — Sean always unlocked everywhere
+if (!window.userInfo) window.userInfo = {};
+
+window.userInfo.email = window.userInfo.email || "seand667@gmail.com";
+
+if (window.userInfo.email === "seand667@gmail.com") {
+  window.userInfo.subscription = "free";
+  window.userInfo.subscriptionStatus = "active";
+  window.isPremium = true; // <-- THIS is the missing piece
+  console.log("🔓 Global bypass: Sean unlocked on ALL pages");
+}
 if (!window.userInfo) window.userInfo = {};
 
 if (window.userInfo.email === "seand667@gmail.com") {
