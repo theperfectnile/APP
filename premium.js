@@ -6,7 +6,7 @@ window.userInfo.email = window.userInfo.email || "seand667@gmail.com";
 if (window.userInfo.email === "seand667@gmail.com") {
   window.userInfo.subscription = "free";
   window.userInfo.subscriptionStatus = "active";
-  window.isPremium = true; // <-- THIS is the missing piece
+  window.isPremium = true; // 
   console.log("🔓 Global bypass: Sean unlocked on ALL pages");
 }
 if (!window.userInfo) window.userInfo = {};
@@ -47,16 +47,16 @@ async function requirePro() {
 
   // 🔓 Developer bypass — Sean always unlocked
   if (user.email === "seand667@gmail.com") {
-    console.log("🔓 Developer bypass active — Sean forced FREE mode");
-    return; // Skip subscription checks entirely
+    console.log("🔓 Developer bypass active — Sean unlocked everywhere");
+    return; // Skip redirect
   }
 
   // Normal premium enforcement for everyone else
   if (user.subscription !== "pro") {
-    return window.location.href = "subscribe.html";
-        }
+        return window.location.href = "subscribe.html";
       }
+    }                                   
 
-    }); 
+  });                                   
 
-})(); 
+})();    
