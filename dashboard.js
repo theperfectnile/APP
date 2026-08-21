@@ -155,16 +155,17 @@ async function completeHabit(category) {
     xpData.log = [];
   }
 
-  xpData.xp += 10;
-  saveXPHistory(xpData.xp);
-  xpData.log.push({ amount: 10, date: Date.now() });
+ const updatedXP = await apiPost(
+  `${API}/api/xp/award`,
+  {
+    amount: 10,
+    reason: `Completed ${category} habit`
+  }
+);
 
-  apiPost("https://backend-qkz7.onrender.com/api/xp", {
-    xp: xpData.xp,
-    log: xpData.log
-  });
+if (updatedXP?.xp !== undefined) {
+  xpData = updatedXP;
 }
-
 // ======================================================
 // 3‑QUESTION SURVEY
 // ======================================================
