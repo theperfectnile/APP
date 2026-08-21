@@ -2,7 +2,7 @@
 // VAULTWISE PREMIUM / ACCESS CONTROL
 // ======================================================
 
-const API = "https://backend-qkz7.onrender.com";
+const PREMIUM_API = "https://backend-qkz7.onrender.com";
 
 
 // ======================================================
@@ -17,7 +17,7 @@ async function getCurrentUser() {
   }
 
   try {
-    const res = await fetch(`${API}/api/auth/user`, {
+   const res = await fetch(`${PREMIUM_API}/api/auth/user`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
