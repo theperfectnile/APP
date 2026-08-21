@@ -343,3 +343,71 @@ button:active {
   opacity: 1;
   transform: translateY(0);
 }
+/* ======================================================
+   AI CHAT COACH
+====================================================== */
+
+#ai-chat {
+  margin-top: 20px;
+}
+
+#ai-chat-messages {
+  height: 350px;
+  overflow-y: auto;
+  padding: 15px;
+  border: 1px solid #252a30;
+  border-radius: 12px;
+  background: #0d0f12;
+  margin-bottom: 15px;
+}
+
+.ai-message,
+.user-message {
+  max-width: 80%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  line-height: 1.5;
+}
+
+.ai-message {
+  background: #191d22;
+  margin-right: auto;
+}
+
+.user-message {
+  background: #252a30;
+  margin-left: auto;
+}
+
+.ai-message p,
+.user-message p {
+  margin: 6px 0 0;
+}
+
+#ai-chat-form {
+  display: flex;
+  gap: 10px;
+}
+
+#ai-chat-input {
+  flex: 1;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid #30353c;
+  background: #111318;
+  color: white;
+  font-size: 16px;
+}
+
+#ai-chat-input:focus {
+  outline: none;
+  border-color: #555d68;
+}
+
+#ai-chat-form button {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
