@@ -3,7 +3,7 @@
 // Backend-connected habit dashboard
 // ======================================================
 
-const API = "https://backend-qkz7.onrender.com";
+
 
 // ======================================================
 // GLOBAL DASHBOARD STATE
