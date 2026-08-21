@@ -1,73 +1,113 @@
-// 🔓 Developer bypass — Sean always unlocked even in FREE mode
-if (!window.userInfo) window.userInfo = {};
-const DEV_EMAIL = "seand667@gmail.com";
+// ======================================================
+// VAULTWISE PREMIUM / ACCESS CONTROL
+// ======================================================
 
-if (window.userInfo.email === DEV_EMAIL) {
-  window.userInfo.subscription = "free";
-  window.userInfo.subscriptionStatus = "active";
-  window.userInfo.isDeveloperBypass = true; // custom flag
-  console.log("🔓 Developer bypass active — Sean unlocked FREE mode");
-}
-// 🔓 GLOBAL DEVELOPER BYPASS — Sean always unlocked everywhere
-if (!window.userInfo) window.userInfo = {};
+const API = "https://backend-qkz7.onrender.com";
 
-window.userInfo.email = window.userInfo.email || "seand667@gmail.com";
 
-if (window.userInfo.email === "seand667@gmail.com") {
-  window.userInfo.subscription = "free";
-  window.userInfo.subscriptionStatus = "active";
-  window.isPremium = true; // 
-  console.log("🔓 Global bypass: Sean unlocked on ALL pages");
-}
-if (!window.userInfo) window.userInfo = {};
+// ======================================================
+// GET LOGGED-IN USER
+// ======================================================
 
-if (window.userInfo.email === "seand667@gmail.com") {
-    window.userInfo.subscription = "free";
-    window.userInfo.subscriptionStatus = "active";
-    console.log("🔓 Developer override applied for Sean (forced FREE mode)");
-}
-// ⭐ GLOBAL DEVELOPER OVERRIDE — runs BEFORE dashboard.js
-(function() {
-  const token = localStorage.getItem("token");
-  if (!token) return;
-
-  fetch("https://backend-qkz7.onrender.com/api/auth/user", {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .then(res => res.json())
-    .then(user => {
-     if (user.email === "seand667@gmail.com") {
-  console.log("🔓 GLOBAL DEV OVERRIDE — forced FREE for Sean");
-  window.userInfo = user;
-  window.userInfo.subscription = "free"; // override BEFORE dashboard loads
-  window.userInfo.subscriptionStatus = "active";
-}
-async function requirePro() {
+async function getCurrentUser() {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    return window.location.href = "login.html";
+    return null;
   }
 
-  const res = await fetch("https://backend-qkz7.onrender.com/api/auth/user", {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
-  const user = await res.json();
-
-  // 🔓 Developer bypass — Sean always unlocked
-  if (user.email === "seand667@gmail.com") {
-    console.log("🔓 Developer bypass active — Sean unlocked everywhere");
-    return; // Skip redirect
-  }
-
-  // Normal premium enforcement for everyone else
- if (!window.userInfo.isDeveloperBypass && window.userInfo.subscription !== "pro") {
-  return window.location.href = "subscribe.html";
-}
+  try {
+    const res = await fetch(`${API}/api/auth/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    }                                   
+    });
 
-  });                                   
+    if (!res.ok) {
+      return null;
+    }
 
-})();    
+    return await res.json();
+
+  } catch (err) {
+    console.error("GET USER ERROR:", err);
+    return null;
+  }
+}
+
+
+// ======================================================
+// CHECK WHETHER USER IS DEVELOPER
+// ======================================================
+
+function isDeveloper(user) {
+  return user?.email === "seand667@gmail.com";
+}
+
+
+// ======================================================
+// CHECK WHETHER USER HAS PRO ACCESS
+// ======================================================
+
+function hasProAccess(user) {
+
+  // Developer access during development
+  if (isDeveloper(user)) {
+    return true;
+  }
+
+  return (
+    user?.subscription === "pro" &&
+    user?.subscriptionStatus === "active"
+  );
+}
+
+
+// ======================================================
+// REQUIRE PRO
+// ======================================================
+
+async function requirePro() {
+
+  const token = localStorage.getItem("token");
+
+  // Not logged in
+  if (!token) {
+    window.location.href = "login.html";
+    return false;
+  }
+
+  const user = await getCurrentUser();
+
+  // Backend couldn't verify user
+  if (!user) {
+    window.location.href = "login.html";
+    return false;
+  }
+
+  // Developer access
+  if (isDeveloper(user)) {
+    console.log("🔓 Developer access enabled");
+    window.userInfo = user;
+    return true;
+  }
+
+  // Normal Pro access
+  if (hasProAccess(user)) {
+    window.userInfo = user;
+    return true;
+  }
+
+  // Not Pro
+  window.location.href = "subscribe.html";
+  return false;
+}
+
+
+// ======================================================
+// OPTIONAL HELPER
+// ======================================================
+
+function userHasProAccess() {
+  return hasProAccess(window.userInfo);
+}
