@@ -121,50 +121,96 @@ function renderHabitCards() {
 // ======================================================
 // COMPLETE HABIT ACTION
 // ======================================================
+// ======================================================
+// COMPLETE HABIT ACTION
+// ======================================================
 async function completeHabit(category) {
-  const cards = document.querySelectorAll(".habit-card");
-  cards.forEach(card => {
-    if (card.querySelector("h3")?.textContent === category.toUpperCase()) {
-      card.classList.add("completed");
-      setTimeout(() => card.classList.remove("completed"), 600);
+  try {
+    // ----------------------------------------
+    // 1. Basic category validation
+    // ----------------------------------------
+    const validCategories = [
+      "finance",
+      "exercise",
+      "cleaning",
+      "cooking",
+      "lifestyle"
+    ];
+
+    if (!validCategories.includes(category)) {
+      console.error("Invalid habit category:", category);
+      return;
     }
-  });
 
-  habitProgress[category] = Math.min(100, habitProgress[category] + 25);
-  saveHabitProgress();
-  saveHabitHistory(habitProgress);
-  saveStreakHistory(streakData?.streak || 0);
+    // ----------------------------------------
+    // 2. Tell backend the habit was completed
+    // ----------------------------------------
+    const updatedHabit = await apiPost(
+      `${API}/api/habits/complete`,
+      {
+        category
+      }
+    );
 
-  const today = new Date().toDateString();
-
-  if (!streakData.lastCompletedDate) {
-    streakData = { streak: 1, lastCompletedDate: today };
-  } else {
-    const last = new Date(streakData.lastCompletedDate).toDateString();
-
-    if (last !== today) {
-      streakData.streak += 1;
-      streakData.lastCompletedDate = today;
+    if (!updatedHabit || !updatedHabit.progress) {
+      alert("Unable to save habit progress.");
+      return;
     }
+
+    // ----------------------------------------
+    // 3. Update dashboard with backend data
+    // ----------------------------------------
+    habitProgress = updatedHabit.progress;
+
+    // ----------------------------------------
+    // 4. Visual completion animation
+    // ----------------------------------------
+    const cards = document.querySelectorAll(".habit-card");
+
+    cards.forEach(card => {
+      if (
+        card.querySelector("h3")?.textContent ===
+        category.toUpperCase()
+      ) {
+        card.classList.add("completed");
+
+        setTimeout(() => {
+          card.classList.remove("completed");
+        }, 600);
+      }
+    });
+
+    // ----------------------------------------
+    // 5. Award XP through backend
+    // ----------------------------------------
+    const updatedXP = await apiPost(
+      `${API}/api/xp/award`,
+      {
+        amount: 10,
+        reason: `Completed ${category} habit`
+      }
+    );
+
+    if (updatedXP?.xp !== undefined) {
+      xpData = updatedXP;
+    }
+
+    // ----------------------------------------
+    // 6. Refresh dashboard
+    // ----------------------------------------
+    renderHabitRings();
+    renderHabitCards();
+    renderHeader();
+    renderCoachMessage();
+
+    console.log(
+      `✅ ${category} habit completed`
+    );
+
+  } catch (err) {
+    console.error("COMPLETE HABIT ERROR:", err);
+    alert("Something went wrong saving your habit.");
   }
-
-  saveStreak();
-
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
-  if (!xpData.log || !Array.isArray(xpData.log)) {
-    xpData.log = [];
-  }
-
- const updatedXP = await apiPost(
-  `${API}/api/xp/award`,
-  {
-    amount: 10,
-    reason: `Completed ${category} habit`
-  }
-);
-
-if (updatedXP?.xp !== undefined) {
-  xpData = updatedXP;
 }
 // ======================================================
 // 3‑QUESTION SURVEY
