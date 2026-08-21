@@ -1,3 +1,5 @@
+const API = "https://backend-qkz7.onrender.com";
+
 if (!window.userInfo) window.userInfo = {};
 
 if (window.userInfo.email === "seand667@gmail.com") {
