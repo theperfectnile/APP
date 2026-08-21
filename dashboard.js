@@ -1,136 +1,301 @@
+// ======================================================
+// DASHBOARD.JS
+// Backend-connected habit dashboard
+// ======================================================
+
 const API = "https://backend-qkz7.onrender.com";
 
-if (!window.userInfo) window.userInfo = {};
+// ======================================================
+// GLOBAL DASHBOARD STATE
+// ======================================================
 
-if (window.userInfo.email === "seand667@gmail.com") {
-    window.userInfo.subscription = "free";
-    window.userInfo.subscriptionStatus = "active";
-    console.log("🔓 Developer override applied for Sean (forced FREE mode)");
-}
-// 🔓 Developer bypass — force FREE inside dashboard.js
-if (!window.userInfo) window.userInfo = {};
-window.userInfo.subscription = "free";
-window.userInfo.subscriptionStatus = "active";
-console.log("🔓 Developer bypass applied inside dashboard.js — forced FREE for Sean");
+let xpData = {
+  xp: 0,
+  log: []
+};
+
+let habitProgress = {
+  finance: 0,
+  exercise: 0,
+  cleaning: 0,
+  cooking: 0,
+  lifestyle: 0
+};
+
+let dailyMissions = {};
+
+let streakData = {
+  streak: 0,
+  lastCompletedDate: null
+};
+
+let moodToday = null;
+
+let financeSummary = null;
+
+const threeQuestionSurvey = [
+  {
+    id: "mood",
+    text: "How is your mood today?"
+  },
+  {
+    id: "energy",
+    text: "How is your energy today?"
+  },
+  {
+    id: "stress",
+    text: "How stressed do you feel today?"
+  }
+];
+
+
 // ======================================================
-// XP SYSTEM
+// LOAD XP FROM BACKEND
 // ======================================================
+
 async function loadXP() {
-  xpData = await apiGet("https://backend-qkz7.onrender.com/api/xp");
+  try {
+    const data = await apiGet(`${API}/api/xp`);
 
-  if (!xpData.log || !Array.isArray(xpData.log)) {
-    xpData.log = [];
+    if (data && typeof data.xp === "number") {
+      xpData = data;
+    } else {
+      xpData = {
+        xp: 0,
+        log: []
+      };
+    }
+
+    if (!Array.isArray(xpData.log)) {
+      xpData.log = [];
+    }
+
+  } catch (err) {
+    console.error("LOAD XP ERROR:", err);
+
+    xpData = {
+      xp: 0,
+      log: []
+    };
   }
 }
 
-// ======================================================
-// STREAKS (placeholder)
-// ======================================================
-async function loadStreak() {
-  streakData = { streak: 0 };
-}
 
 // ======================================================
-// MOOD (placeholder)
+// LOAD HABITS FROM BACKEND
 // ======================================================
+
+async function loadHabits() {
+  try {
+    const data = await apiGet(`${API}/api/habits`);
+
+    if (data && data.progress) {
+      habitProgress = {
+        finance: Number(data.progress.finance) || 0,
+        exercise: Number(data.progress.exercise) || 0,
+        cleaning: Number(data.progress.cleaning) || 0,
+        cooking: Number(data.progress.cooking) || 0,
+        lifestyle: Number(data.progress.lifestyle) || 0
+      };
+    }
+
+  } catch (err) {
+    console.error("LOAD HABITS ERROR:", err);
+  }
+}
+
+
+// ======================================================
+// STREAK
+// ======================================================
+
+async function loadStreak() {
+  // Temporary until streaks are moved completely
+  // into the backend.
+  streakData = {
+    streak: 0,
+    lastCompletedDate: null
+  };
+}
+
+
+// ======================================================
+// MOOD
+// ======================================================
+
 async function loadMood() {
   moodToday = null;
 }
 
+
 // ======================================================
 // FINANCE SUMMARY
 // ======================================================
+
 async function loadFinanceSummary() {
-  financeSummary = await apiGet("https://backend-qkz7.onrender.com/api/finance/summary");
+  try {
+    financeSummary = await apiGet(
+      `${API}/api/finance/summary`
+    );
+  } catch (err) {
+    console.error("FINANCE SUMMARY ERROR:", err);
+  }
 }
 
-// ======================================================
-// DAILY MISSIONS (SYSTEM B)
-// ======================================================
-function generateDailyMissions() {
-  const categories = ["finance", "exercise", "cleaning", "cooking", "lifestyle"];
-
-  const missionTemplates = {
-    finance: ["Review one transaction", "Add an expense", "Check your budget"],
-    exercise: ["Walk 10 minutes", "Stretch 5 minutes", "Do 10 pushups"],
-    cleaning: ["Clean one surface", "5‑minute tidy", "Organize one item"],
-    cooking: ["Cook one meal", "Prep ingredients", "Try a new recipe"],
-    lifestyle: ["Drink water", "Plan tomorrow", "Read 5 minutes"]
-  };
-
-  categories.forEach(cat => {
-    dailyMissions[cat] = missionTemplates[cat][Math.floor(Math.random() * missionTemplates[cat].length)];
-  });
-}
 
 // ======================================================
-// HABIT RINGS (SYSTEM A)
+// LOAD DAILY MISSIONS
 // ======================================================
+
 async function loadMissions() {
-  const res = await apiGet("https://backend-qkz7.onrender.com/api/missions/get");
+  try {
+    const res = await apiGet(
+      `${API}/api/missions/get`
+    );
 
-  dailyMissions = {
-    finance: res.missions[0] || "No mission",
-    exercise: res.missions[1] || "No mission",
-    cleaning: res.missions[2] || "No mission",
-    cooking: res.missions[3] || "No mission",
-    lifestyle: res.missions[4] || "No mission"
-  };
+    const missions = Array.isArray(res?.missions)
+      ? res.missions
+      : [];
+
+    dailyMissions = {
+      finance: missions[0] || "Review one transaction",
+      exercise: missions[1] || "Walk 10 minutes",
+      cleaning: missions[2] || "Clean one surface",
+      cooking: missions[3] || "Cook one meal",
+      lifestyle: missions[4] || "Plan tomorrow"
+    };
+
+  } catch (err) {
+    console.error("LOAD MISSIONS ERROR:", err);
+
+    dailyMissions = {
+      finance: "Review one transaction",
+      exercise: "Walk 10 minutes",
+      cleaning: "Clean one surface",
+      cooking: "Cook one meal",
+      lifestyle: "Plan tomorrow"
+    };
+  }
 }
+
+
+// ======================================================
+// HABIT RINGS
+// ======================================================
 
 function renderHabitRings() {
-  const container = document.getElementById("habit-rings");
+  const container =
+    document.getElementById("habit-rings");
+
+  if (!container) {
+    console.warn("habit-rings element not found.");
+    return;
+  }
 
   container.innerHTML = "";
-  Object.keys(habitProgress).forEach(cat => {
-    const percent = Number(habitProgress[cat]) || 0;
+
+  Object.keys(habitProgress).forEach(category => {
+
+    const percent =
+      Number(habitProgress[category]) || 0;
 
     container.innerHTML += `
       <div class="habit-ring">
-        <svg class="ring" width="120" height="120">
-          <circle class="bg" cx="60" cy="60" r="50"></circle>
-          <circle class="progress" cx="60" cy="60" r="50"
-            style="stroke-dashoffset:${314 - (314 * percent) / 100}">
+
+        <svg class="ring"
+             width="120"
+             height="120"
+             viewBox="0 0 120 120">
+
+          <circle
+            class="bg"
+            cx="60"
+            cy="60"
+            r="50">
           </circle>
+
+          <circle
+            class="progress"
+            cx="60"
+            cy="60"
+            r="50"
+            style="
+              stroke-dashoffset:
+              ${314 - (314 * percent) / 100};
+            ">
+          </circle>
+
         </svg>
-        <div class="habit-label">${cat.toUpperCase()}</div>
-        <div class="habit-percent">${percent}%</div>
+
+        <div class="habit-label">
+          ${category.toUpperCase()}
+        </div>
+
+        <div class="habit-percent">
+          ${percent}%
+        </div>
+
       </div>
     `;
   });
 }
 
+
 // ======================================================
-// HABIT CARDS (SYSTEM C)
+// HABIT CARDS
 // ======================================================
+
 function renderHabitCards() {
-  const container = document.getElementById("habit-cards");
+  const container =
+    document.getElementById("habit-cards");
+
+  if (!container) {
+    console.warn("habit-cards element not found.");
+    return;
+  }
 
   container.innerHTML = "";
-  Object.keys(dailyMissions).forEach(cat => {
+
+  Object.keys(dailyMissions).forEach(category => {
+
     container.innerHTML += `
       <div class="habit-card">
-        <h3>${cat.toUpperCase()}</h3>
-        <p class="mission">Today: ${dailyMissions[cat]}</p>
-        <p class="streak">Streak: ${streakData?.streak || 0} days</p>
-        <p class="xp">XP: ${xpData?.xp || 0}</p>
-        <button onclick="completeHabit('${cat.toLowerCase().trim()}')">Complete</button>
+
+        <h3>
+          ${category.toUpperCase()}
+        </h3>
+
+        <p class="mission">
+          Today: ${dailyMissions[category]}
+        </p>
+
+        <p class="streak">
+          Streak: ${streakData?.streak || 0} days
+        </p>
+
+        <p class="xp">
+          XP: ${xpData?.xp || 0}
+        </p>
+
+        <button
+          onclick="completeHabit('${category}')">
+          Complete
+        </button>
+
       </div>
     `;
   });
 }
 
+
 // ======================================================
-// COMPLETE HABIT ACTION
+// COMPLETE HABIT
 // ======================================================
-// ======================================================
-// COMPLETE HABIT ACTION
-// ======================================================
+
 async function completeHabit(category) {
+
   try {
-    // ----------------------------------------
-    // 1. Basic category validation
-    // ----------------------------------------
+
     const validCategories = [
       "finance",
       "exercise",
@@ -140,13 +305,18 @@ async function completeHabit(category) {
     ];
 
     if (!validCategories.includes(category)) {
-      console.error("Invalid habit category:", category);
+      console.error(
+        "Invalid habit category:",
+        category
+      );
       return;
     }
 
+
     // ----------------------------------------
-    // 2. Tell backend the habit was completed
+    // SAVE HABIT TO BACKEND
     // ----------------------------------------
+
     const updatedHabit = await apiPost(
       `${API}/api/habits/complete`,
       {
@@ -154,200 +324,427 @@ async function completeHabit(category) {
       }
     );
 
-    if (!updatedHabit || !updatedHabit.progress) {
-      alert("Unable to save habit progress.");
+
+    if (!updatedHabit?.progress) {
+
+      alert(
+        "Unable to save habit progress."
+      );
+
       return;
     }
 
-    // ----------------------------------------
-    // 3. Update dashboard with backend data
-    // ----------------------------------------
-    habitProgress = updatedHabit.progress;
 
     // ----------------------------------------
-    // 4. Visual completion animation
+    // UPDATE LOCAL DISPLAY STATE
     // ----------------------------------------
-    const cards = document.querySelectorAll(".habit-card");
+
+    habitProgress = {
+      finance:
+        Number(updatedHabit.progress.finance) || 0,
+
+      exercise:
+        Number(updatedHabit.progress.exercise) || 0,
+
+      cleaning:
+        Number(updatedHabit.progress.cleaning) || 0,
+
+      cooking:
+        Number(updatedHabit.progress.cooking) || 0,
+
+      lifestyle:
+        Number(updatedHabit.progress.lifestyle) || 0
+    };
+
+
+    // ----------------------------------------
+    // ANIMATION
+    // ----------------------------------------
+
+    const cards =
+      document.querySelectorAll(".habit-card");
 
     cards.forEach(card => {
+
+      const heading =
+        card.querySelector("h3");
+
       if (
-        card.querySelector("h3")?.textContent ===
+        heading?.textContent.trim() ===
         category.toUpperCase()
       ) {
+
         card.classList.add("completed");
 
         setTimeout(() => {
           card.classList.remove("completed");
         }, 600);
       }
+
     });
 
+
     // ----------------------------------------
-    // 5. Award XP through backend
+    // AWARD XP THROUGH BACKEND
     // ----------------------------------------
+
     const updatedXP = await apiPost(
       `${API}/api/xp/award`,
       {
         amount: 10,
-        reason: `Completed ${category} habit`
+        reason:
+          `Completed ${category} habit`
       }
     );
 
-    if (updatedXP?.xp !== undefined) {
+
+    if (
+      updatedXP &&
+      typeof updatedXP.xp === "number"
+    ) {
       xpData = updatedXP;
     }
 
+
     // ----------------------------------------
-    // 6. Refresh dashboard
+    // REFRESH UI
     // ----------------------------------------
+
     renderHabitRings();
     renderHabitCards();
     renderHeader();
     renderCoachMessage();
 
     console.log(
-      `✅ ${category} habit completed`
+      `Habit completed: ${category}`
     );
 
   } catch (err) {
-    console.error("COMPLETE HABIT ERROR:", err);
-    alert("Something went wrong saving your habit.");
+
+    console.error(
+      "COMPLETE HABIT ERROR:",
+      err
+    );
+
+    alert(
+      "Something went wrong saving your habit."
+    );
   }
 }
+
+
 // ======================================================
-// 3‑QUESTION SURVEY
+// SURVEY
 // ======================================================
+
 async function loadThreeQuestionSurvey() {
-  renderThreeQuestionSurvey(threeQuestionSurvey);
+  renderThreeQuestionSurvey(
+    threeQuestionSurvey
+  );
 }
 
+
 function renderThreeQuestionSurvey(questions) {
-  const container = document.getElementById("survey-container");
+
+  const container =
+    document.getElementById(
+      "survey-container"
+    );
+
+  if (!container) return;
 
   container.innerHTML = `
-    <h2>Daily Check‑In</h2>
-    ${questions
-      .map(
-        q => `
-        <div class="survey-question">
-          <p>${q.text}</p>
-          <input type="range" min="1" max="5" id="q-${q.id}">
-        </div>
-      `
-      )
-      .join("")}
-    <button onclick="submitThreeQuestionSurvey()">Submit</button>
+    <h2>Daily Check-In</h2>
+
+    ${questions.map(q => `
+
+      <div class="survey-question">
+
+        <p>
+          ${q.text}
+        </p>
+
+        <input
+          type="range"
+          min="1"
+          max="5"
+          value="3"
+          id="q-${q.id}"
+        />
+
+      </div>
+
+    `).join("")}
+
+    <button
+      onclick="submitThreeQuestionSurvey()">
+      Submit
+    </button>
   `;
 }
 
+
 async function submitThreeQuestionSurvey() {
+
   const answers = [];
 
-  document.querySelectorAll(".survey-question").forEach(q => {
-    const id = q.querySelector("input").id.replace("q-", "");
-    const value = q.querySelector("input").value;
-    answers.push({ id, value });
-  });
+  document
+    .querySelectorAll(".survey-question")
+    .forEach(question => {
 
-  saveSurvey3History(answers);
+      const input =
+        question.querySelector("input");
 
-  await apiPost("https://backend-qkz7.onrender.com/api/survey", { answers });
+      const id =
+        input.id.replace("q-", "");
 
-  document.getElementById("survey-container").innerHTML =
-    "<p>Thanks for checking in!</p>";
+      answers.push({
+        id,
+        value: Number(input.value)
+      });
+
+    });
+
+
+  try {
+
+    await apiPost(
+      `${API}/api/survey`,
+      {
+        answers
+      }
+    );
+
+    const container =
+      document.getElementById(
+        "survey-container"
+      );
+
+    if (container) {
+
+      container.innerHTML =
+        "<p>Thanks for checking in!</p>";
+
+    }
+
+  } catch (err) {
+
+    console.error(
+      "SURVEY ERROR:",
+      err
+    );
+
+    alert(
+      "Unable to save your check-in."
+    );
+  }
 }
+
 
 // ======================================================
 // XP HEADER
 // ======================================================
+
 function renderHeader() {
-  const levelLabel = document.getElementById("xpLevelLabel");
-  const valueLabel = document.getElementById("xpValueLabel");
-  const nextLabel = document.getElementById("xpNextLabel");
-  const fill = document.getElementById("xpFill");
 
-  const xp = xpData?.xp || 0;
-  const level = Math.floor(xp / 100) + 1;
-  const nextLevelXP = level * 100;
-  const progress = Math.min(100, (xp / nextLevelXP) * 100);
+  const levelLabel =
+    document.getElementById(
+      "xpLevelLabel"
+    );
 
-  levelLabel.textContent = `Level ${level}`;
-  valueLabel.textContent = `${xp} XP`;
-  nextLabel.textContent = `Next level in ${nextLevelXP - xp} XP`;
+  const valueLabel =
+    document.getElementById(
+      "xpValueLabel"
+    );
 
-  fill.style.width = `${progress}%`;
+  const nextLabel =
+    document.getElementById(
+      "xpNextLabel"
+    );
+
+  const fill =
+    document.getElementById(
+      "xpFill"
+    );
+
+
+  if (
+    !levelLabel ||
+    !valueLabel ||
+    !nextLabel ||
+    !fill
+  ) {
+    return;
+  }
+
+
+  const xp =
+    Number(xpData?.xp) || 0;
+
+
+  const level =
+    Math.floor(xp / 100) + 1;
+
+
+  const nextLevelXP =
+    level * 100;
+
+
+  const progress =
+    Math.min(
+      100,
+      (xp / nextLevelXP) * 100
+    );
+
+
+  levelLabel.textContent =
+    `Level ${level}`;
+
+  valueLabel.textContent =
+    `${xp} XP`;
+
+  nextLabel.textContent =
+    `Next level in ${
+      nextLevelXP - xp
+    } XP`;
+
+  fill.style.width =
+    `${progress}%`;
 }
 
+
 // ======================================================
-// COACH (SYSTEM D)
+// COACH
 // ======================================================
+
 async function renderCoachMessage() {
-  const container = document.getElementById("coach");
 
-  const xp = xpData?.xp || 0;
-  const level = Math.floor(xp / 100) + 1;
-  const nextLevelXP = level * 100;
-  const xpToNext = nextLevelXP - xp;
+  const container =
+    document.getElementById("coach");
 
-  const completed = Object.values(habitProgress).filter(v => v >= 100).length;
+  if (!container) return;
 
-  const weakestCategory = Object.entries(habitProgress)
-    .sort((a, b) => a[1] - b[1])[0][0];
 
-  const missions = dailyMissions || {};
+  const xp =
+    Number(xpData?.xp) || 0;
+
+
+  const level =
+    Math.floor(xp / 100) + 1;
+
+
+  const nextLevelXP =
+    level * 100;
+
+
+  const xpToNext =
+    nextLevelXP - xp;
+
+
+  const completed =
+    Object.values(habitProgress)
+      .filter(
+        value => value >= 100
+      )
+      .length;
+
+
+  const weakestCategory =
+    Object.entries(habitProgress)
+      .sort(
+        (a, b) => a[1] - b[1]
+      )[0]?.[0];
+
 
   let message = "";
 
+
   if (xpToNext <= 20) {
-    message = "🔥 You're extremely close to leveling up — finish one more habit!";
+
+    message =
+      "🔥 You're extremely close to leveling up — finish one more habit!";
+
   } else if (xpToNext <= 50) {
-    message = "⚡ You're making great progress — keep pushing toward the next level.";
+
+    message =
+      "⚡ You're making great progress — keep pushing toward the next level.";
+
   } else if (xp < 100) {
-    message = "🌱 You're just getting started — small wins add up fast.";
+
+    message =
+      "🌱 You're just getting started — small wins add up fast.";
   }
+
 
   if (completed >= 3) {
-    message = "💪 You're on fire today — three habits done already!";
+
+    message =
+      "💪 You're on fire today — three habits done already!";
+
   } else if (completed === 1) {
-    message = "✨ Nice! You completed your first habit of the day.";
+
+    message =
+      "✨ Nice! You completed your first habit of the day.";
   }
+
 
   if (!message && weakestCategory) {
-    message = `🎯 Try focusing on your ${weakestCategory} habit — a small win there boosts your whole day.`;
+
+    message =
+      `🎯 Try focusing on your ${weakestCategory} habit — a small win there boosts your whole day.`;
   }
 
-  const missionList = Object.values(missions).filter(Boolean);
-  if (!message && missionList.length > 0) {
-    const randomMission = missionList[Math.floor(Math.random() * missionList.length)];
-    message = `📌 Coach Tip: Try completing this mission today — "${randomMission}".`;
-  }
 
   if (!message) {
-    try {
-      const coach = await apiGet("https://backend-qkz7.onrender.com/api/coach/message");
-      message = coach.message;
-    } catch {
-      message = "You're doing great — keep going!";
-    }
+
+    message =
+      "📌 Pick one habit and complete it today.";
   }
+
 
   container.innerHTML = `
     <h2>Vaultwise Coach</h2>
     <p>${message}</p>
   `;
+
   container.classList.add("loaded");
 }
-// 🔓 Keep developer override persistent — Sean stays FREE
+
+
 // ======================================================
 // MAIN DASHBOARD RENDER
 // ======================================================
+
 async function renderDashboard() {
+
+  console.log(
+    "🚀 Rendering Vaultwise dashboard..."
+  );
+
+
   await loadXP();
+
+  await loadHabits();
+
   await loadMissions();
 
+  await loadStreak();
+
+  await loadMood();
+
+
   renderHeader();
+
   renderHabitRings();
+
   renderHabitCards();
+
   renderCoachMessage();
+
   loadThreeQuestionSurvey();
+
+
+  console.log(
+    "✅ Vaultwise dashboard rendered"
+  );
 }
