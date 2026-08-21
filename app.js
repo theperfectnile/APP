@@ -174,20 +174,32 @@ window.userInfo.subscriptionStatus = "active";
 // ===============================
 async function initDashboard() {
   const token = getToken();
+
   if (!token) {
     window.location.href = "login.html";
     return;
   }
 
-  // Load user info FIRST (with override)
-  await loadUserInfo();
-
-  // Finance data still loads for backend support
   try {
-    await fetchSummary();
-    await fetchHistory();
+    // Load authenticated user first
+    await loadUserInfo();
+
+    // Load finance data
+    try {
+      await fetchSummary();
+      await fetchHistory();
+    } catch (err) {
+      console.warn("Finance API unavailable.");
+    }
+
+    // ⭐ IMPORTANT:
+    // Actually render the dashboard
+    if (document.body.id === "dashboard") {
+      await renderDashboard();
+    }
+
   } catch (err) {
-    console.warn("Finance API unavailable or not needed on this page.");
+    console.error("DASHBOARD INIT ERROR:", err);
   }
 }
 
