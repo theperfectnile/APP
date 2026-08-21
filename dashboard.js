@@ -338,11 +338,6 @@ async function renderCoachMessage() {
   container.classList.add("loaded");
 }
 // 🔓 Keep developer override persistent — Sean stays FREE
-setInterval(() => {
-  if (!window.userInfo) window.userInfo = {};
-  window.userInfo.subscription = "free";
-  window.userInfo.subscriptionStatus = "active";
-}, 1000);
 // ======================================================
 // MAIN DASHBOARD RENDER
 // ======================================================
