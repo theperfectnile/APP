@@ -1,3 +1,4 @@
+console.log("TOKEN:", localStorage.getItem("token"));
 // ======================================================
 // DASHBOARD.JS
 // Backend-connected habit dashboard
