@@ -55,7 +55,7 @@ const threeQuestionSurvey = [
 
 async function loadXP() {
   try {
-    const data = await apiGet(`${API}/api/xp`);
+    const data = await apiGet(`${DASH_API}/api/xp`);
 
     if (data && typeof data.xp === "number") {
       xpData = data;
@@ -87,7 +87,7 @@ async function loadXP() {
 
 async function loadHabits() {
   try {
-    const data = await apiGet(`${API}/api/habits`);
+    const data = await apiGet(`${DASH_API}/api/habits`);
 
     if (data && data.progress) {
       habitProgress = {
@@ -135,7 +135,7 @@ async function loadMood() {
 async function loadFinanceSummary() {
   try {
     financeSummary = await apiGet(
-      `${API}/api/finance/summary`
+      `${DASH_API}/api/finance/summary`
     );
   } catch (err) {
     console.error("FINANCE SUMMARY ERROR:", err);
@@ -150,7 +150,7 @@ async function loadFinanceSummary() {
 async function loadMissions() {
   try {
     const res = await apiGet(
-      `${API}/api/missions/get`
+      `${DASH_API}/api/missions/get`
     );
 
     const missions = Array.isArray(res?.missions)
@@ -389,7 +389,7 @@ async function completeHabit(category) {
     // ----------------------------------------
 
     const updatedXP = await apiPost(
-      `${API}/api/xp/award`,
+      `${DASH_API}/api/xp/award`,
       {
         amount: 10,
         reason:
@@ -509,7 +509,7 @@ async function submitThreeQuestionSurvey() {
   try {
 
     await apiPost(
-      `${API}/api/survey`,
+      `${DASH_API}/api/survey`,
       {
         answers
       }
