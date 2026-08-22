@@ -8,7 +8,7 @@ if (window.userInfo.email === "seand667@gmail.com") {
 // ===============================
 // CONFIG
 // ===============================
-const API = "https://backend-ongn.onrender.com";
+const APP_API = "https://backend-ongn.onrender.com";
 
 // ===============================
 // GLOBAL API HELPERS
