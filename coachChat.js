@@ -1,4 +1,4 @@
-const API = "https://backend-ongn.onrender.com";
+const CHAT_API = "https://backend-ongn.onrender.com";
 // ======================================================
 // VAULTWISE AI CHAT COACH
 // ======================================================
