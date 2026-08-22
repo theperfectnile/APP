@@ -3,7 +3,7 @@
 // Backend-connected habit dashboard
 // ======================================================
 
-const API = "https://backend-ongn.onrender.com";
+const DASH_API = "https://backend-ongn.onrender.com";
 
 // ======================================================
 // GLOBAL DASHBOARD STATE
