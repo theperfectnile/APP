@@ -52,7 +52,7 @@ const threeQuestionSurvey = [
 // ======================================================
 // LOAD XP FROM BACKEND
 // ======================================================
-const API = "https://backend-ongn.onrender.com";
+
 async function loadXP() {
   try {
     const data = await apiGet(`${API}/api/xp`);
