@@ -55,7 +55,7 @@ async function sendCoachMessage(message) {
   }
 
   const response = await fetch(
-    `${API}/api/coach/chat`,
+    `${CHAT_API}/api/coach/chat`,
     {
       method: "POST",
 
