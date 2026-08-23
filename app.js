@@ -72,7 +72,7 @@ function startTrial() {
 // LOGIN FUNCTION
 // ===============================
 async function loginUser(email, password) {
-  const res = await fetch(`${API}/api/auth/login`, {
+  const res = await fetch(`${APP_API}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
@@ -85,7 +85,7 @@ async function loginUser(email, password) {
 // REGISTER FUNCTION
 // ===============================
 async function registerUser(email, password) {
-  const res = await fetch(`${API}/api/auth/register`, {
+  const res = await fetch(`${APP_API}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
@@ -99,7 +99,7 @@ async function registerUser(email, password) {
 // ===============================
 async function fetchSummary() {
   const token = getToken();
-  const res = await fetch(`${API}/api/finance/summary`, {
+  const res = await fetch(`${APP_API}/api/finance/summary`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.json();
@@ -107,7 +107,7 @@ async function fetchSummary() {
 
 async function fetchHistory() {
   const token = getToken();
-  const res = await fetch(`${API}/api/finance/history`, {
+  const res = await fetch(`${APP_API}/api/finance/history`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.json();
@@ -123,7 +123,7 @@ async function saveEntry() {
     goal: Number(document.getElementById("savingsGoal")?.value || 0)
   };
 
-  const res = await fetch(`${API}/api/finance/add`, {
+  const res = await fetch(`${APP_API}/api/finance/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -144,7 +144,7 @@ async function loadUserInfo() {
   const token = getToken();
 
   try {
-    const res = await fetch(`${API}/api/auth/user`, {
+    const res = await fetch(`${APP_API}/api/auth/user`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
