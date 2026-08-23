@@ -1,10 +1,42 @@
+const DASH_API = "https://backend-ongn.onrender.com";
+
+// GET helper
+async function apiGet(path) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${DASH_API}${path}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return res.json();
+}
+
+// POST helper
+async function apiPost(path, body) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${DASH_API}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(body)
+  });
+
+  return res.json();
+}
+
+console.log("TOKEN:", localStorage.getItem("token"));
 console.log("TOKEN:", localStorage.getItem("token"));
 // ======================================================
 // DASHBOARD.JS
 // Backend-connected habit dashboard
 // ======================================================
 
-const DASH_API = "https://backend-ongn.onrender.com";
+
 
 // ======================================================
 // GLOBAL DASHBOARD STATE
@@ -56,7 +88,7 @@ const threeQuestionSurvey = [
 
 async function loadXP() {
   try {
-    const data = await apiGet(`${DASH_API}/api/xp`);
+    const data = await apiGet("/api/xp");
 
     if (data && typeof data.xp === "number") {
       xpData = data;
@@ -88,7 +120,7 @@ async function loadXP() {
 
 async function loadHabits() {
   try {
-    const data = await apiGet(`${DASH_API}/api/habits`);
+    const data = await apiGet("/api/habits");
 
     if (data && data.progress) {
       habitProgress = {
@@ -135,9 +167,7 @@ async function loadMood() {
 
 async function loadFinanceSummary() {
   try {
-    financeSummary = await apiGet(
-      `${DASH_API}/api/finance/summary`
-    );
+    financeSummary = await apiGet("/api/finance/summary");
   } catch (err) {
     console.error("FINANCE SUMMARY ERROR:", err);
   }
@@ -150,9 +180,7 @@ async function loadFinanceSummary() {
 
 async function loadMissions() {
   try {
-    const res = await apiGet(
-      `${DASH_API}/api/missions/get`
-    );
+    const res = await apiGet("/api/missions/get");
 
     const missions = Array.isArray(res?.missions)
       ? res.missions
@@ -318,8 +346,7 @@ async function completeHabit(category) {
     // SAVE HABIT TO BACKEND
     // ----------------------------------------
 
-    const updatedHabit = await apiPost(
-      `${API}/api/habits/complete`,
+    const updatedHabit = await apiPost("/api/habits/complete",
       {
         category
       }
@@ -389,8 +416,7 @@ async function completeHabit(category) {
     // AWARD XP THROUGH BACKEND
     // ----------------------------------------
 
-    const updatedXP = await apiPost(
-      `${DASH_API}/api/xp/award`,
+    const updatedXP = await apiPost("/api/xp/award",
       {
         amount: 10,
         reason:
@@ -509,8 +535,7 @@ async function submitThreeQuestionSurvey() {
 
   try {
 
-    await apiPost(
-      `${DASH_API}/api/survey`,
+    await apiPost("/api/survey",
       {
         answers
       }
