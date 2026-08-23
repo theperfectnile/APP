@@ -1,41 +1,20 @@
-const DASH_API = "https://backend-ongn.onrender.com";
-
-// GET helper
-async function apiGet(path) {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`${DASH_API}${path}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-
-  return res.json();
-}
-
-// POST helper
-async function apiPost(path, body) {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`${DASH_API}${path}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(body)
-  });
-
-  return res.json();
-}
-
-console.log("TOKEN:", localStorage.getItem("token"));
-console.log("TOKEN:", localStorage.getItem("token"));
 // ======================================================
-// DASHBOARD.JS
-// Backend-connected habit dashboard
+// VAULTWISE DASHBOARD
+// Backend-connected dashboard
 // ======================================================
 
+// IMPORTANT:
+// API requests are handled by apiGet() and apiPost()
+// from app.js.
+//
+// app.js defines:
+// APP_API
+// apiGet()
+// apiPost()
+// getToken()
+// logout()
+//
+// Do NOT declare another const API here.
 
 
 // ======================================================
@@ -55,7 +34,13 @@ let habitProgress = {
   lifestyle: 0
 };
 
-let dailyMissions = {};
+let dailyMissions = {
+  finance: "Loading...",
+  exercise: "Loading...",
+  cleaning: "Loading...",
+  cooking: "Loading...",
+  lifestyle: "Loading..."
+};
 
 let streakData = {
   streak: 0,
@@ -66,6 +51,11 @@ let moodToday = null;
 
 let financeSummary = null;
 
+
+// ======================================================
+// SURVEY QUESTIONS
+// ======================================================
+
 const threeQuestionSurvey = [
   {
     id: "mood",
@@ -73,7 +63,7 @@ const threeQuestionSurvey = [
   },
   {
     id: "energy",
-    text: "How is your energy today?"
+    text: "How is your energy level today?"
   },
   {
     id: "stress",
@@ -83,28 +73,29 @@ const threeQuestionSurvey = [
 
 
 // ======================================================
-// LOAD XP FROM BACKEND
+// LOAD XP
 // ======================================================
 
 async function loadXP() {
   try {
+
     const data = await apiGet("/api/xp");
 
-    if (data && typeof data.xp === "number") {
-      xpData = data;
-    } else {
-      xpData = {
-        xp: 0,
-        log: []
-      };
-    }
+    xpData = {
+      xp: Number(data?.xp) || 0,
+      log: Array.isArray(data?.log)
+        ? data.log
+        : []
+    };
 
-    if (!Array.isArray(xpData.log)) {
-      xpData.log = [];
-    }
+    console.log("✅ XP loaded:", xpData);
 
   } catch (err) {
-    console.error("LOAD XP ERROR:", err);
+
+    console.error(
+      "LOAD XP ERROR:",
+      err
+    );
 
     xpData = {
       xp: 0,
@@ -115,36 +106,62 @@ async function loadXP() {
 
 
 // ======================================================
-// LOAD HABITS FROM BACKEND
+// LOAD HABIT PROGRESS
 // ======================================================
 
 async function loadHabits() {
   try {
+
     const data = await apiGet("/api/habits");
 
-    if (data && data.progress) {
+    if (data?.progress) {
+
       habitProgress = {
-        finance: Number(data.progress.finance) || 0,
-        exercise: Number(data.progress.exercise) || 0,
-        cleaning: Number(data.progress.cleaning) || 0,
-        cooking: Number(data.progress.cooking) || 0,
-        lifestyle: Number(data.progress.lifestyle) || 0
+        finance:
+          Number(data.progress.finance) || 0,
+
+        exercise:
+          Number(data.progress.exercise) || 0,
+
+        cleaning:
+          Number(data.progress.cleaning) || 0,
+
+        cooking:
+          Number(data.progress.cooking) || 0,
+
+        lifestyle:
+          Number(data.progress.lifestyle) || 0
       };
+
     }
 
+    console.log(
+      "✅ Habit progress loaded:",
+      habitProgress
+    );
+
   } catch (err) {
-    console.error("LOAD HABITS ERROR:", err);
+
+    console.error(
+      "LOAD HABITS ERROR:",
+      err
+    );
   }
 }
 
 
 // ======================================================
-// STREAK
+// LOAD STREAK
 // ======================================================
 
+// Your current backend Habit route does not yet provide
+// a dedicated streak endpoint.
+//
+// For now we keep the dashboard safe and display 0
+// until we build the proper backend streak system.
+
 async function loadStreak() {
-  // Temporary until streaks are moved completely
-  // into the backend.
+
   streakData = {
     streak: 0,
     lastCompletedDate: null
@@ -153,23 +170,36 @@ async function loadStreak() {
 
 
 // ======================================================
-// MOOD
+// LOAD MOOD
 // ======================================================
 
 async function loadMood() {
+
   moodToday = null;
 }
 
 
 // ======================================================
-// FINANCE SUMMARY
+// LOAD FINANCE SUMMARY
 // ======================================================
 
 async function loadFinanceSummary() {
+
   try {
-    financeSummary = await apiGet("/api/finance/summary");
+
+    financeSummary =
+      await apiGet(
+        "/api/finance/summary"
+      );
+
   } catch (err) {
-    console.error("FINANCE SUMMARY ERROR:", err);
+
+    console.warn(
+      "Finance summary unavailable:",
+      err.message
+    );
+
+    financeSummary = null;
   }
 }
 
@@ -179,30 +209,67 @@ async function loadFinanceSummary() {
 // ======================================================
 
 async function loadMissions() {
-  try {
-    const res = await apiGet("/api/missions/get");
 
-    const missions = Array.isArray(res?.missions)
-      ? res.missions
-      : [];
+  try {
+
+    const res =
+      await apiGet(
+        "/api/missions/get"
+      );
+
+    const missions =
+      Array.isArray(res?.missions)
+        ? res.missions
+        : [];
 
     dailyMissions = {
-      finance: missions[0] || "Review one transaction",
-      exercise: missions[1] || "Walk 10 minutes",
-      cleaning: missions[2] || "Clean one surface",
-      cooking: missions[3] || "Cook one meal",
-      lifestyle: missions[4] || "Plan tomorrow"
+
+      finance:
+        missions[0] ||
+        "No mission",
+
+      exercise:
+        missions[1] ||
+        "No mission",
+
+      cleaning:
+        missions[2] ||
+        "No mission",
+
+      cooking:
+        missions[3] ||
+        "No mission",
+
+      lifestyle:
+        missions[4] ||
+        "No mission"
+
     };
 
+    console.log(
+      "✅ Missions loaded:",
+      dailyMissions
+    );
+
   } catch (err) {
-    console.error("LOAD MISSIONS ERROR:", err);
+
+    console.error(
+      "LOAD MISSIONS ERROR:",
+      err
+    );
 
     dailyMissions = {
+
       finance: "Review one transaction",
-      exercise: "Walk 10 minutes",
+
+      exercise: "Walk for 10 minutes",
+
       cleaning: "Clean one surface",
-      cooking: "Cook one meal",
+
+      cooking: "Prepare a meal",
+
       lifestyle: "Plan tomorrow"
+
     };
   }
 }
@@ -213,107 +280,151 @@ async function loadMissions() {
 // ======================================================
 
 function renderHabitRings() {
+
   const container =
-    document.getElementById("habit-rings");
+    document.getElementById(
+      "habit-rings"
+    );
 
   if (!container) {
-    console.warn("habit-rings element not found.");
     return;
   }
 
   container.innerHTML = "";
 
-  Object.keys(habitProgress).forEach(category => {
+  Object.keys(habitProgress)
+    .forEach(category => {
 
-    const percent =
-      Number(habitProgress[category]) || 0;
+      const percent =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            Number(
+              habitProgress[category]
+            ) || 0
+          )
+        );
 
-    container.innerHTML += `
-      <div class="habit-ring">
+      const circumference = 314;
 
-        <svg class="ring"
-             width="120"
-             height="120"
-             viewBox="0 0 120 120">
+      const offset =
+        circumference -
+        (
+          circumference *
+          percent
+        ) /
+        100;
 
-          <circle
-            class="bg"
-            cx="60"
-            cy="60"
-            r="50">
-          </circle>
+      container.innerHTML += `
 
-          <circle
-            class="progress"
-            cx="60"
-            cy="60"
-            r="50"
-            style="
-              stroke-dashoffset:
-              ${314 - (314 * percent) / 100};
-            ">
-          </circle>
+        <div class="habit-ring">
 
-        </svg>
+          <svg
+            class="ring"
+            width="120"
+            height="120"
+            viewBox="0 0 120 120"
+          >
 
-        <div class="habit-label">
-          ${category.toUpperCase()}
+            <circle
+              class="bg"
+              cx="60"
+              cy="60"
+              r="50"
+            ></circle>
+
+            <circle
+              class="progress"
+              cx="60"
+              cy="60"
+              r="50"
+              style="
+                stroke-dasharray:${circumference};
+                stroke-dashoffset:${offset};
+              "
+            ></circle>
+
+          </svg>
+
+          <div class="habit-label">
+            ${category.toUpperCase()}
+          </div>
+
+          <div class="habit-percent">
+            ${percent}%
+          </div>
+
         </div>
 
-        <div class="habit-percent">
-          ${percent}%
-        </div>
-
-      </div>
-    `;
-  });
+      `;
+    });
 }
 
 
 // ======================================================
-// HABIT CARDS
+// HABIT CARDS / DAILY MISSIONS
 // ======================================================
 
 function renderHabitCards() {
+
   const container =
-    document.getElementById("habit-cards");
+    document.getElementById(
+      "habit-cards"
+    );
 
   if (!container) {
-    console.warn("habit-cards element not found.");
     return;
   }
 
   container.innerHTML = "";
 
-  Object.keys(dailyMissions).forEach(category => {
+  Object.keys(dailyMissions)
+    .forEach(category => {
 
-    container.innerHTML += `
-      <div class="habit-card">
+      const mission =
+        dailyMissions[category];
 
-        <h3>
-          ${category.toUpperCase()}
-        </h3>
+      const progress =
+        Number(
+          habitProgress[category]
+        ) || 0;
 
-        <p class="mission">
-          Today: ${dailyMissions[category]}
-        </p>
+      container.innerHTML += `
 
-        <p class="streak">
-          Streak: ${streakData?.streak || 0} days
-        </p>
+        <div class="habit-card">
 
-        <p class="xp">
-          XP: ${xpData?.xp || 0}
-        </p>
+          <h3>
+            ${category.toUpperCase()}
+          </h3>
 
-        <button
-          onclick="completeHabit('${category}')">
-          Complete
-        </button>
+          <p class="mission">
+            Today: ${mission}
+          </p>
 
-      </div>
-    `;
-  });
+          <p class="streak">
+            Progress: ${progress}%
+          </p>
+
+          <p class="xp">
+            XP: ${xpData?.xp || 0}
+          </p>
+
+          <button
+            onclick="completeHabit('${category}')"
+            ${progress >= 100 ? "disabled" : ""}
+          >
+            ${
+              progress >= 100
+                ? "Completed"
+                : "Complete"
+            }
+          </button>
+
+        </div>
+
+      `;
+    });
 }
 
 
@@ -325,6 +436,10 @@ async function completeHabit(category) {
 
   try {
 
+    // ----------------------------------------
+    // Validate category
+    // ----------------------------------------
+
     const validCategories = [
       "finance",
       "exercise",
@@ -333,30 +448,33 @@ async function completeHabit(category) {
       "lifestyle"
     ];
 
-    if (!validCategories.includes(category)) {
+    if (
+      !validCategories.includes(
+        category
+      )
+    ) {
+
       console.error(
         "Invalid habit category:",
         category
       );
+
       return;
     }
 
 
     // ----------------------------------------
-    // SAVE HABIT TO BACKEND
+    // Prevent duplicate completion
     // ----------------------------------------
 
-    const updatedHabit = await apiPost("/api/habits/complete",
-      {
-        category
-      }
-    );
+    if (
+      Number(
+        habitProgress[category]
+      ) >= 100
+    ) {
 
-
-    if (!updatedHabit?.progress) {
-
-      alert(
-        "Unable to save habit progress."
+      console.log(
+        `${category} already completed.`
       );
 
       return;
@@ -364,86 +482,190 @@ async function completeHabit(category) {
 
 
     // ----------------------------------------
-    // UPDATE LOCAL DISPLAY STATE
+    // Disable button immediately
     // ----------------------------------------
 
-    habitProgress = {
-      finance:
-        Number(updatedHabit.progress.finance) || 0,
+    const buttons =
+      document.querySelectorAll(
+        ".habit-card button"
+      );
 
-      exercise:
-        Number(updatedHabit.progress.exercise) || 0,
+    buttons.forEach(button => {
 
-      cleaning:
-        Number(updatedHabit.progress.cleaning) || 0,
+      const card =
+        button.closest(
+          ".habit-card"
+        );
 
-      cooking:
-        Number(updatedHabit.progress.cooking) || 0,
+      const title =
+        card
+          ?.querySelector("h3")
+          ?.textContent
+          ?.trim()
+          ?.toLowerCase();
 
-      lifestyle:
-        Number(updatedHabit.progress.lifestyle) || 0
-    };
-
-
-    // ----------------------------------------
-    // ANIMATION
-    // ----------------------------------------
-
-    const cards =
-      document.querySelectorAll(".habit-card");
-
-    cards.forEach(card => {
-
-      const heading =
-        card.querySelector("h3");
-
-      if (
-        heading?.textContent.trim() ===
-        category.toUpperCase()
-      ) {
-
-        card.classList.add("completed");
-
-        setTimeout(() => {
-          card.classList.remove("completed");
-        }, 600);
+      if (title === category) {
+        button.disabled = true;
       }
 
     });
 
 
     // ----------------------------------------
-    // AWARD XP THROUGH BACKEND
+    // Save habit to MongoDB
     // ----------------------------------------
 
-    const updatedXP = await apiPost("/api/xp/award",
-      {
-        amount: 10,
-        reason:
-          `Completed ${category} habit`
-      }
-    );
+    const updatedHabit =
+      await apiPost(
+        "/api/habits/complete",
+        {
+          category
+        }
+      );
 
 
     if (
-      updatedXP &&
-      typeof updatedXP.xp === "number"
+      !updatedHabit ||
+      !updatedHabit.progress
     ) {
-      xpData = updatedXP;
+
+      throw new Error(
+        "Backend did not return habit progress."
+      );
     }
 
 
     // ----------------------------------------
-    // REFRESH UI
+    // Update local dashboard state
+    // ----------------------------------------
+
+    habitProgress = {
+
+      finance:
+        Number(
+          updatedHabit.progress.finance
+        ) || 0,
+
+      exercise:
+        Number(
+          updatedHabit.progress.exercise
+        ) || 0,
+
+      cleaning:
+        Number(
+          updatedHabit.progress.cleaning
+        ) || 0,
+
+      cooking:
+        Number(
+          updatedHabit.progress.cooking
+        ) || 0,
+
+      lifestyle:
+        Number(
+          updatedHabit.progress.lifestyle
+        ) || 0
+
+    };
+
+
+    // ----------------------------------------
+    // Animation
+    // ----------------------------------------
+
+    const cards =
+      document.querySelectorAll(
+        ".habit-card"
+      );
+
+    cards.forEach(card => {
+
+      const title =
+        card
+          .querySelector("h3")
+          ?.textContent
+          ?.trim()
+          ?.toLowerCase();
+
+      if (
+        title === category
+      ) {
+
+        card.classList.add(
+          "completed"
+        );
+
+        setTimeout(() => {
+
+          card.classList.remove(
+            "completed"
+          );
+
+        }, 600);
+      }
+    });
+
+
+    // ----------------------------------------
+    // Award XP through backend
+    // ----------------------------------------
+
+    const updatedXP =
+      await apiPost(
+        "/api/xp/award",
+        {
+          amount: 10,
+          reason:
+            `Completed ${category} habit`
+        }
+      );
+
+
+    if (
+      updatedXP &&
+      updatedXP.xp !== undefined
+    ) {
+
+      xpData = {
+
+        xp:
+          Number(
+            updatedXP.xp
+          ) || 0,
+
+        log:
+          Array.isArray(
+            updatedXP.log
+          )
+            ? updatedXP.log
+            : []
+
+      };
+    }
+
+
+    // ----------------------------------------
+    // Update streak
+    // ----------------------------------------
+
+    await loadStreak();
+
+
+    // ----------------------------------------
+    // Refresh dashboard
     // ----------------------------------------
 
     renderHabitRings();
+
     renderHabitCards();
+
     renderHeader();
-    renderCoachMessage();
+
+    await renderCoachMessage();
+
 
     console.log(
-      `Habit completed: ${category}`
+      `✅ ${category} habit completed`
     );
 
   } catch (err) {
@@ -454,92 +676,166 @@ async function completeHabit(category) {
     );
 
     alert(
+      err.message ||
       "Something went wrong saving your habit."
     );
+
+    // Re-enable buttons
+    renderHabitCards();
   }
 }
 
 
 // ======================================================
-// SURVEY
+// THREE QUESTION SURVEY
 // ======================================================
 
 async function loadThreeQuestionSurvey() {
-  renderThreeQuestionSurvey(
-    threeQuestionSurvey
-  );
-}
-
-
-function renderThreeQuestionSurvey(questions) {
 
   const container =
     document.getElementById(
       "survey-container"
     );
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
+
+  renderThreeQuestionSurvey(
+    threeQuestionSurvey
+  );
+}
+
+
+function renderThreeQuestionSurvey(
+  questions
+) {
+
+  const container =
+    document.getElementById(
+      "survey-container"
+    );
+
+  if (!container) {
+    return;
+  }
 
   container.innerHTML = `
+
     <h2>Daily Check-In</h2>
 
-    ${questions.map(q => `
+    ${questions
+      .map(
+        question => `
 
-      <div class="survey-question">
+          <div
+            class="survey-question"
+          >
 
-        <p>
-          ${q.text}
-        </p>
+            <p>
+              ${question.text}
+            </p>
 
-        <input
-          type="range"
-          min="1"
-          max="5"
-          value="3"
-          id="q-${q.id}"
-        />
+            <input
+              type="range"
+              min="1"
+              max="5"
+              value="3"
+              id="q-${question.id}"
+            />
 
-      </div>
+            <div class="survey-scale">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+            </div>
 
-    `).join("")}
+          </div>
+
+        `
+      )
+      .join("")}
 
     <button
-      onclick="submitThreeQuestionSurvey()">
+      onclick="submitThreeQuestionSurvey()"
+    >
       Submit
     </button>
+
   `;
 }
 
 
+// ======================================================
+// SUBMIT SURVEY
+// ======================================================
+
 async function submitThreeQuestionSurvey() {
-
-  const answers = [];
-
-  document
-    .querySelectorAll(".survey-question")
-    .forEach(question => {
-
-      const input =
-        question.querySelector("input");
-
-      const id =
-        input.id.replace("q-", "");
-
-      answers.push({
-        id,
-        value: Number(input.value)
-      });
-
-    });
-
 
   try {
 
-    await apiPost("/api/survey",
+    const answers = [];
+
+    document
+      .querySelectorAll(
+        ".survey-question"
+      )
+      .forEach(question => {
+
+        const input =
+          question.querySelector(
+            "input"
+          );
+
+        if (!input) {
+          return;
+        }
+
+        const id =
+          input.id.replace(
+            "q-",
+            ""
+          );
+
+        const value =
+          Number(input.value);
+
+        answers.push({
+          id,
+          value
+        });
+
+      });
+
+
+    if (
+      answers.length !==
+      3
+    ) {
+
+      throw new Error(
+        "Please answer all three questions."
+      );
+    }
+
+
+    // ----------------------------------------
+    // SAVE TO BACKEND
+    // ----------------------------------------
+
+    await apiPost(
+      "/api/survey",
       {
         answers
       }
     );
+
+
+    // ----------------------------------------
+    // Success message
+    // ----------------------------------------
 
     const container =
       document.getElementById(
@@ -548,10 +844,27 @@ async function submitThreeQuestionSurvey() {
 
     if (container) {
 
-      container.innerHTML =
-        "<p>Thanks for checking in!</p>";
+      container.innerHTML = `
 
+        <div class="survey-success">
+
+          <h2>Check-In Saved ✓</h2>
+
+          <p>
+            Thanks for checking in!
+            Your responses were saved.
+          </p>
+
+        </div>
+
+      `;
     }
+
+
+    console.log(
+      "✅ Survey saved:",
+      answers
+    );
 
   } catch (err) {
 
@@ -561,6 +874,7 @@ async function submitThreeQuestionSurvey() {
     );
 
     alert(
+      err.message ||
       "Unable to save your check-in."
     );
   }
@@ -600,63 +914,97 @@ function renderHeader() {
     !nextLabel ||
     !fill
   ) {
+
     return;
   }
 
 
   const xp =
-    Number(xpData?.xp) || 0;
+    Number(
+      xpData?.xp
+    ) || 0;
 
 
   const level =
-    Math.floor(xp / 100) + 1;
+    Math.floor(
+      xp / 100
+    ) + 1;
 
 
   const nextLevelXP =
     level * 100;
 
 
-  const progress =
+  const previousLevelXP =
+    (level - 1) * 100;
+
+
+  const levelProgress =
     Math.min(
       100,
-      (xp / nextLevelXP) * 100
+      Math.max(
+        0,
+        (
+          (xp - previousLevelXP) /
+          (
+            nextLevelXP -
+            previousLevelXP
+          )
+        ) * 100
+      )
+    );
+
+
+  const xpNeeded =
+    Math.max(
+      0,
+      nextLevelXP - xp
     );
 
 
   levelLabel.textContent =
     `Level ${level}`;
 
+
   valueLabel.textContent =
     `${xp} XP`;
 
+
   nextLabel.textContent =
-    `Next level in ${
-      nextLevelXP - xp
-    } XP`;
+    `Next level in ${xpNeeded} XP`;
+
 
   fill.style.width =
-    `${progress}%`;
+    `${levelProgress}%`;
 }
 
 
 // ======================================================
-// COACH
+// COACH MESSAGE
 // ======================================================
 
 async function renderCoachMessage() {
 
   const container =
-    document.getElementById("coach");
+    document.getElementById(
+      "coach"
+    );
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
 
   const xp =
-    Number(xpData?.xp) || 0;
+    Number(
+      xpData?.xp
+    ) || 0;
 
 
   const level =
-    Math.floor(xp / 100) + 1;
+    Math.floor(
+      xp / 100
+    ) + 1;
 
 
   const nextLevelXP =
@@ -668,72 +1016,175 @@ async function renderCoachMessage() {
 
 
   const completed =
-    Object.values(habitProgress)
-      .filter(
-        value => value >= 100
-      )
-      .length;
+    Object.values(
+      habitProgress
+    )
+    .filter(
+      value =>
+        Number(value) >= 100
+    )
+    .length;
+
+
+  const entries =
+    Object.entries(
+      habitProgress
+    );
 
 
   const weakestCategory =
-    Object.entries(habitProgress)
-      .sort(
-        (a, b) => a[1] - b[1]
-      )[0]?.[0];
+    entries.length > 0
+      ? entries.sort(
+          (a, b) =>
+            Number(a[1]) -
+            Number(b[1])
+        )[0][0]
+      : null;
 
 
   let message = "";
 
 
-  if (xpToNext <= 20) {
+  // ----------------------------------------
+  // Local intelligent coaching
+  // ----------------------------------------
+
+  if (
+    xpToNext <= 20 &&
+    xpToNext > 0
+  ) {
 
     message =
       "🔥 You're extremely close to leveling up — finish one more habit!";
 
-  } else if (xpToNext <= 50) {
+  } else if (
+    xpToNext <= 50
+  ) {
 
     message =
       "⚡ You're making great progress — keep pushing toward the next level.";
 
-  } else if (xp < 100) {
+  } else if (
+    xp < 100
+  ) {
 
     message =
       "🌱 You're just getting started — small wins add up fast.";
   }
 
 
-  if (completed >= 3) {
+  if (
+    completed >= 3
+  ) {
 
     message =
       "💪 You're on fire today — three habits done already!";
 
-  } else if (completed === 1) {
+  } else if (
+    completed === 1
+  ) {
 
     message =
       "✨ Nice! You completed your first habit of the day.";
   }
 
 
-  if (!message && weakestCategory) {
+  if (
+    !message &&
+    weakestCategory
+  ) {
 
     message =
       `🎯 Try focusing on your ${weakestCategory} habit — a small win there boosts your whole day.`;
   }
 
 
+  // ----------------------------------------
+  // Mission coaching
+  // ----------------------------------------
+
   if (!message) {
 
-    message =
-      "📌 Pick one habit and complete it today.";
+    const missionList =
+      Object.values(
+        dailyMissions
+      )
+      .filter(
+        mission =>
+          mission &&
+          mission !== "No mission" &&
+          mission !== "Loading..."
+      );
+
+
+    if (
+      missionList.length > 0
+    ) {
+
+      const randomMission =
+        missionList[
+          Math.floor(
+            Math.random() *
+            missionList.length
+          )
+        ];
+
+
+      message =
+        `📌 Coach Tip: Try completing this mission today — "${randomMission}".`;
+    }
+  }
+
+
+  // ----------------------------------------
+  // AI Coach fallback
+  // ----------------------------------------
+
+  if (!message) {
+
+    try {
+
+      const coach =
+        await apiGet(
+          "/api/coach/message"
+        );
+
+
+      if (
+        coach?.message
+      ) {
+
+        message =
+          coach.message;
+      }
+
+    } catch (err) {
+
+      console.warn(
+        "AI coach unavailable:",
+        err.message
+      );
+
+      message =
+        "You're doing great — keep going!";
+    }
   }
 
 
   container.innerHTML = `
+
     <h2>Vaultwise Coach</h2>
-    <p>${message}</p>
+
+    <p>
+      ${message}
+    </p>
+
   `;
 
-  container.classList.add("loaded");
+
+  container.classList.add(
+    "loaded"
+  );
 }
 
 
@@ -743,34 +1194,51 @@ async function renderCoachMessage() {
 
 async function renderDashboard() {
 
-  console.log(
-    "🚀 Rendering Vaultwise dashboard..."
-  );
+  try {
+
+    console.log(
+      "🚀 Loading Vaultwise dashboard..."
+    );
 
 
-  await loadXP();
+    // ----------------------------------------
+    // Load backend data
+    // ----------------------------------------
 
-  await loadHabits();
-
-  await loadMissions();
-
-  await loadStreak();
-
-  await loadMood();
-
-
-  renderHeader();
-
-  renderHabitRings();
-
-  renderHabitCards();
-
-  renderCoachMessage();
-
-  loadThreeQuestionSurvey();
+    await Promise.all([
+      loadXP(),
+      loadHabits(),
+      loadMissions(),
+      loadStreak(),
+      loadMood(),
+      loadFinanceSummary()
+    ]);
 
 
-  console.log(
-    "✅ Vaultwise dashboard rendered"
-  );
+    // ----------------------------------------
+    // Render UI
+    // ----------------------------------------
+
+    renderHeader();
+
+    renderHabitRings();
+
+    renderHabitCards();
+
+    await renderCoachMessage();
+
+    await loadThreeQuestionSurvey();
+
+
+    console.log(
+      "✅ Dashboard loaded successfully"
+    );
+
+  } catch (err) {
+
+    console.error(
+      "DASHBOARD RENDER ERROR:",
+      err
+    );
+  }
 }
