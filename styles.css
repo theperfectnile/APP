@@ -1,13 +1,55 @@
-/* ================================
-   GLOBAL DARK THEME
-================================ */
-body {
+/* =========================================
+   VAULTWISE DESIGN SYSTEM — GLOBAL TOKENS
+   ========================================= */
+
+:root {
+  /* Colors */
+  --bg: #0d0d0d;
+  --bg-soft: #141414;
+  --bg-card: #1a1a1a;
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --text: #f0f0f0;
+  --text-muted: #b3b3b3;
+  --accent: #4a6cff;
+  --accent-soft: #6f8cff;
+  --accent-success: #4caf50;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 12px rgba(0,0,0,0.25);
+  --shadow-glow: 0 0 20px rgba(74,108,255,0.4);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Animation */
+  --anim-fast: 150ms ease;
+  --anim-medium: 300ms ease;
+  --anim-slow: 600ms ease;
+}
+
+/* =========================================
+   GLOBAL DARK THEME BASE
+   ========================================= */
+
+body,
+body.mood-dark,
+body.dark-mode {
   margin: 0;
   padding: 0;
-  background: #0d0f12;
-  color: #e6e6e6;
+  background: var(--bg);
+  color: var(--text);
   font-family: "Inter", sans-serif;
   display: flex;
+  transition: background var(--anim-medium), color var(--anim-medium);
 }
 
 h1, h2, h3 {
@@ -21,17 +63,19 @@ h1, h2, h3 {
   margin-bottom: 1rem;
 }
 
-/* ================================
-   SIDEBAR
-================================ */
+/* =========================================
+   PREMIUM SIDEBAR
+   ========================================= */
+
 .sidebar {
   width: 240px;
-  background: #111317;
+  background: var(--bg-soft);
   height: 100vh;
   padding: 2rem 1.5rem;
   box-sizing: border-box;
   border-right: 1px solid #1c1f24;
   position: fixed;
+  box-shadow: var(--shadow-soft);
 }
 
 .logo {
@@ -47,17 +91,26 @@ h1, h2, h3 {
 }
 
 .nav-links a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
   color: #bfc4cc;
   text-decoration: none;
   padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  transition: 0.2s;
+  border-radius: var(--radius-sm);
+  transition: background var(--anim-fast), color var(--anim-fast), transform var(--anim-fast);
 }
 
-.nav-links a:hover,
+.nav-links a:hover {
+  background: var(--bg-glass);
+  color: var(--text);
+  transform: translateX(4px);
+}
+
 .nav-links a.active {
-  background: #1f2329;
+  background: var(--accent);
   color: #fff;
+  box-shadow: var(--shadow-glow);
 }
 
 .logout-btn {
@@ -66,19 +119,21 @@ h1, h2, h3 {
   padding: 0.7rem;
   background: #d9534f;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background var(--anim-fast), transform var(--anim-fast);
 }
 
 .logout-btn:hover {
   background: #c64541;
+  transform: translateY(-2px);
 }
 
-/* ================================
-   MAIN CONTENT
-================================ */
+/* =========================================
+   MAIN CONTENT & LAYOUT
+   ========================================= */
+
 .main-content {
   margin-left: 240px;
   padding: 2rem;
@@ -86,8 +141,54 @@ h1, h2, h3 {
   box-sizing: border-box;
 }
 
+.horizontal-layout {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  opacity: 0;
+  animation: layoutFadeIn var(--anim-medium) forwards;
+}
+
+@keyframes layoutFadeIn {
+  to { opacity: 1; }
+}
+
+.left-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.left-column {
+  width: 40%;
+}
+
+.right-column {
+  width: 60%;
+}
+
+/* =========================================
+   PREMIUM HEADER
+   ========================================= */
+
 .page-header {
   margin-bottom: 2rem;
+  background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: headerFadeIn var(--anim-medium) forwards;
+}
+
+@keyframes headerFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .personal-greeting {
@@ -97,18 +198,20 @@ h1, h2, h3 {
 }
 
 /* XP + STREAK BADGES */
+
 .streak-badge,
 .xp-badge {
   margin-top: 0.5rem;
   background: #1a1d22;
   padding: 0.4rem 0.7rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   display: inline-block;
   font-size: 0.85rem;
   margin-right: 0.5rem;
 }
 
 /* XP BAR */
+
 .xp-container {
   margin-top: 1rem;
 }
@@ -129,8 +232,8 @@ h1, h2, h3 {
 #xpFill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #4caf50, #7bff8a);
-  transition: width 0.4s ease;
+  background: linear-gradient(90deg, var(--accent-success), #7bff8a);
+  transition: width var(--anim-medium), background var(--anim-medium);
 }
 
 #xpNextLabel {
@@ -140,16 +243,38 @@ h1, h2, h3 {
   display: block;
 }
 
-/* ================================
-   DASHBOARD CARDS
-================================ */
+/* =========================================
+   PREMIUM DASHBOARD CARDS + ANIMATION
+   ========================================= */
+
 .dashboard-card {
-  background: #111317;
-  padding: 1.5rem;
-  border-radius: 12px;
+  background: var(--bg-card);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
   margin-bottom: 2rem;
   border: 1px solid #1c1f24;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: cardFadeIn var(--anim-medium) forwards;
+  transition: transform var(--anim-medium), box-shadow var(--anim-medium);
+  will-change: transform, box-shadow;
 }
+
+.dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+@keyframes cardFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Legacy fade-in class still supported */
 
 .fade-in {
   animation: fadeIn 0.5s ease;
@@ -160,9 +285,53 @@ h1, h2, h3 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ================================
+/* =========================================
+   PREMIUM BUTTONS
+   ========================================= */
+
+button {
+  background: var(--accent);
+  color: #fff;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: background var(--anim-fast), transform var(--anim-fast);
+  will-change: transform, box-shadow;
+}
+
+button:hover {
+  background: var(--accent-soft);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* =========================================
+   PREMIUM INPUTS
+   ========================================= */
+
+input {
+  background: var(--bg-soft);
+  color: var(--text);
+  border: 1px solid #333;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  transition: border var(--anim-fast), background var(--anim-fast), box-shadow var(--anim-fast);
+}
+
+input:focus {
+  border-color: var(--accent);
+  background: #1f1f1f;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* =========================================
    HABIT RINGS
-================================ */
+   ========================================= */
+
 .habit-rings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -171,6 +340,16 @@ h1, h2, h3 {
 
 .habit-ring {
   text-align: center;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: habitRingIn var(--anim-medium) forwards;
+}
+
+@keyframes habitRingIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .habit-ring svg {
@@ -185,11 +364,11 @@ h1, h2, h3 {
 
 .habit-ring .progress {
   fill: none;
-  stroke: #4caf50;
+  stroke: var(--accent-success);
   stroke-width: 10;
   stroke-linecap: round;
   stroke-dasharray: 314;
-  transition: stroke-dashoffset 0.5s ease;
+  transition: stroke-dashoffset 0.8s ease-in-out;
 }
 
 .habit-label {
@@ -204,9 +383,10 @@ h1, h2, h3 {
   margin-top: 0.2rem;
 }
 
-/* ================================
+/* =========================================
    HABIT CARDS
-================================ */
+   ========================================= */
+
 .habit-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -218,12 +398,13 @@ h1, h2, h3 {
   padding: 1.2rem;
   border-radius: 10px;
   border: 1px solid #24272d;
-  transition: 0.2s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .habit-card:hover {
-  transform: translateY(-3px);
-  border-color: #4caf50;
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  border-color: var(--accent-success);
 }
 
 .habit-card h3 {
@@ -239,22 +420,34 @@ h1, h2, h3 {
 .habit-card button {
   width: 100%;
   padding: 0.6rem;
-  background: #4caf50;
+  background: var(--accent-success);
   border: none;
   border-radius: 6px;
   color: #000;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background var(--anim-fast), transform var(--anim-fast);
 }
 
 .habit-card button:hover {
   background: #6dfc7a;
+  transform: translateY(-2px);
 }
 
-/* ================================
+.habit-card.completed {
+  animation: flashComplete 0.6s ease;
+}
+
+@keyframes flashComplete {
+  0% { background:#1a1d22; }
+  50% { background:#2d3f2d; }
+  100% { background:#1a1d22; }
+}
+
+/* =========================================
    SURVEY
-================================ */
+   ========================================= */
+
 #survey-container {
   margin-top: 1rem;
 }
@@ -273,7 +466,7 @@ h1, h2, h3 {
 
 #survey-container button {
   padding: 0.7rem 1rem;
-  background: #4caf50;
+  background: var(--accent-success);
   border: none;
   border-radius: 6px;
   color: #000;
@@ -282,58 +475,14 @@ h1, h2, h3 {
   margin-top: 1rem;
 }
 
-/* ================================
+/* =========================================
    COACH
-================================ */
+   ========================================= */
+
 #coach {
   margin-top: 1rem;
   font-size: 1rem;
   line-height: 1.5rem;
-  opacity: 0.9;
-}
-.progress {
-  transition: stroke-dashoffset 0.8s ease-in-out;
-}
-.habit-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.habit-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-}
-.habit-card.completed {
-  animation: flashComplete 0.6s ease;
-}
-
-@keyframes flashComplete {
-  0% { background:#1a1d22; }
-  50% { background:#2d3f2d; }
-  100% { background:#1a1d22; }
-}
-
-button:active {
-  transform: scale(0.95);
-}
-#xp-level-up {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #4caf50;
-  padding: 12px 18px;
-  border-radius: 8px;
-  color: #000;
-  font-weight: bold;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.4s ease;
-}
-
-#xp-level-up.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-#coach {
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.4s ease;
@@ -343,9 +492,34 @@ button:active {
   opacity: 1;
   transform: translateY(0);
 }
-/* ======================================================
+
+/* =========================================
+   XP LEVEL-UP POPUP
+   ========================================= */
+
+#xp-level-up {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--accent-success);
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: #000;
+  font-weight: bold;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+  box-shadow: var(--shadow-soft);
+}
+
+#xp-level-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================
    AI CHAT COACH
-====================================================== */
+   ========================================= */
 
 #ai-chat {
   margin-top: 20px;
@@ -368,6 +542,16 @@ button:active {
   margin-bottom: 12px;
   border-radius: 12px;
   line-height: 1.5;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: chatBubbleIn var(--anim-medium) forwards;
+}
+
+@keyframes chatBubbleIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .ai-message {
@@ -405,115 +589,27 @@ button:active {
   border-color: #555d68;
 }
 
-#ai-chat-form button {
-  padding: 12px 22px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.horizontal-layout {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  padding: 20px;
-}
-
-.left-column {
-  width: 40%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.right-column {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.dashboard-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-.horizontal-layout {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  padding: 20px;
-}
-
-.left-column {
-  width: 40%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.right-column {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.dashboard-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-body.dark-mode {
-  background: #0d0d0d;
-  color: #f0f0f0;
-}
-
-body.dark-mode .dashboard-card,
-body.dark-mode .left-column,
-body.dark-mode .right-column,
-body.dark-mode .main-content {
-  background: #1a1a1a !important;
-  color: #f0f0f0 !important;
-  border-color: #333 !important;
-}
-
-body.dark-mode input,
-body.dark-mode textarea {
-  background: #222 !important;
-  color: #fff !important;
-  border: 1px solid #444 !important;
-}
-
-body.dark-mode button {
-  background: #333 !important;
-  color: #fff !important;
-}
-/* DARK MODE FIX FOR NEW HORIZONTAL LAYOUT */
-body.dark-mode,
-body.mood-dark {
-  background: #0d0d0d !important;
-  color: #f0f0f0 !important;
-}
+/* =========================================
+   DARK MODE OVERRIDES (SAFE, GLOBAL)
+   ========================================= */
 
 body.dark-mode .horizontal-layout,
 body.mood-dark .horizontal-layout {
-  background: #0d0d0d !important;
+  background: var(--bg);
 }
 
 body.dark-mode .left-column,
 body.dark-mode .right-column,
 body.mood-dark .left-column,
 body.mood-dark .right-column {
-  background: #0d0d0d !important;
-  color: #f0f0f0 !important;
+  background: transparent;
+  color: var(--text);
 }
 
 body.dark-mode .dashboard-card,
 body.mood-dark .dashboard-card {
-  background: #1a1a1a !important;
-  color: #f0f0f0 !important;
+  background: var(--bg-card) !important;
+  color: var(--text) !important;
   border-color: #333 !important;
 }
 
