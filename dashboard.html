@@ -22,32 +22,30 @@
   </aside>
 <div id="xp-level-up">Level Up!</div>
   <!-- Main Content -->
-  <main class="main-content">
-    <!-- HEADER -->
+  <main class="main-content horizontal-layout">
+
+  <!-- LEFT COLUMN: Stats + XP + Greeting -->
+  <div class="left-column">
     <header class="page-header fade-in">
-      <div>
-        <h1>Habit Dashboard</h1>
-        <span>Improve your money, body, home, and daily life—one habit at a time.</span>
+      <h1>Habit Dashboard</h1>
+      <span>Improve your money, body, home, and daily life—one habit at a time.</span>
 
-        <div id="personalGreeting" class="personal-greeting"></div>
-        <div id="streakBadge" class="streak-badge"></div>
-        <div id="xpBadge" class="xp-badge"></div>
+      <div id="personalGreeting" class="personal-greeting"></div>
+      <div id="streakBadge" class="streak-badge"></div>
+      <div id="xpBadge" class="xp-badge"></div>
 
-        <!-- XP Progress Bar -->
-        <div class="xp-container">
-          <div class="xp-label">
-            <span id="xpLevelLabel">Level 1</span> •
-            <span id="xpValueLabel">0 XP</span>
-          </div>
-          <div class="xp-bar">
-            <div id="xpFill"></div>
-          </div>
-          <span id="xpNextLabel">Next level in 100 XP</span>
+      <div class="xp-container">
+        <div class="xp-label">
+          <span id="xpLevelLabel">Level 1</span> •
+          <span id="xpValueLabel">0 XP</span>
         </div>
+        <div class="xp-bar">
+          <div id="xpFill"></div>
+        </div>
+        <span id="xpNextLabel">Next level in 100 XP</span>
       </div>
     </header>
 
-    <!-- HABIT RINGS -->
     <section class="dashboard-card fade-in">
       <h2>Today's Habit Rings</h2>
       <p class="section-subtitle">
@@ -55,34 +53,59 @@
       </p>
       <div id="habit-rings" class="habit-rings-grid"></div>
     </section>
+  </div>
 
-    <!-- HABIT CARDS / DAILY MISSIONS -->
+  <!-- RIGHT COLUMN: Missions + Survey + Coach + Chat -->
+  <div class="right-column">
+
     <section class="dashboard-card fade-in">
       <h2>Daily Missions</h2>
-      <p class="section-subtitle">
-        Small, doable actions that move your life forward today.
-      </p>
+      <p class="section-subtitle">Small, doable actions that move your life forward today.</p>
       <div id="habit-cards" class="habit-cards-grid"></div>
     </section>
 
-    <!-- 3‑QUESTION SURVEY -->
     <section class="dashboard-card fade-in">
       <h2>Daily Check‑In</h2>
-      <p class="section-subtitle">
-        A quick 3‑question pulse on how you're doing right now.
-      </p>
+      <p class="section-subtitle">A quick 3‑question pulse on how you're doing right now.</p>
       <div id="survey-container"></div>
     </section>
 
-    <!-- COACH -->
     <section class="dashboard-card fade-in">
       <h2>Vaultwise Coach</h2>
-      <p class="section-subtitle">
-        Personalized nudges based on your habits, mood, and progress.
-      </p>
+      <p class="section-subtitle">Personalized nudges based on your habits, mood, and progress.</p>
       <div id="coach"></div>
     </section>
-  </main>
+
+    <!-- AI CHAT COACH -->
+    <section class="dashboard-card fade-in">
+      <h2>💬 Talk to Vaultwise Coach</h2>
+      <p class="section-subtitle">Ask your AI coach about your habits, motivation, finances, or goals.</p>
+
+      <div id="ai-chat">
+        <div id="ai-chat-messages">
+          <div class="ai-message">
+            <strong>Vaultwise Coach:</strong>
+            <p>Hey! I'm your AI coach. What are you working on today?</p>
+          </div>
+        </div>
+
+        <form id="ai-chat-form">
+          <input
+            id="ai-chat-input"
+            type="text"
+            placeholder="Ask your coach something..."
+            maxlength="2000"
+            autocomplete="off"
+          />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+  </div>
+
+</main>
+
 <!-- AI CHAT COACH -->
 <section class="dashboard-card fade-in">
 
