@@ -490,3 +490,38 @@ body.dark-mode button {
   background: #333 !important;
   color: #fff !important;
 }
+/* DARK MODE FIX FOR NEW HORIZONTAL LAYOUT */
+body.dark-mode,
+body.mood-dark {
+  background: #0d0d0d !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .horizontal-layout,
+body.mood-dark .horizontal-layout {
+  background: #0d0d0d !important;
+}
+
+body.dark-mode .left-column,
+body.dark-mode .right-column,
+body.mood-dark .left-column,
+body.mood-dark .right-column {
+  background: #0d0d0d !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .dashboard-card,
+body.mood-dark .dashboard-card {
+  background: #1a1a1a !important;
+  color: #f0f0f0 !important;
+  border-color: #333 !important;
+}
+
+body.dark-mode input,
+body.dark-mode button,
+body.mood-dark input,
+body.mood-dark button {
+  background: #222 !important;
+  color: #fff !important;
+  border: 1px solid #444 !important;
+}
