@@ -438,3 +438,55 @@ button:active {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
+.horizontal-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
+}
+
+.left-column {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-column {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+body.dark-mode {
+  background: #0d0d0d;
+  color: #f0f0f0;
+}
+
+body.dark-mode .dashboard-card,
+body.dark-mode .left-column,
+body.dark-mode .right-column,
+body.dark-mode .main-content {
+  background: #1a1a1a !important;
+  color: #f0f0f0 !important;
+  border-color: #333 !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+  background: #222 !important;
+  color: #fff !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark-mode button {
+  background: #333 !important;
+  color: #fff !important;
+}
