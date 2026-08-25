@@ -48,7 +48,6 @@ body.dark-mode {
   background: var(--bg);
   color: var(--text);
   font-family: "Inter", sans-serif;
-  display: flex;
   transition: background var(--anim-medium), color var(--anim-medium);
 }
 
