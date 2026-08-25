@@ -621,3 +621,329 @@ body.mood-dark button {
   color: #fff !important;
   border: 1px solid #444 !important;
 }
+/* ======================================================
+   STEP 3 — EMOTIONAL STICKINESS UPGRADE
+   ====================================================== */
+
+/* --------------------------------------
+   XP LEVEL-UP CELEBRATION (CONFETTI)
+-------------------------------------- */
+
+@keyframes vaultwiseConfetti {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(120px) rotate(360deg); opacity: 0; }
+}
+
+.confetti-piece {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  top: -20px;
+  left: calc(50% - 5px);
+  border-radius: 2px;
+  animation: vaultwiseConfetti 1.2s ease forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* --------------------------------------
+   HABIT RING COMPLETION GLOW
+-------------------------------------- */
+
+.habit-ring.completed .progress {
+  stroke: var(--accent-success);
+  filter: drop-shadow(0 0 8px #4caf50);
+  transition: filter 0.4s ease;
+}
+
+.habit-ring.completed {
+  animation: habitGlow 0.8s ease;
+}
+
+@keyframes habitGlow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* --------------------------------------
+   DAILY MISSION CHECKMARK ANIMATION
+-------------------------------------- */
+
+.habit-card.completed {
+  position: relative;
+  overflow: hidden;
+}
+
+.habit-card.completed::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 3rem;
+  color: var(--accent-success);
+  opacity: 0.8;
+  animation: checkmarkPop 0.5s ease forwards;
+}
+
+@keyframes checkmarkPop {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  60% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* --------------------------------------
+   MOOD CHECK-IN EMOJI ANIMATION
+-------------------------------------- */
+
+.mood-emoji {
+  display: inline-block;
+  font-size: 2rem;
+  transition: transform var(--anim-medium);
+}
+
+.mood-emoji:hover {
+  transform: scale(1.25) rotate(6deg);
+}
+
+/* --------------------------------------
+   COACH PERSONALITY MICRO-ANIMATIONS
+-------------------------------------- */
+
+#coach.personality-motivational {
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+}
+
+#coach.personality-calm {
+  opacity: 0.85;
+}
+
+#coach.personality-tough {
+  border-left: 4px solid #ff4444;
+  padding-left: 12px;
+}
+
+#coach.personality-funny {
+  transform-origin: left;
+  animation: coachWiggle 1.2s ease-in-out;
+}
+
+@keyframes coachWiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  50% { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* --------------------------------------
+   STREAK BADGE PULSE
+-------------------------------------- */
+
+.streak-badge {
+  animation: streakPulse 2s infinite ease-in-out;
+}
+
+@keyframes streakPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+/* --------------------------------------
+   XP BAR GLOW WHEN NEAR LEVEL-UP
+-------------------------------------- */
+
+.xp-bar.near-level-up #xpFill {
+  box-shadow: 0 0 12px #7bff8a;
+}
+
+/* --------------------------------------
+   COACH TYPING INDICATOR (CSS ONLY)
+-------------------------------------- */
+
+.coach-typing {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  width: 60px;
+}
+
+.coach-typing div {
+  width: 10px;
+  height: 10px;
+  background: #555;
+  border-radius: 50%;
+  animation: typingBounce 0.6s infinite alternate;
+}
+
+.coach-typing div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.coach-typing div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  from { transform: translateY(0); opacity: 0.5; }
+  to { transform: translateY(-6px); opacity: 1; }
+}
+/* ======================================================
+   STEP 4 — SUBSCRIPTION JUSTIFICATION (PRO vs FREE UI)
+   ====================================================== */
+
+/* --------------------------------------
+   PRO BADGE
+-------------------------------------- */
+
+.pro-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-glow);
+  margin-left: 8px;
+}
+
+/* --------------------------------------
+   LOCKED FEATURES (FREE USERS)
+-------------------------------------- */
+
+.locked {
+  position: relative;
+  opacity: 0.55;
+  filter: grayscale(40%);
+}
+
+.locked::after {
+  content: "🔒 Pro Only";
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.6);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  color: #fff;
+}
+
+/* --------------------------------------
+   PREMIUM GLOW FOR PRO FEATURES
+-------------------------------------- */
+
+.pro-feature {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 12px rgba(74,108,255,0.4);
+  position: relative;
+}
+
+.pro-feature::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(74,108,255,0.15), rgba(74,108,255,0.05));
+  pointer-events: none;
+}
+
+/* --------------------------------------
+   UPGRADE CTA BUTTON
+-------------------------------------- */
+
+.upgrade-cta {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 14px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+  color: #fff;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform var(--anim-fast), box-shadow var(--anim-fast);
+}
+
+.upgrade-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* --------------------------------------
+   FEATURE COMPARISON TABLE (PAYWALL)
+-------------------------------------- */
+
+.feature-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.feature-table th,
+.feature-table td {
+  padding: 12px;
+  border-bottom: 1px solid #222;
+  text-align: left;
+}
+
+.feature-table th {
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.feature-table .pro {
+  color: var(--accent-success);
+  font-weight: 600;
+}
+
+.feature-table .free {
+  color: var(--text-muted);
+}
+
+/* --------------------------------------
+   PAYWALL HEADER (BEAUTIFUL)
+-------------------------------------- */
+
+.paywall-header {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 30px;
+}
+
+.paywall-header h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.paywall-header p {
+  opacity: 0.8;
+  font-size: 1rem;
+}
+
+/* --------------------------------------
+   PRO THEME (OPTIONAL)
+-------------------------------------- */
+
+body.pro-mode .dashboard-card {
+  border: 1px solid var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+
+body.pro-mode .habit-card {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(74,108,255,0.4);
+}
+
+body.pro-mode #ai-chat-messages {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 12px rgba(74,108,255,0.3);
+}
