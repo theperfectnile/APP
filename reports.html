@@ -26,56 +26,61 @@
   </aside>
 
   <!-- Main Content -->
-  <main class="main-content">
-    <header class="page-header fade-in">
-      <h1>Reports</h1>
-      <span>Your long‑term habit and wellness trends</span>
-    </header>
+ <main class="main-content">
 
-    <!-- HABIT HISTORY -->
-    <section class="dashboard-card fade-in">
-      <h2>Habit Progress Timeline</h2>
-      <p class="section-subtitle">See how your habits have improved over time.</p>
-      <ul id="habitTimeline"></ul>
-    </section>
+  <header class="page-header fade-in">
+    <h1>Reports</h1>
+    <span>Your long‑term habit and wellness trends</span>
+  </header>
 
-    <!-- SURVEY TRENDS -->
-    <section class="dashboard-card fade-in">
-      <h2>3‑Question Survey Trends</h2>
-      <p class="section-subtitle">Mood • Energy • Stress</p>
+  <!-- WEEKLY REPORT -->
+  <section class="weekly-report dashboard-card">
+    <h2>Weekly Insights</h2>
 
-      <div class="chart-row">
-        <div>
-          <h3>Mood</h3>
-          <div id="surveyMoodChart" class="chart-container"></div>
-        </div>
+    <div class="analytics-grid">
 
-        <div>
-          <h3>Energy</h3>
-          <div id="surveyEnergyChart" class="chart-container"></div>
-        </div>
-
-        <div>
-          <h3>Stress</h3>
-          <div id="surveyStressChart" class="chart-container"></div>
-        </div>
+      <div class="insight-card">
+        <h3>Habits Completed</h3>
+        <div class="insight-value">14</div>
+        <div class="insight-subtext trend-up">▲ Up 12% from last week</div>
       </div>
-    </section>
 
-    <!-- XP TIMELINE -->
-    <section class="dashboard-card fade-in">
-      <h2>XP Progress</h2>
-      <p class="section-subtitle">Track your leveling journey over time.</p>
-      <div id="xpChart" class="chart-container"></div>
-    </section>
+      <div class="insight-card">
+        <h3>XP Earned</h3>
+        <div class="insight-value">320 XP</div>
+        <div class="insight-subtext trend-neutral">• Same as last week</div>
+      </div>
 
-    <!-- STREAK TIMELINE -->
-    <section class="dashboard-card fade-in">
-      <h2>Streak History</h2>
-      <p class="section-subtitle">See how consistent you've been.</p>
-      <div id="streakChart" class="chart-container"></div>
-    </section>
-  </main>
+      <div class="insight-card">
+        <h3>Streak</h3>
+        <div class="insight-value">7 Days</div>
+        <div class="insight-subtext trend-up">▲ Strong consistency</div>
+      </div>
+
+    </div>
+
+    <div class="chart-box">
+      <h3>Weekly Habit Performance</h3>
+      <!-- Optional: Insert canvas or SVG chart later -->
+    </div>
+
+    <div class="heatmap-grid">
+      <div class="heatmap-cell" data-level="1"></div>
+      <div class="heatmap-cell" data-level="2"></div>
+      <div class="heatmap-cell" data-level="3"></div>
+      <div class="heatmap-cell" data-level="4"></div>
+      <div class="heatmap-cell" data-level="2"></div>
+      <div class="heatmap-cell" data-level="1"></div>
+      <div class="heatmap-cell" data-level="3"></div>
+    </div>
+
+    <div class="weekly-summary-bar">
+      <p>You maintained strong consistency this week. Keep building momentum!</p>
+    </div>
+  </section>
+
+</main>
+
 
   <script src="reports.js"></script>
   <script src="app.js"></script>
