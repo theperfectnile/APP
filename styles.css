@@ -3,20 +3,20 @@
    ========================================= */
 
 :root {
-  /* Colors */
-  --bg: #0d0d0d;
-  --bg-soft: #141414;
-  --bg-card: #1a1a1a;
-  --bg-glass: rgba(255, 255, 255, 0.05);
-  --text: #f0f0f0;
-  --text-muted: #b3b3b3;
+  /* Colors – DARK, BUT HIGH-CONTRAST FOR READABILITY */
+  --bg: #050608;
+  --bg-soft: #0c0f13;
+  --bg-card: #10141b;
+  --bg-glass: rgba(255, 255, 255, 0.06);
+  --text: #f5f7fa;
+  --text-muted: #9aa3b5;
   --accent: #4a6cff;
   --accent-soft: #6f8cff;
-  --accent-success: #4caf50;
+  --accent-success: #35c46b;
 
   /* Shadows */
-  --shadow-soft: 0 4px 12px rgba(0,0,0,0.25);
-  --shadow-glow: 0 0 20px rgba(74,108,255,0.4);
+  --shadow-soft: 0 4px 16px rgba(0,0,0,0.35);
+  --shadow-glow: 0 0 22px rgba(74,108,255,0.45);
 
   /* Radius */
   --radius-sm: 8px;
@@ -40,14 +40,14 @@
    GLOBAL DARK THEME BASE
    ========================================= */
 
-
+body,
 body.mood-dark,
 body.dark-mode {
   margin: 0;
   padding: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   transition: background var(--anim-medium), color var(--anim-medium);
 }
 
@@ -57,8 +57,8 @@ h1, h2, h3 {
 }
 
 .section-subtitle {
-  opacity: 0.7;
-  font-size: 0.9rem;
+  opacity: 0.8;
+  font-size: 0.95rem;
   margin-bottom: 1rem;
 }
 
@@ -143,13 +143,15 @@ h1, h2, h3 {
 .horizontal-layout {
   display: flex;
   flex-direction: row;
-  gap: var(--space-lg); /* smaller gap */
-  padding: 0 var(--space-lg); /* remove huge padding */
+  gap: var(--space-lg);
+  padding: 0 var(--space-lg);
   opacity: 0;
   animation: layoutFadeIn var(--anim-medium) forwards;
-  max-width: 100%; /* prevent overflow */
+  max-width: 100%;
   box-sizing: border-box;
+  min-height: 100vh;
 }
+
 @keyframes layoutFadeIn {
   to { opacity: 1; }
 }
@@ -194,7 +196,7 @@ h1, h2, h3 {
 .personal-greeting {
   margin-top: 0.5rem;
   font-size: 1rem;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* XP + STREAK BADGES */
@@ -202,7 +204,7 @@ h1, h2, h3 {
 .streak-badge,
 .xp-badge {
   margin-top: 0.5rem;
-  background: #1a1d22;
+  background: #151922;
   padding: 0.4rem 0.7rem;
   border-radius: var(--radius-sm);
   display: inline-block;
@@ -224,7 +226,7 @@ h1, h2, h3 {
 .xp-bar {
   width: 100%;
   height: 10px;
-  background: #1a1d22;
+  background: #151922;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -238,7 +240,7 @@ h1, h2, h3 {
 
 #xpNextLabel {
   font-size: 0.8rem;
-  opacity: 0.7;
+  opacity: 0.75;
   margin-top: 0.3rem;
   display: block;
 }
@@ -324,7 +326,7 @@ input {
 
 input:focus {
   border-color: var(--accent);
-  background: #1f1f1f;
+  background: #171b22;
   box-shadow: 0 0 0 2px var(--accent);
 }
 
@@ -374,7 +376,7 @@ input:focus {
 .habit-label {
   margin-top: 0.5rem;
   font-size: 0.9rem;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .habit-percent {
@@ -394,7 +396,7 @@ input:focus {
 }
 
 .habit-card {
-  background: #1a1d22;
+  background: #151922;
   padding: 1.2rem;
   border-radius: 10px;
   border: 1px solid #24272d;
@@ -413,7 +415,7 @@ input:focus {
 
 .habit-card .mission {
   font-size: 0.9rem;
-  opacity: 0.8;
+  opacity: 0.85;
   margin-bottom: 0.8rem;
 }
 
@@ -439,9 +441,9 @@ input:focus {
 }
 
 @keyframes flashComplete {
-  0% { background:#1a1d22; }
+  0% { background:#151922; }
   50% { background:#2d3f2d; }
-  100% { background:#1a1d22; }
+  100% { background:#151922; }
 }
 
 /* =========================================
@@ -621,13 +623,10 @@ body.mood-dark button {
   color: #fff !important;
   border: 1px solid #444 !important;
 }
+
 /* ======================================================
    STEP 3 — EMOTIONAL STICKINESS UPGRADE
    ====================================================== */
-
-/* --------------------------------------
-   XP LEVEL-UP CELEBRATION (CONFETTI)
--------------------------------------- */
 
 @keyframes vaultwiseConfetti {
   0% { transform: translateY(0) rotate(0deg); opacity: 1; }
@@ -647,9 +646,7 @@ body.mood-dark button {
   z-index: 9999;
 }
 
-/* --------------------------------------
-   HABIT RING COMPLETION GLOW
--------------------------------------- */
+/* HABIT RING COMPLETION GLOW */
 
 .habit-ring.completed .progress {
   stroke: var(--accent-success);
@@ -667,9 +664,7 @@ body.mood-dark button {
   100% { transform: scale(1); }
 }
 
-/* --------------------------------------
-   DAILY MISSION CHECKMARK ANIMATION
--------------------------------------- */
+/* DAILY MISSION CHECKMARK ANIMATION */
 
 .habit-card.completed {
   position: relative;
@@ -694,9 +689,7 @@ body.mood-dark button {
   100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
 }
 
-/* --------------------------------------
-   MOOD CHECK-IN EMOJI ANIMATION
--------------------------------------- */
+/* MOOD CHECK-IN EMOJI ANIMATION */
 
 .mood-emoji {
   display: inline-block;
@@ -708,9 +701,7 @@ body.mood-dark button {
   transform: scale(1.25) rotate(6deg);
 }
 
-/* --------------------------------------
-   COACH PERSONALITY MICRO-ANIMATIONS
--------------------------------------- */
+/* COACH PERSONALITY MICRO-ANIMATIONS */
 
 #coach.personality-motivational {
   border-left: 4px solid var(--accent);
@@ -718,7 +709,7 @@ body.mood-dark button {
 }
 
 #coach.personality-calm {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 #coach.personality-tough {
@@ -738,9 +729,7 @@ body.mood-dark button {
   100% { transform: rotate(0deg); }
 }
 
-/* --------------------------------------
-   STREAK BADGE PULSE
--------------------------------------- */
+/* STREAK BADGE PULSE */
 
 .streak-badge {
   animation: streakPulse 2s infinite ease-in-out;
@@ -752,17 +741,13 @@ body.mood-dark button {
   100% { transform: scale(1); opacity: 0.9; }
 }
 
-/* --------------------------------------
-   XP BAR GLOW WHEN NEAR LEVEL-UP
--------------------------------------- */
+/* XP BAR GLOW WHEN NEAR LEVEL-UP */
 
 .xp-bar.near-level-up #xpFill {
   box-shadow: 0 0 12px #7bff8a;
 }
 
-/* --------------------------------------
-   COACH TYPING INDICATOR (CSS ONLY)
--------------------------------------- */
+/* COACH TYPING INDICATOR */
 
 .coach-typing {
   display: flex;
@@ -791,13 +776,10 @@ body.mood-dark button {
   from { transform: translateY(0); opacity: 0.5; }
   to { transform: translateY(-6px); opacity: 1; }
 }
+
 /* ======================================================
    STEP 4 — SUBSCRIPTION JUSTIFICATION (PRO vs FREE UI)
    ====================================================== */
-
-/* --------------------------------------
-   PRO BADGE
--------------------------------------- */
 
 .pro-badge {
   display: inline-block;
@@ -810,10 +792,6 @@ body.mood-dark button {
   box-shadow: var(--shadow-glow);
   margin-left: 8px;
 }
-
-/* --------------------------------------
-   LOCKED FEATURES (FREE USERS)
--------------------------------------- */
 
 .locked {
   position: relative;
@@ -833,10 +811,6 @@ body.mood-dark button {
   color: #fff;
 }
 
-/* --------------------------------------
-   PREMIUM GLOW FOR PRO FEATURES
--------------------------------------- */
-
 .pro-feature {
   border: 1px solid var(--accent);
   box-shadow: 0 0 12px rgba(74,108,255,0.4);
@@ -851,10 +825,6 @@ body.mood-dark button {
   background: linear-gradient(135deg, rgba(74,108,255,0.15), rgba(74,108,255,0.05));
   pointer-events: none;
 }
-
-/* --------------------------------------
-   UPGRADE CTA BUTTON
--------------------------------------- */
 
 .upgrade-cta {
   display: block;
@@ -874,10 +844,6 @@ body.mood-dark button {
   transform: translateY(-3px);
   box-shadow: var(--shadow-glow);
 }
-
-/* --------------------------------------
-   FEATURE COMPARISON TABLE (PAYWALL)
--------------------------------------- */
 
 .feature-table {
   width: 100%;
@@ -906,9 +872,7 @@ body.mood-dark button {
   color: var(--text-muted);
 }
 
-/* --------------------------------------
-   PAYWALL HEADER (BEAUTIFUL)
--------------------------------------- */
+/* PAYWALL HEADER */
 
 .paywall-header {
   text-align: center;
@@ -925,13 +889,11 @@ body.mood-dark button {
 }
 
 .paywall-header p {
-  opacity: 0.8;
+  opacity: 0.85;
   font-size: 1rem;
 }
 
-/* --------------------------------------
-   PRO THEME (OPTIONAL)
--------------------------------------- */
+/* PRO THEME (OPTIONAL) */
 
 body.pro-mode .dashboard-card {
   border: 1px solid var(--accent);
