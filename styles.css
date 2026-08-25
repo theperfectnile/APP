@@ -143,12 +143,13 @@ h1, h2, h3 {
 .horizontal-layout {
   display: flex;
   flex-direction: row;
-  gap: var(--space-xl);
-  padding: var(--space-xl);
+  gap: var(--space-lg); /* smaller gap */
+  padding: 0 var(--space-lg); /* remove huge padding */
   opacity: 0;
   animation: layoutFadeIn var(--anim-medium) forwards;
+  max-width: 100%; /* prevent overflow */
+  box-sizing: border-box;
 }
-
 @keyframes layoutFadeIn {
   to { opacity: 1; }
 }
@@ -161,11 +162,11 @@ h1, h2, h3 {
 }
 
 .left-column {
-  width: 40%;
+  width: 36%;
 }
 
 .right-column {
-  width: 60%;
+  width: 64%;
 }
 
 /* =========================================
