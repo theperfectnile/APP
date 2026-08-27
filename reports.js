@@ -1,10 +1,11 @@
 // ========================================
-// REPORTS.JS — NEW HABIT SYSTEM VERSION
+// REPORTS.JS — BACKEND + LOCAL HISTORY VERSION
 // Tracks:
-// - Habit progress history
-// - 3-question survey trends
-// - XP timeline
-// - Streak history
+// - Habit progress history (local)
+// - 3-question survey trends (local)
+// - XP timeline (local)
+// - Streak history (local)
+// - Weekly backend analytics (new)
 // ========================================
 
 // -------------------------------
@@ -24,6 +25,39 @@ function getXPHistory() {
 
 function getStreakHistory() {
   return JSON.parse(localStorage.getItem("streakHistory") || "[]");
+}
+
+// -------------------------------
+// BACKEND HELPERS
+// -------------------------------
+async function getBackendWeekly() {
+  try {
+    const [
+      weeklyHabits,
+      weeklyXP,
+      weeklyStreak,
+      missions,
+      finance
+    ] = await Promise.all([
+      apiGet("/api/habits/weekly"),
+      apiGet("/api/xp/weekly"),
+      apiGet("/api/streak"),
+      apiGet("/api/missions/get"),
+      apiGet("/api/finance/summary")
+    ]);
+
+    return {
+      weeklyHabits,
+      weeklyXP,
+      weeklyStreak,
+      missions,
+      finance
+    };
+
+  } catch (err) {
+    console.error("BACKEND WEEKLY ERROR:", err);
+    return null;
+  }
 }
 
 // -------------------------------
@@ -80,51 +114,67 @@ function renderHabitTimeline(history) {
 // SURVEY (3-QUESTION) TRENDS
 // -------------------------------
 function renderSurvey3Charts(history) {
-  renderChart(
-    "surveyMoodChart",
-    history.map(h => h.mood),
-    v => v
-  );
-
-  renderChart(
-    "surveyEnergyChart",
-    history.map(h => h.energy),
-    v => v
-  );
-
-  renderChart(
-    "surveyStressChart",
-    history.map(h => h.stress),
-    v => v
-  );
+  renderChart("surveyMoodChart", history.map(h => h.mood), v => v);
+  renderChart("surveyEnergyChart", history.map(h => h.energy), v => v);
+  renderChart("surveyStressChart", history.map(h => h.stress), v => v);
 }
 
 // -------------------------------
 // XP TIMELINE
 // -------------------------------
 function renderXPTimeline(history) {
-  renderChart(
-    "xpChart",
-    history.map(h => h.xp),
-    v => `${v} XP`
-  );
+  renderChart("xpChart", history.map(h => h.xp), v => `${v} XP`);
 }
 
 // -------------------------------
 // STREAK TIMELINE
 // -------------------------------
 function renderStreakTimeline(history) {
-  renderChart(
-    "streakChart",
-    history.map(h => h.streak),
-    v => `${v} days`
-  );
+  renderChart("streakChart", history.map(h => h.streak), v => `${v} days`);
+}
+
+// -------------------------------
+// WEEKLY BACKEND SUMMARY
+// -------------------------------
+function renderWeeklyBackend(data) {
+  if (!data) return;
+
+  const { weeklyHabits, weeklyXP, weeklyStreak, missions, finance } = data;
+
+  // Top cards
+  document.getElementById("weeklyHabits").textContent =
+    weeklyHabits?.completed ?? 0;
+
+  document.getElementById("weeklyHabitsChange").textContent =
+    weeklyHabits?.change ?? "0%";
+
+  document.getElementById("weeklyXP").textContent =
+    weeklyXP?.earned ?? 0;
+
+  document.getElementById("weeklyXPChange").textContent =
+    weeklyXP?.change ?? "0%";
+
+  document.getElementById("weeklyStreak").textContent =
+    weeklyStreak?.days ?? 0;
+
+  // Summary narrative
+  const summary = document.getElementById("weeklySummary");
+  if (summary) {
+    summary.textContent = `
+      You completed ${weeklyHabits?.completed ?? 0} habits this week.
+      XP earned: ${weeklyXP?.earned ?? 0}.
+      Streak: ${weeklyStreak?.days ?? 0} days.
+      Mission example: "${missions?.missions?.[0] ?? "None"}".
+      Weekly spending: $${finance?.weeklySpending ?? 0}.
+    `;
+  }
 }
 
 // -------------------------------
 // INITIALIZE REPORTS PAGE
 // -------------------------------
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // Local history
   const habitHistory = getHabitHistory();
   const survey3History = getSurvey3History();
   const xpHistory = getXPHistory();
@@ -134,4 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSurvey3Charts(survey3History);
   renderXPTimeline(xpHistory);
   renderStreakTimeline(streakHistory);
+
+  // Backend weekly analytics
+  const backendData = await getBackendWeekly();
+  renderWeeklyBackend(backendData);
+
+  console.log("✅ Reports page fully loaded");
 });
