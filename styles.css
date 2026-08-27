@@ -145,7 +145,8 @@ h1, h2, h3 {
   flex-direction: row;
   gap: var(--space-lg);
   padding: 0 var(--space-lg);
-  opacity: 0;
+  /* Visible by default so a failed/blocked animation cannot hide the dashboard */
+  opacity: 1;
   animation: layoutFadeIn var(--anim-medium) forwards;
   max-width: 100%;
   box-sizing: border-box;
@@ -180,8 +181,9 @@ h1, h2, h3 {
   padding: var(--space-lg);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
-  opacity: 0;
-  transform: translateY(-10px);
+  /* Visible by default; animation only enhances the entrance */
+  opacity: 1;
+  transform: translateY(0);
   animation: headerFadeIn var(--anim-medium) forwards;
 }
 
@@ -256,8 +258,9 @@ h1, h2, h3 {
   border: 1px solid #1c1f24;
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(12px);
-  opacity: 0;
-  transform: translateY(10px);
+  /* Visible by default so cards never disappear if animation is unavailable */
+  opacity: 1;
+  transform: translateY(0);
   animation: cardFadeIn var(--anim-medium) forwards;
   transition: transform var(--anim-medium), box-shadow var(--anim-medium);
   will-change: transform, box-shadow;
@@ -341,8 +344,9 @@ input:focus {
 
 .habit-ring {
   text-align: center;
-  opacity: 0;
-  transform: scale(0.9);
+  /* Visible by default; keep the entrance animation as an enhancement */
+  opacity: 1;
+  transform: scale(1);
   animation: habitRingIn var(--anim-medium) forwards;
 }
 
@@ -907,4 +911,68 @@ body.pro-mode .habit-card {
 body.pro-mode #ai-chat-messages {
   border-color: var(--accent);
   box-shadow: inset 0 0 12px rgba(74,108,255,0.3);
+}
+
+
+/* ======================================================
+   DASHBOARD VISIBILITY FIX
+   ======================================================
+   Dark mode remains unchanged. These rules make sure the
+   dashboard content stays visible even if CSS animations
+   are blocked, interrupted, or fail to start.
+*/
+
+html,
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.main-content {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.horizontal-layout {
+  opacity: 1;
+  visibility: visible;
+  display: flex;
+}
+
+.horizontal-layout *,
+.page-header,
+.dashboard-card,
+.habit-ring {
+  visibility: visible;
+}
+
+.page-header,
+.dashboard-card {
+  color: var(--text);
+}
+
+.page-header h1,
+.page-header h2,
+.page-header h3,
+.dashboard-card h1,
+.dashboard-card h2,
+.dashboard-card h3,
+.dashboard-card p,
+.dashboard-card label,
+.dashboard-card span {
+  color: inherit;
+}
+
+/* Keep dark cards distinct from the black page background */
+.dashboard-card {
+  background: var(--bg-card) !important;
+  border: 1px solid #2a3038 !important;
+}
+
+.habit-card {
+  background: #151922;
+  color: var(--text);
+  border: 1px solid #2a3038;
 }
