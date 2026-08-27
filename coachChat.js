@@ -776,7 +776,4 @@ document.addEventListener(
 );
 
 
-out = Path("/mnt/data/Vaultwise_Free_Coach_5_Categories.js")
-out.write_text(js)
-print(f"Created {out}")
-print(f"{len(js.splitlines())} lines")
+
