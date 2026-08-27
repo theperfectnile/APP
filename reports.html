@@ -8,9 +8,8 @@
 
 <body id="reports" class="mood-neutral">
   <script src="premium.js"></script>
-  <script>
-    requirePro();
-  </script>
+  <script> requirePro(); </script>
+
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
@@ -26,61 +25,86 @@
   </aside>
 
   <!-- Main Content -->
- <main class="main-content">
+  <main class="main-content">
 
-  <header class="page-header fade-in">
-    <h1>Reports</h1>
-    <span>Your long‑term habit and wellness trends</span>
-  </header>
+    <header class="page-header fade-in">
+      <h1>Reports</h1>
+      <span>Your long‑term habit and wellness trends</span>
+    </header>
 
-  <!-- WEEKLY REPORT -->
-  <section class="weekly-report dashboard-card">
-    <h2>Weekly Insights</h2>
+    <!-- WEEKLY REPORT -->
+    <section class="weekly-report dashboard-card fade-in">
+      <h2>Weekly Insights</h2>
 
-    <div class="analytics-grid">
+      <div class="analytics-grid">
 
-      <div class="insight-card">
-        <h3>Habits Completed</h3>
-        <div class="insight-value">14</div>
-        <div class="insight-subtext trend-up">▲ Up 12% from last week</div>
+        <!-- HABITS COMPLETED -->
+        <div class="insight-card">
+          <h3>Habits Completed</h3>
+          <div class="insight-value" id="weeklyHabits">0</div>
+          <div class="insight-subtext" id="weeklyHabitsChange">Loading...</div>
+        </div>
+
+        <!-- XP EARNED -->
+        <div class="insight-card">
+          <h3>XP Earned</h3>
+          <div class="insight-value" id="weeklyXP">0 XP</div>
+          <div class="insight-subtext" id="weeklyXPChange">Loading...</div>
+        </div>
+
+        <!-- STREAK -->
+        <div class="insight-card">
+          <h3>Streak</h3>
+          <div class="insight-value" id="weeklyStreak">0 Days</div>
+          <div class="insight-subtext">Consistency matters</div>
+        </div>
+
       </div>
 
-      <div class="insight-card">
-        <h3>XP Earned</h3>
-        <div class="insight-value">320 XP</div>
-        <div class="insight-subtext trend-neutral">• Same as last week</div>
+      <!-- WEEKLY SUMMARY -->
+      <div class="weekly-summary-bar">
+        <p id="weeklySummary">Loading weekly summary...</p>
       </div>
+    </section>
 
-      <div class="insight-card">
-        <h3>Streak</h3>
-        <div class="insight-value">7 Days</div>
-        <div class="insight-subtext trend-up">▲ Strong consistency</div>
+    <!-- HISTORY SECTION -->
+    <section class="dashboard-card fade-in">
+      <h2>Habit History Timeline</h2>
+      <ul id="habitTimeline" class="history-list"></ul>
+    </section>
+
+    <section class="dashboard-card fade-in">
+      <h2>Survey Trends</h2>
+
+      <div class="chart-row">
+        <div class="chart-box">
+          <h3>Mood</h3>
+          <div id="surveyMoodChart" class="chart-container"></div>
+        </div>
+
+        <div class="chart-box">
+          <h3>Energy</h3>
+          <div id="surveyEnergyChart" class="chart-container"></div>
+        </div>
+
+        <div class="chart-box">
+          <h3>Stress</h3>
+          <div id="surveyStressChart" class="chart-container"></div>
+        </div>
       </div>
+    </section>
 
-    </div>
+    <section class="dashboard-card fade-in">
+      <h2>XP Timeline</h2>
+      <div id="xpChart" class="chart-container"></div>
+    </section>
 
-    <div class="chart-box">
-      <h3>Weekly Habit Performance</h3>
-      <!-- Optional: Insert canvas or SVG chart later -->
-    </div>
+    <section class="dashboard-card fade-in">
+      <h2>Streak Timeline</h2>
+      <div id="streakChart" class="chart-container"></div>
+    </section>
 
-    <div class="heatmap-grid">
-      <div class="heatmap-cell" data-level="1"></div>
-      <div class="heatmap-cell" data-level="2"></div>
-      <div class="heatmap-cell" data-level="3"></div>
-      <div class="heatmap-cell" data-level="4"></div>
-      <div class="heatmap-cell" data-level="2"></div>
-      <div class="heatmap-cell" data-level="1"></div>
-      <div class="heatmap-cell" data-level="3"></div>
-    </div>
-
-    <div class="weekly-summary-bar">
-      <p>You maintained strong consistency this week. Keep building momentum!</p>
-    </div>
-  </section>
-
-</main>
-
+  </main>
 
   <script src="reports.js"></script>
   <script src="app.js"></script>
