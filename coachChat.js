@@ -1,65 +1,77 @@
+from pathlib import Path
+
+js = r'''
 // ======================================================
-// VAULTWISE AI CHAT COACH — FREE MOCK VERSION
+// VAULTWISE COACH — FREE MOCK AI
 // ======================================================
-// No backend.
-// No API key.
-// No external AI service.
+// Five core categories:
+// 1. Finance
+// 2. Cooking
+// 3. Cleaning
+// 4. Lifestyle
+// 5. Exercise
 //
-// This version uses:
-// - conversation memory
-// - topic detection
-// - follow-up awareness
-// - financial calculations
-// - personalized mock responses
-// - clarification questions
-// ======================================================
-
-
-// ======================================================
-// CHAT MEMORY
+// This FREE version does NOT call the backend.
+// It uses local topic detection, conversation memory,
+// practical rules, calculations, routines, and varied
+// responses to make the demo feel intelligent.
+//
+// Later, your PRO version can use the same chat UI and
+// replace generateCoachReply() with your real AI API.
 // ======================================================
 
 const coachHistory = [];
 
-
-// ======================================================
-// USER PROFILE MEMORY
-// ======================================================
-
 const coachMemory = {
-  income: null,
-  savings: null,
-  debt: null,
-  creditScore: null,
-  monthlyExpenses: null,
-  age: null,
-  goal: null,
-  topic: null
+  category: null,
+  name: null,
+
+  finance: {
+    income: null,
+    savings: null,
+    debt: null,
+    creditScore: null,
+    goal: null
+  },
+
+  cooking: {
+    ingredients: [],
+    goal: null,
+    dietaryPreference: null
+  },
+
+  cleaning: {
+    problemArea: null,
+    frequency: null
+  },
+
+  lifestyle: {
+    goal: null,
+    wakeTime: null,
+    sleepTime: null
+  },
+
+  exercise: {
+    goal: null,
+    experience: null,
+    equipment: null,
+    daysPerWeek: null
+  }
 };
 
 
 // ======================================================
-// ADD MESSAGE TO CHAT
+// CHAT UI
 // ======================================================
 
 function addCoachMessage(role, content) {
-
-  const container =
-    document.getElementById("ai-chat-messages");
-
+  const container = document.getElementById("ai-chat-messages");
   if (!container) return;
 
   const message = document.createElement("div");
+  message.className = role === "user" ? "user-message" : "ai-message";
 
-  message.className =
-    role === "user"
-      ? "user-message"
-      : "ai-message";
-
-  const label =
-    role === "user"
-      ? "You"
-      : "Vaultwise Coach";
+  const label = role === "user" ? "You" : "Vaultwise Coach";
 
   message.innerHTML = `
     <strong>${label}:</strong>
@@ -67,671 +79,623 @@ function addCoachMessage(role, content) {
   `;
 
   message.querySelector("p").textContent = content;
-
   container.appendChild(message);
-
   container.scrollTop = container.scrollHeight;
 }
 
 
 // ======================================================
-// FORMAT MONEY
+// HELPERS
 // ======================================================
 
-function formatMoney(amount) {
-
+function money(value) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0
-  }).format(amount);
+  }).format(value);
 }
 
-
-// ======================================================
-// EXTRACT NUMBERS
-// ======================================================
-
-function extractMoney(message) {
-
-  const match =
-    message.match(
-      /\$?\s*([\d,]+(?:\.\d+)?)\s*(k|thousand)?/i
-    );
-
+function numberFromText(text) {
+  const match = text.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*(k|thousand)?/i);
   if (!match) return null;
 
-  let amount =
-    parseFloat(match[1].replace(/,/g, ""));
+  let value = parseFloat(match[1].replace(/,/g, ""));
+  if (match[2]) value *= 1000;
 
-  if (match[2]) {
-    amount *= 1000;
+  return value;
+}
+
+function percentFromText(text) {
+  const match = text.match(/(\d+(?:\.\d+)?)\s*%/);
+  return match ? parseFloat(match[1]) : null;
+}
+
+function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function randomItem(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function lastUserMessage() {
+  for (let i = coachHistory.length - 1; i >= 0; i--) {
+    if (coachHistory[i].role === "user") {
+      return coachHistory[i].content;
+    }
   }
-
-  return amount;
+  return "";
 }
 
 
 // ======================================================
-// REMEMBER USER INFORMATION
+// CATEGORY DETECTION
 // ======================================================
 
-function updateCoachMemory(message) {
+function detectCategory(message) {
+  const text = message.toLowerCase();
 
-  const lower = message.toLowerCase();
-
-  const money = extractMoney(message);
-
-  // Income
-  if (
-    lower.includes("income") ||
-    lower.includes("make") ||
-    lower.includes("salary") ||
-    lower.includes("earn")
-  ) {
-    if (money) {
-      coachMemory.income = money;
-    }
-  }
-
-  // Savings
-  if (
-    lower.includes("savings") ||
-    lower.includes("saved") ||
-    lower.includes("save")
-  ) {
-    if (money) {
-      coachMemory.savings = money;
-    }
-  }
-
-  // Debt
-  if (
-    lower.includes("debt") ||
-    lower.includes("owe") ||
-    lower.includes("loan")
-  ) {
-    if (money) {
-      coachMemory.debt = money;
-    }
-  }
-
-  // Credit score
-  const creditMatch =
-    message.match(/\b([4-8]\d{2})\b/);
-
-  if (
-    lower.includes("credit") &&
-    creditMatch
-  ) {
-    coachMemory.creditScore =
-      parseInt(creditMatch[1]);
-  }
-
-  // Age
-  const ageMatch =
-    lower.match(
-      /\b(?:i'm|im|i am|age)\s*(\d{2})\b/
-    );
-
-  if (ageMatch) {
-    coachMemory.age =
-      parseInt(ageMatch[1]);
-  }
-}
-
-
-// ======================================================
-// DETECT TOPIC
-// ======================================================
-
-function detectTopic(message) {
-
-  const text =
-    message.toLowerCase();
-
-  if (
-    /budget|spend|spending|expense|expenses|money.*left|cut back|cutting/i
-      .test(text)
-  ) {
-    return "budget";
-  }
-
-  if (
-    /save|saving|savings|emergency fund|cash reserve/i
-      .test(text)
-  ) {
-    return "savings";
-  }
-
-  if (
-    /credit score|credit card|utilization|credit limit|fico/i
-      .test(text)
-  ) {
-    return "credit";
-  }
-
-  if (
-    /debt|loan|apr|interest|pay off|payment/i
-      .test(text)
-  ) {
-    return "debt";
-  }
-
-  if (
-    /invest|investing|stock|stocks|etf|index fund|mutual fund|roth|ira|401k|retirement/i
-      .test(text)
-  ) {
-    return "investing";
-  }
-
-  if (
-    /income|salary|raise|job|career|side hustle|business/i
-      .test(text)
-  ) {
-    return "income";
-  }
-
-  if (
-    /car|vehicle|auto loan|car payment/i
-      .test(text)
-  ) {
-    return "car";
-  }
-
-  if (
-    /house|home|mortgage|down payment/i
-      .test(text)
-  ) {
-    return "housing";
-  }
-
-  if (
-    /goal|goals|financial freedom|wealth|future/i
-      .test(text)
-  ) {
-    return "goals";
-  }
-
-  return coachMemory.topic || "general";
-}
-
-
-// ======================================================
-// SIMPLE FINANCIAL CALCULATIONS
-// ======================================================
-
-function calculateSavingsFromMonthly(amount) {
-
-  return {
-    monthly: amount,
-    yearly: amount * 12
+  const scores = {
+    finance: 0,
+    cooking: 0,
+    cleaning: 0,
+    lifestyle: 0,
+    exercise: 0
   };
-}
 
+  const keywords = {
+    finance: [
+      "money", "budget", "budgeting", "spend", "spending", "expense",
+      "expenses", "income", "salary", "savings", "save", "saved",
+      "debt", "loan", "credit", "credit score", "credit card", "apr",
+      "interest", "invest", "investing", "stock", "stocks", "roth",
+      "ira", "401k", "retirement", "rent", "mortgage", "bill", "bills",
+      "car payment", "financial", "finance", "afford", "affordability"
+    ],
 
-function calculatePercentage(amount, percentage) {
+    cooking: [
+      "cook", "cooking", "recipe", "food", "meal", "meals", "dinner",
+      "lunch", "breakfast", "eat", "eating", "chicken", "beef", "rice",
+      "pasta", "eggs", "vegetables", "vegetable", "oven", "stove",
+      "air fryer", "fridge", "refrigerator", "ingredients", "grocery",
+      "groceries", "protein", "calories", "leftovers"
+    ],
 
-  return amount * (percentage / 100);
-}
+    cleaning: [
+      "clean", "cleaning", "dirty", "mess", "messy", "laundry", "dishes",
+      "bathroom", "kitchen", "bedroom", "vacuum", "mop", "dust", "dusting",
+      "organize", "organization", "clutter", "trash", "toilet", "shower",
+      "sink", "counter", "cleaning schedule", "chore", "chores"
+    ],
 
+    lifestyle: [
+      "routine", "routines", "habit", "habits", "daily", "day", "morning",
+      "night", "evening", "sleep", "sleeping", "wake", "wakeup", "stress",
+      "productive", "productivity", "procrastinate", "procrastination",
+      "focus", "focused", "phone", "screen time", "self care", "self-care",
+      "life", "lifestyle", "goal", "goals", "discipline", "motivation",
+      "time management", "schedule"
+    ],
 
-// ======================================================
-// CHECK FOR FOLLOW-UP QUESTIONS
-// ======================================================
+    exercise: [
+      "exercise", "workout", "work out", "gym", "fitness", "muscle",
+      "muscles", "strength", "cardio", "run", "running", "walk", "walking",
+      "pushup", "pushups", "pullup", "pullups", "squat", "squats",
+      "weight", "weights", "lifting", "stretch", "stretching", "yoga",
+      "core", "abs", "calories burned", "training", "recovery"
+    ]
+  };
 
-function isFollowUp(message) {
-
-  const text =
-    message.toLowerCase().trim();
-
-  if (
-    /^(what about|what if|how about|and if|then what|why|how|okay|ok|yes|yeah|no|really|why not)/i
-      .test(text)
-  ) {
-    return true;
+  for (const category of Object.keys(keywords)) {
+    for (const word of keywords[category]) {
+      if (text.includes(word)) scores[category]++;
+    }
   }
 
-  if (
-    text.length < 35 &&
-    coachHistory.length > 1
-  ) {
-    return true;
+  const best = Object.entries(scores)
+    .sort((a, b) => b[1] - a[1])[0];
+
+  if (best[1] === 0) {
+    return coachMemory.category || "lifestyle";
   }
 
-  return false;
+  return best[0];
 }
 
 
 // ======================================================
-// GENERATE BUDGET RESPONSE
+// MEMORY EXTRACTION
 // ======================================================
 
-function budgetResponse(message) {
+function updateMemory(message, category) {
+  const text = message.toLowerCase();
+  const amount = numberFromText(message);
+  const percent = percentFromText(message);
 
-  const amount =
-    extractMoney(message);
+  coachMemory.category = category;
 
-  if (amount) {
+  // ---------- FINANCE ----------
+  if (category === "finance") {
+    if (
+      text.includes("income") ||
+      text.includes("salary") ||
+      text.includes("make ") ||
+      text.includes("earn ")
+    ) {
+      if (amount) coachMemory.finance.income = amount;
+    }
 
-    const yearly =
-      calculateSavingsFromMonthly(amount);
+    if (
+      text.includes("saving") ||
+      text.includes("savings") ||
+      text.includes("saved")
+    ) {
+      if (amount) coachMemory.finance.savings = amount;
+    }
 
-    return `
-If that's a monthly amount, you're looking at about ${formatMoney(yearly.yearly)} per year.
+    if (
+      text.includes("debt") ||
+      text.includes("owe") ||
+      text.includes("loan")
+    ) {
+      if (amount) coachMemory.finance.debt = amount;
+    }
 
-I wouldn't automatically tell you to eliminate it. The better question is whether that spending is actually hurting one of your goals.
+    const credit = message.match(/\b([4-8]\d{2})\b/);
+    if (text.includes("credit") && credit) {
+      coachMemory.finance.creditScore = parseInt(credit[1]);
+    }
 
-For example, cutting ${formatMoney(amount * 0.20)} per month would free up about ${formatMoney(amount * 0.20 * 12)} per year while still allowing you to keep 80% of the spending.
-
-If you give me your monthly income and your major expenses, I can help you figure out whether this is actually too much.
-    `.trim();
+    if (text.includes("goal")) {
+      coachMemory.finance.goal = message;
+    }
   }
 
-  return `
-Let's make this practical instead of just telling you to "spend less."
+  // ---------- COOKING ----------
+  if (category === "cooking") {
+    const knownIngredients = [
+      "chicken", "beef", "turkey", "fish", "salmon",
+      "eggs", "rice", "pasta", "potatoes", "bread",
+      "cheese", "beans", "tomatoes", "onions",
+      "spinach", "broccoli", "carrots", "avocado"
+    ];
 
-Start with four categories:
+    coachMemory.cooking.ingredients =
+      knownIngredients.filter(item => text.includes(item));
 
-1. Housing
-2. Transportation
-3. Food
-4. Everything else
+    if (text.includes("healthy")) {
+      coachMemory.cooking.goal = "healthy";
+    }
 
-Then compare your monthly spending against your income.
+    if (text.includes("cheap") || text.includes("budget")) {
+      coachMemory.cooking.goal = "budget";
+    }
 
-If you tell me your monthly take-home income and roughly what you spend on housing, transportation, food and debt, I can help you build a realistic budget.
-  `.trim();
-}
-
-
-// ======================================================
-// SAVINGS RESPONSE
-// ======================================================
-
-function savingsResponse(message) {
-
-  const amount =
-    extractMoney(message);
-
-  if (amount) {
-
-    return `
-That's useful information.
-
-If you currently have ${formatMoney(amount)} saved, the next question is what job that money is supposed to do.
-
-I'd separate your savings into:
-
-• Emergency cash
-• Near-term purchases
-• Long-term investing
-
-You generally don't want money you'll need soon exposed to large market swings.
-
-If you tell me what you're saving the money for and roughly when you'll need it, I can help you decide how much should stay in cash versus be invested.
-    `.trim();
+    if (text.includes("quick") || text.includes("fast")) {
+      coachMemory.cooking.goal = "quick";
+    }
   }
 
-  return `
-The goal isn't simply to have a large savings balance. Your money should have a purpose.
+  // ---------- CLEANING ----------
+  if (category === "cleaning") {
+    const areas = [
+      "kitchen", "bathroom", "bedroom", "living room",
+      "laundry", "dishes", "floor", "toilet", "shower"
+    ];
 
-I'd normally think about savings in three layers:
+    coachMemory.cleaning.problemArea =
+      areas.find(area => text.includes(area)) ||
+      coachMemory.cleaning.problemArea;
 
-1. Money for emergencies
-2. Money for purchases in the next few years
-3. Money for long-term wealth building
-
-Tell me how much you currently have saved and what you're saving for, and we'll work from there.
-  `.trim();
-}
-
-
-// ======================================================
-// CREDIT RESPONSE
-// ======================================================
-
-function creditResponse(message) {
-
-  if (coachMemory.creditScore) {
-
-    const score =
-      coachMemory.creditScore;
-
-    return `
-A ${score} credit score is already strong.
-
-At that level, the goal usually isn't to obsess over gaining another 20 points. I'd focus on protecting the score while improving your overall financial position.
-
-The biggest things to watch are:
-
-• Never missing payments
-• Keeping revolving utilization reasonable
-• Avoiding unnecessary new accounts
-• Keeping older accounts open when appropriate
-• Paying attention to your total debt
-
-If you're trying to qualify for a car, mortgage, or another loan, tell me what you're trying to do and I can explain what matters most.
-    `.trim();
+    if (text.includes("daily")) {
+      coachMemory.cleaning.frequency = "daily";
+    } else if (text.includes("weekly")) {
+      coachMemory.cleaning.frequency = "weekly";
+    }
   }
 
-  return `
-Credit scores are only one part of your financial picture.
-
-The biggest factors I'd watch are:
-
-• Payment history
-• Credit utilization
-• Age of accounts
-• New credit applications
-• Credit mix
-
-If you tell me your approximate score, card balances and credit limits, I can explain what is likely affecting your score.
-  `.trim();
-}
-
-
-// ======================================================
-// DEBT RESPONSE
-// ======================================================
-
-function debtResponse(message) {
-
-  const amount =
-    extractMoney(message);
-
-  if (amount) {
-
-    return `
-If ${formatMoney(amount)} is the amount you're dealing with, don't just focus on the balance.
-
-I'd want to know:
-
-• Interest rate
-• Minimum payment
-• Monthly cash flow
-• Whether you have an emergency fund
-
-High-interest debt is usually a priority because the interest can work against you every month.
-
-If you give me the balance, APR and minimum payment, I can compare different payoff strategies for you.
-    `.trim();
+  // ---------- LIFESTYLE ----------
+  if (category === "lifestyle") {
+    if (
+      text.includes("sleep") ||
+      text.includes("routine") ||
+      text.includes("productive")
+    ) {
+      coachMemory.lifestyle.goal = message;
+    }
   }
 
-  return `
-Let's look at debt mathematically rather than emotionally.
+  // ---------- EXERCISE ----------
+  if (category === "exercise") {
+    if (
+      text.includes("muscle") ||
+      text.includes("strength")
+    ) {
+      coachMemory.exercise.goal = "strength";
+    } else if (
+      text.includes("lose weight") ||
+      text.includes("weight loss") ||
+      text.includes("fat loss")
+    ) {
+      coachMemory.exercise.goal = "weight loss";
+    } else if (
+      text.includes("cardio") ||
+      text.includes("running")
+    ) {
+      coachMemory.exercise.goal = "cardio";
+    }
 
-The most important numbers are:
-
-1. Balance
-2. APR
-3. Minimum payment
-4. Extra amount you can afford each month
-
-Give me those four numbers and I can show you how aggressively you could pay it down.
-  `.trim();
-}
-
-
-// ======================================================
-// INVESTING RESPONSE
-// ======================================================
-
-function investingResponse(message) {
-
-  return `
-For investing, I want to separate two questions:
-
-"Should I invest?"
-
-and
-
-"What should I invest in?"
-
-Those aren't the same question.
-
-Before choosing an investment, I'd look at:
-
-• Emergency savings
-• High-interest debt
-• Time horizon
-• Risk tolerance
-• Account type, such as a Roth IRA or taxable brokerage
-
-For long-term investing, diversified low-cost funds are often a much simpler starting point than trying to pick individual stocks.
-
-If you tell me which account you're talking about and when you expect to need the money, I can walk you through the options.
-  `.trim();
-}
-
-
-// ======================================================
-// CAR RESPONSE
-// ======================================================
-
-function carResponse(message) {
-
-  const amount =
-    extractMoney(message);
-
-  if (amount) {
-
-    return `
-A ${formatMoney(amount)} vehicle isn't just a ${formatMoney(amount)} purchase.
-
-I'd look at the total monthly cost:
-
-• Loan payment
-• Insurance
-• Gas
-• Maintenance
-• Registration
-• Depreciation
-
-The important question is whether the total cost fits comfortably into your budget, not simply whether you can get approved for the loan.
-
-If you give me the purchase price, down payment, APR and loan term, I can calculate the payment and total interest.
-    `.trim();
+    const days = message.match(/\b([1-7])\s*(?:days?|x)\b/i);
+    if (days) {
+      coachMemory.exercise.daysPerWeek = parseInt(days[1]);
+    }
   }
-
-  return `
-When you're evaluating a car, don't judge affordability only by the monthly payment.
-
-A dealer can make almost any payment look reasonable by extending the loan term.
-
-Give me the car price, down payment, APR and loan length and I'll break down the real cost.
-  `.trim();
 }
 
 
 // ======================================================
-// INCOME RESPONSE
+// FINANCE COACH
 // ======================================================
 
-function incomeResponse(message) {
+function financeCoach(message) {
+  const text = message.toLowerCase();
+  const amount = numberFromText(message);
 
-  return `
-Increasing income can be more powerful than trying to optimize every small expense.
+  if (text.includes("credit score")) {
+    if (coachMemory.finance.creditScore) {
+      const score = coachMemory.finance.creditScore;
 
-I'd look at three paths:
+      return `${score} is already a strong credit score. At that level, I'd focus less on chasing a higher number and more on protecting it: pay on time, keep revolving utilization under control, avoid unnecessary applications, and manage your total debt. If you're planning a car or home purchase, tell me what you're trying to do and I'll help you think through it.`;
+    }
 
-1. Increase your current income
-2. Build a valuable skill that raises your earning potential
-3. Create an additional income source
-
-The best option depends on your current job, skills and how much time you have available.
-
-Tell me what you currently do for work and what skills you're building, and I'll help you compare realistic paths.
-  `.trim();
-}
-
-
-// ======================================================
-// GOALS RESPONSE
-// ======================================================
-
-function goalsResponse(message) {
-
-  return `
-Let's turn the goal into numbers.
-
-A useful financial goal has:
-
-• A target amount
-• A deadline
-• A current starting point
-• A monthly contribution
-
-For example, instead of saying "I want to save more," we could say:
-
-"I want $20,000 by December 2027."
-
-Then we can calculate exactly what monthly contribution would be required.
-
-Tell me your goal and deadline and I'll break it down.
-  `.trim();
-}
-
-
-// ======================================================
-// GENERAL RESPONSE
-// ======================================================
-
-function generalResponse(message) {
-
-  const lower =
-    message.toLowerCase();
-
-  if (
-    lower.includes("hello") ||
-    lower.includes("hi") ||
-    lower.includes("hey")
-  ) {
-    return `
-Hey — I'm your Vaultwise Coach.
-
-I can help you think through budgeting, saving, debt, credit, investing, major purchases and financial goals.
-
-What's on your mind?
-    `.trim();
+    return `I can help with that. Tell me your approximate credit score, your card balances, and your total credit limits. Then I can explain what is likely helping or hurting your score.`;
   }
 
   if (
-    lower.includes("thank")
+    text.includes("budget") ||
+    text.includes("spending") ||
+    text.includes("expense")
   ) {
-    return `
-You're welcome.
-
-Keep giving me the actual numbers and I'll help you work through the decision instead of giving you generic financial advice.
-    `.trim();
+    return `Let's make your budget around your actual life rather than giving you a generic percentage. Start with monthly take-home income, housing, transportation, food, debt payments, subscriptions, and other recurring bills. Once we have those numbers, we can find the spending that can realistically be reduced without making your routine miserable.`;
   }
 
-  return `
-I want to give you an answer that actually fits your situation rather than guessing.
+  if (
+    text.includes("save") ||
+    text.includes("savings")
+  ) {
+    if (amount) {
+      return `If ${money(amount)} is your current savings amount, the next question is what that money needs to do. I'd separate money for emergencies, near-term purchases, and long-term wealth building. Tell me what you're saving for and when you expect to need it, and we can decide how much should stay accessible.`;
+    }
 
-Tell me a little more about what you're trying to accomplish, and include any numbers that matter — income, balance, payment, savings, price, APR, or deadline.
+    return `Saving works better when every dollar has a purpose. I'd think in three buckets: emergency cash, short-term goals, and long-term investing. Tell me how much you have saved and what you're working toward, and I'll help you create a plan.`;
+  }
 
-I'll work through it with you.
-  `.trim();
+  if (
+    text.includes("debt") ||
+    text.includes("loan") ||
+    text.includes("apr")
+  ) {
+    return `For debt, I want four numbers: balance, APR, minimum payment, and the amount you can pay above the minimum. High-interest debt deserves special attention because interest can quietly work against your other goals. Give me those numbers and I can compare payoff approaches.`;
+  }
+
+  if (
+    text.includes("invest") ||
+    text.includes("roth") ||
+    text.includes("ira") ||
+    text.includes("401k")
+  ) {
+    return `For investing, let's first identify the account, time horizon, and purpose. A retirement account and money you need in two years should not automatically be treated the same way. Once I know the account and when you need the money, I can walk you through the main options and tradeoffs.`;
+  }
+
+  if (amount && (text.includes("monthly") || text.includes("month"))) {
+    const yearly = amount * 12;
+
+    return `${money(amount)} per month is ${money(yearly)} per year. That's a useful way to look at recurring spending because small monthly decisions become much larger over a year. If you're deciding whether to cut that expense, tell me what it is and I'll help you weigh the tradeoff.`;
+  }
+
+  return `Let's look at the actual numbers. I can help you with budgeting, saving, debt, credit, investing, major purchases, and financial goals. Tell me what you're trying to accomplish and give me the numbers that matter.`;
 }
 
 
 // ======================================================
-// MAIN MOCK AI ENGINE
+// COOKING COACH
 // ======================================================
 
-function generateMockCoachReply(message) {
+function cookingCoach(message) {
+  const text = message.toLowerCase();
+  const ingredients = coachMemory.cooking.ingredients;
 
-  updateCoachMemory(message);
-
-  const topic =
-    detectTopic(message);
-
-  coachMemory.topic = topic;
-
-  // ----------------------------------------
-  // Follow-up awareness
-  // ----------------------------------------
-
-  if (isFollowUp(message)) {
-
-    const previousTopic =
-      coachMemory.topic;
-
-    if (previousTopic === "budget") {
-      return budgetResponse(message);
+  if (
+    text.includes("what can i make") ||
+    text.includes("what should i cook") ||
+    text.includes("recipe")
+  ) {
+    if (ingredients.length) {
+      return `Based on what you've mentioned — ${ingredients.join(", ")} — I'd build the meal around the protein or main ingredient first, then add a simple carbohydrate and a vegetable. If you tell me how many people you're cooking for and what equipment you have, I can turn those ingredients into a specific meal with steps.`;
     }
 
-    if (previousTopic === "savings") {
-      return savingsResponse(message);
-    }
-
-    if (previousTopic === "credit") {
-      return creditResponse(message);
-    }
-
-    if (previousTopic === "debt") {
-      return debtResponse(message);
-    }
-
-    if (previousTopic === "investing") {
-      return investingResponse(message);
-    }
+    return `Tell me 3–5 ingredients you already have, and I'll create a meal around them. I can also optimize it for cheap, healthy, high-protein, quick, or beginner-friendly cooking.`;
   }
 
-  // ----------------------------------------
-  // Topic routing
-  // ----------------------------------------
+  if (
+    text.includes("healthy") ||
+    text.includes("nutrition") ||
+    text.includes("protein")
+  ) {
+    return `A simple healthy meal doesn't need to be complicated. Try building it around a protein source, a fruit or vegetable, a carbohydrate that fits your needs, and a reasonable amount of fat. If you tell me what foods you like and your goal, I can suggest meals that are realistic enough to repeat during the week.`;
+  }
 
-  switch (topic) {
+  if (
+    text.includes("cheap") ||
+    text.includes("budget") ||
+    text.includes("affordable")
+  ) {
+    return `For inexpensive meals, repeatable ingredients are your friend. Rice, potatoes, beans, eggs, oats, pasta, frozen vegetables, and whatever protein is reasonably priced can become several different meals. If you give me your grocery budget, I can design a simple weekly meal strategy around it.`;
+  }
 
-    case "budget":
-      return budgetResponse(message);
+  if (
+    text.includes("chicken") ||
+    text.includes("rice") ||
+    text.includes("pasta") ||
+    ingredients.length
+  ) {
+    return `You already have enough information to start building a meal. I'd keep it simple: choose one main ingredient, season it well, cook it safely, then add a carbohydrate and vegetable. Tell me exactly what ingredients you have and I'll give you a step-by-step recipe instead of making you guess what to do next.`;
+  }
 
-    case "savings":
-      return savingsResponse(message);
+  return `I can help you decide what to cook, use ingredients you already have, make meals cheaper, build healthier meals, plan groceries, or create simple recipes. What are you working with?`;
+}
 
-    case "credit":
-      return creditResponse(message);
 
-    case "debt":
-      return debtResponse(message);
+// ======================================================
+// CLEANING COACH
+// ======================================================
 
-    case "investing":
-      return investingResponse(message);
+function cleaningCoach(message) {
+  const text = message.toLowerCase();
 
-    case "car":
-      return carResponse(message);
+  const area =
+    coachMemory.cleaning.problemArea;
 
-    case "income":
-      return incomeResponse(message);
+  if (
+    text.includes("schedule") ||
+    text.includes("routine") ||
+    text.includes("chores")
+  ) {
+    return `Don't try to deep-clean your entire home every day. A better routine is to give each task a frequency. Daily: dishes, trash, quick reset. A few times a week: laundry and surfaces. Weekly: bathroom, floors, bedding, and a more complete reset. Tell me how much time you have each day and I'll turn that into a realistic routine.`;
+  }
 
-    case "goals":
-      return goalsResponse(message);
+  if (area) {
+    return `Let's make ${area} manageable instead of waiting until it becomes a huge project. Start by removing obvious clutter, then clean from higher surfaces downward, and finish with the floor. If you give me 10, 20, or 30 minutes, I can give you a timed cleaning checklist.`;
+  }
+
+  if (
+    text.includes("messy") ||
+    text.includes("overwhelmed") ||
+    text.includes("don't know where to start")
+  ) {
+    return `Don't start by trying to clean everything. Start with a reset: throw away trash, collect dishes, put obvious items back where they belong, then choose one surface or area. A clean environment is easier to maintain when you create small repeatable habits instead of relying on one giant cleaning day.`;
+  }
+
+  return `I can help you build cleaning routines, organize a messy room, divide chores across the week, or create a 10–30 minute cleaning sprint. Tell me what area you're dealing with and how much time you have.`;
+}
+
+
+// ======================================================
+// LIFESTYLE COACH
+// ======================================================
+
+function lifestyleCoach(message) {
+  const text = message.toLowerCase();
+
+  if (
+    text.includes("procrast") ||
+    text.includes("can't focus") ||
+    text.includes("distracted")
+  ) {
+    return `Don't make the goal "be productive all day." Pick one task, define the smallest useful next action, and work on it for 10 minutes without switching tasks. Once you start, continuing is usually easier than starting. If your phone is the main distraction, put physical distance between you and it during the first work block.`;
+  }
+
+  if (
+    text.includes("morning") ||
+    text.includes("wake")
+  ) {
+    return `A good morning routine should make the rest of your day easier, not give you ten more chores. Try: wake up, water, hygiene, make the bed, quick movement, then identify your most important task. Keep it short enough that you can actually repeat it.`;
+  }
+
+  if (
+    text.includes("sleep") ||
+    text.includes("night") ||
+    text.includes("bed")
+  ) {
+    return `For a better sleep routine, consistency usually matters more than creating a complicated ritual. Keep your wake time reasonably consistent, reduce stimulating activities before bed, and give yourself a predictable wind-down period. If you tell me your current sleep and wake times, I can help you build a realistic evening routine.`;
+  }
+
+  if (
+    text.includes("habit") ||
+    text.includes("habits")
+  ) {
+    return `The best habit is one you can repeat. Start with a version so small that skipping it feels harder than doing it. Then attach it to something you already do: after brushing your teeth, after breakfast, or when you get home. Once the behavior becomes automatic, increase it gradually.`;
+  }
+
+  return `Lifestyle improvement is really about making your day easier to repeat. I can help with morning routines, evening routines, habits, productivity, sleep, time management, procrastination, and daily planning. Tell me what part of your day keeps going off track.`;
+}
+
+
+// ======================================================
+// EXERCISE COACH
+// ======================================================
+
+function exerciseCoach(message) {
+  const text = message.toLowerCase();
+
+  if (
+    text.includes("beginner") ||
+    text.includes("starting") ||
+    text.includes("new to")
+  ) {
+    return `If you're new to exercise, don't start with an extreme program. Start with a routine you can recover from and repeat. A simple foundation is walking or light cardio plus basic strength movements such as squats, pushes, pulls, and core work. If you tell me your goal, available equipment, and how many days you can train, I can build a beginner routine around that.`;
+  }
+
+  if (
+    text.includes("muscle") ||
+    text.includes("strength")
+  ) {
+    return `For building strength or muscle, consistency and progressive overload matter more than constantly changing exercises. Build your routine around major movement patterns, train them regularly, recover adequately, and gradually increase reps, resistance, or difficulty. Tell me whether you train at home or in a gym and how many days you have available.`;
+  }
+
+  if (
+    text.includes("lose weight") ||
+    text.includes("weight loss") ||
+    text.includes("fat loss")
+  ) {
+    return `For fat loss, exercise helps, but your overall energy balance and eating habits matter too. A sustainable approach is usually better than trying to burn yourself out with cardio. Combine regular movement with strength training and an eating pattern you can maintain. If you tell me your current activity level and goal, I can help you structure a routine.`;
+  }
+
+  if (
+    text.includes("cardio") ||
+    text.includes("running") ||
+    text.includes("run")
+  ) {
+    return `For cardio, build gradually instead of trying to maximize every workout. Walking, jogging, cycling, swimming, or other activities can work. If you're starting from low fitness, alternating easier and harder periods can make training more manageable. Tell me what activity you prefer and your current level.`;
+  }
+
+  if (
+    text.includes("stretch") ||
+    text.includes("mobility")
+  ) {
+    return `A useful mobility routine doesn't need to be long. Focus on the areas that actually limit your movement, move through comfortable ranges, and avoid forcing painful positions. If you tell me where you feel stiff, I can suggest a short routine.`;
+  }
+
+  return `I can help with workouts, strength, cardio, mobility, beginner fitness, habit-building around exercise, and training schedules. Tell me your goal, where you train, what equipment you have, and how many days per week you can realistically commit.`;
+}
+
+
+// ======================================================
+// CROSS-CATEGORY DAILY ROUTINE COACH
+// ======================================================
+
+function routineCoach(message) {
+  return `Let's turn that into a routine instead of another thing you have to remember.
+
+A strong Vaultwise routine can combine your five areas:
+
+Morning
+• Hygiene
+• Quick room reset
+• Breakfast
+• Review today's priorities
+
+Day
+• Work/school responsibilities
+• Movement
+• Food and hydration
+
+Evening
+• Clean-up reset
+• Prepare tomorrow
+• Review spending if needed
+• Wind down for sleep
+
+Tell me what your typical day looks like and I can build a routine around your actual schedule.`;
+}
+
+
+// ======================================================
+// GENERAL COACH
+// ======================================================
+
+function generalCoach(message) {
+  const text = message.toLowerCase();
+
+  if (
+    text.includes("hello") ||
+    text.includes("hi") ||
+    text.includes("hey")
+  ) {
+    return `Hey! I'm your Vaultwise Coach. I can help you improve five parts of your everyday life: finances, cooking, cleaning, lifestyle, and exercise. You can ask me something specific or tell me what you're struggling with today.`;
+  }
+
+  if (
+    text.includes("what can you do") ||
+    text.includes("help me")
+  ) {
+    return `I can help you with five areas:
+
+💰 Finance — budgets, saving, debt, credit, investing and spending
+
+🍳 Cooking — recipes, groceries, meal planning and using what you already have
+
+🧹 Cleaning — chores, organization, cleaning schedules and quick resets
+
+🌱 Lifestyle — routines, habits, sleep, productivity and procrastination
+
+💪 Exercise — workouts, strength, cardio, mobility and consistency
+
+You can also combine them. For example: "Build me a routine that includes cooking dinner, cleaning my apartment and working out."`;
+  }
+
+  return `I'm here to help with the everyday things that are easy to put off. Try asking about your money, what to cook, how to clean something, how to improve your routine, or what workout you should do. You can also give me a real situation and we'll work through it together.`;
+}
+
+
+// ======================================================
+// MAIN RESPONSE ENGINE
+// ======================================================
+
+function generateCoachReply(message) {
+  const category = detectCategory(message);
+
+  updateMemory(message, category);
+
+  // Cross-category requests
+  const text = message.toLowerCase();
+
+  if (
+    (text.includes("routine") || text.includes("schedule")) &&
+    (
+      text.includes("cook") ||
+      text.includes("clean") ||
+      text.includes("exercise") ||
+      text.includes("workout") ||
+      text.includes("money") ||
+      text.includes("finance")
+    )
+  ) {
+    return routineCoach(message);
+  }
+
+  switch (category) {
+    case "finance":
+      return financeCoach(message);
+
+    case "cooking":
+      return cookingCoach(message);
+
+    case "cleaning":
+      return cleaningCoach(message);
+
+    case "lifestyle":
+      return lifestyleCoach(message);
+
+    case "exercise":
+      return exerciseCoach(message);
 
     default:
-      return generalResponse(message);
+      return generalCoach(message);
   }
 }
 
 
 // ======================================================
-// SEND MESSAGE
+// SEND MESSAGE — FREE MOCK
 // ======================================================
 
 async function sendCoachMessage(message) {
+  // Simulate thinking so the free demo feels natural.
+  await new Promise(resolve => setTimeout(resolve, 450));
 
-  // ----------------------------------------
-  // FREE MOCK MODE
-  // ----------------------------------------
-  // There is deliberately NO backend call here.
-  // ----------------------------------------
-
-  await new Promise(resolve =>
-    setTimeout(resolve, 500)
-  );
-
-  return generateMockCoachReply(message);
+  return generateCoachReply(message);
 }
 
 
@@ -740,32 +704,18 @@ async function sendCoachMessage(message) {
 // ======================================================
 
 function initCoachChat() {
-
-  const form =
-    document.getElementById("ai-chat-form");
-
-  const input =
-    document.getElementById("ai-chat-input");
+  const form = document.getElementById("ai-chat-form");
+  const input = document.getElementById("ai-chat-input");
 
   if (!form || !input) return;
 
   form.addEventListener("submit", async event => {
-
     event.preventDefault();
 
-    const message =
-      input.value.trim();
-
+    const message = input.value.trim();
     if (!message) return;
 
-    // ----------------------------------------
-    // Display user message
-    // ----------------------------------------
-
-    addCoachMessage(
-      "user",
-      message
-    );
+    addCoachMessage("user", message);
 
     coachHistory.push({
       role: "user",
@@ -774,28 +724,13 @@ function initCoachChat() {
 
     input.value = "";
 
-    // ----------------------------------------
-    // Loading
-    // ----------------------------------------
-
-    addCoachMessage(
-      "assistant",
-      "Thinking..."
-    );
+    addCoachMessage("assistant", "Thinking...");
 
     try {
-
-      const reply =
-        await sendCoachMessage(message);
-
-      // ----------------------------------------
-      // Remove thinking message
-      // ----------------------------------------
+      const reply = await sendCoachMessage(message);
 
       const messages =
-        document.getElementById(
-          "ai-chat-messages"
-        );
+        document.getElementById("ai-chat-messages");
 
       const lastMessage =
         messages.lastElementChild;
@@ -804,31 +739,18 @@ function initCoachChat() {
         lastMessage.remove();
       }
 
-      // ----------------------------------------
-      // Display response
-      // ----------------------------------------
-
-      addCoachMessage(
-        "assistant",
-        reply
-      );
+      addCoachMessage("assistant", reply);
 
       coachHistory.push({
         role: "assistant",
         content: reply
       });
 
-    } catch (err) {
-
-      console.error(
-        "VAULTWISE COACH ERROR:",
-        err
-      );
+    } catch (error) {
+      console.error("VAULTWISE COACH ERROR:", error);
 
       const messages =
-        document.getElementById(
-          "ai-chat-messages"
-        );
+        document.getElementById("ai-chat-messages");
 
       const lastMessage =
         messages.lastElementChild;
@@ -839,7 +761,7 @@ function initCoachChat() {
 
       addCoachMessage(
         "assistant",
-        "Something went wrong. Try asking me again."
+        "I couldn't process that. Try asking me another way."
       );
     }
   });
@@ -847,10 +769,16 @@ function initCoachChat() {
 
 
 // ======================================================
-// START CHAT
+// START
 // ======================================================
 
 document.addEventListener(
   "DOMContentLoaded",
   initCoachChat
 );
+'''
+
+out = Path("/mnt/data/Vaultwise_Free_Coach_5_Categories.js")
+out.write_text(js)
+print(f"Created {out}")
+print(f"{len(js.splitlines())} lines")
