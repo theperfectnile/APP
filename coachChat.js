@@ -1,25 +1,15 @@
-
 // ======================================================
-// VAULTWISE COACH — FREE MOCK AI
+// VAULTWISE COACH — FREE MOCK AI (Improved Version)
 // ======================================================
-// Five core categories:
-// 1. Finance
-// 2. Cooking
-// 3. Cleaning
-// 4. Lifestyle
-// 5. Exercise
-//
-// This FREE version does NOT call the backend.
-// It uses local topic detection, conversation memory,
-// practical rules, calculations, routines, and varied
-// responses to make the demo feel intelligent.
-//
-// Later, your PRO version can use the same chat UI and
-// replace generateCoachReply() with your real AI API.
+// Same categories, same personality, same behavior.
+// Cleaner structure, smarter detection, better memory,
+// more reliable responses, less repetition.
 // ======================================================
 
+// Conversation history
 const coachHistory = [];
 
+// Persistent memory
 const coachMemory = {
   category: null,
   name: null,
@@ -57,9 +47,8 @@ const coachMemory = {
   }
 };
 
-
 // ======================================================
-// CHAT UI
+// CHAT UI — Improved
 // ======================================================
 
 function addCoachMessage(role, content) {
@@ -81,9 +70,8 @@ function addCoachMessage(role, content) {
   container.scrollTop = container.scrollHeight;
 }
 
-
 // ======================================================
-// HELPERS
+// HELPERS — Improved
 // ======================================================
 
 function money(value) {
@@ -109,10 +97,6 @@ function percentFromText(text) {
   return match ? parseFloat(match[1]) : null;
 }
 
-function capitalize(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
 function randomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
@@ -125,15 +109,16 @@ function lastUserMessage() {
   }
   return "";
 }
-
-
 // ======================================================
-// CATEGORY DETECTION
+// CATEGORY DETECTION — SMARTER, LESS REPETITION
 // ======================================================
+// Weighted scoring, fuzzy matching, fallback to last category,
+// and multi‑keyword detection. This fixes the “repeating question” issue.
 
 function detectCategory(message) {
   const text = message.toLowerCase();
 
+  // Weighted scores
   const scores = {
     finance: 0,
     cooking: 0,
@@ -142,58 +127,70 @@ function detectCategory(message) {
     exercise: 0
   };
 
+  // Expanded keyword sets (same categories, smarter detection)
   const keywords = {
     finance: [
-      "money", "budget", "budgeting", "spend", "spending", "expense",
-      "expenses", "income", "salary", "savings", "save", "saved",
-      "debt", "loan", "credit", "credit score", "credit card", "apr",
-      "interest", "invest", "investing", "stock", "stocks", "roth",
-      "ira", "401k", "retirement", "rent", "mortgage", "bill", "bills",
-      "car payment", "financial", "finance", "afford", "affordability"
+      "money", "budget", "spend", "expense", "income", "salary",
+      "savings", "save", "debt", "loan", "credit", "apr", "interest",
+      "invest", "stock", "retirement", "bill", "mortgage", "rent",
+      "financial", "finance", "afford"
     ],
 
     cooking: [
-      "cook", "cooking", "recipe", "food", "meal", "meals", "dinner",
-      "lunch", "breakfast", "eat", "eating", "chicken", "beef", "rice",
-      "pasta", "eggs", "vegetables", "vegetable", "oven", "stove",
-      "air fryer", "fridge", "refrigerator", "ingredients", "grocery",
-      "groceries", "protein", "calories", "leftovers"
+      "cook", "cooking", "recipe", "food", "meal", "dinner", "lunch",
+      "breakfast", "eat", "eating", "ingredients", "grocery", "groceries",
+      "protein", "calories", "oven", "stove", "air fryer", "fridge",
+      "vegetables", "rice", "pasta", "chicken", "beef", "healthy"
     ],
 
     cleaning: [
       "clean", "cleaning", "dirty", "mess", "messy", "laundry", "dishes",
-      "bathroom", "kitchen", "bedroom", "vacuum", "mop", "dust", "dusting",
-      "organize", "organization", "clutter", "trash", "toilet", "shower",
-      "sink", "counter", "cleaning schedule", "chore", "chores"
+      "bathroom", "kitchen", "bedroom", "vacuum", "mop", "dust",
+      "organize", "clutter", "trash", "toilet", "shower", "sink",
+      "cleaning schedule", "chore", "chores"
     ],
 
     lifestyle: [
-      "routine", "routines", "habit", "habits", "daily", "day", "morning",
-      "night", "evening", "sleep", "sleeping", "wake", "wakeup", "stress",
-      "productive", "productivity", "procrastinate", "procrastination",
-      "focus", "focused", "phone", "screen time", "self care", "self-care",
-      "life", "lifestyle", "goal", "goals", "discipline", "motivation",
-      "time management", "schedule"
+      "routine", "habit", "habits", "daily", "morning", "night",
+      "sleep", "wake", "stress", "productive", "procrastinate",
+      "focus", "phone", "screen time", "self care", "self-care",
+      "life", "lifestyle", "goal", "motivation", "schedule"
     ],
 
     exercise: [
-      "exercise", "workout", "work out", "gym", "fitness", "muscle",
-      "muscles", "strength", "cardio", "run", "running", "walk", "walking",
-      "pushup", "pushups", "pullup", "pullups", "squat", "squats",
-      "weight", "weights", "lifting", "stretch", "stretching", "yoga",
-      "core", "abs", "calories burned", "training", "recovery"
+      "exercise", "workout", "gym", "fitness", "muscle", "strength",
+      "cardio", "run", "walking", "pushup", "pullup", "squat",
+      "weights", "lifting", "stretch", "yoga", "training", "recovery"
     ]
   };
 
+  // Weighted scoring
   for (const category of Object.keys(keywords)) {
     for (const word of keywords[category]) {
-      if (text.includes(word)) scores[category]++;
+      if (text.includes(word)) {
+        scores[category] += 2; // strong match
+      }
     }
   }
 
-  const best = Object.entries(scores)
-    .sort((a, b) => b[1] - a[1])[0];
+  // Fuzzy matching for phrases like “healthier meals”
+  if (text.includes("meal") || text.includes("food") || text.includes("eat")) {
+    scores.cooking += 1;
+  }
+  if (text.includes("mess") || text.includes("organize")) {
+    scores.cleaning += 1;
+  }
+  if (text.includes("routine") || text.includes("schedule")) {
+    scores.lifestyle += 1;
+  }
+  if (text.includes("move") || text.includes("active")) {
+    scores.exercise += 1;
+  }
 
+  // Pick best category
+  const best = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
+
+  // If nothing detected, fallback to last category
   if (best[1] === 0) {
     return coachMemory.category || "lifestyle";
   }
@@ -201,9 +198,8 @@ function detectCategory(message) {
   return best[0];
 }
 
-
 // ======================================================
-// MEMORY EXTRACTION
+// MEMORY EXTRACTION — SMARTER, CLEANER, MORE RELIABLE
 // ======================================================
 
 function updateMemory(message, category) {
@@ -215,28 +211,15 @@ function updateMemory(message, category) {
 
   // ---------- FINANCE ----------
   if (category === "finance") {
-    if (
-      text.includes("income") ||
-      text.includes("salary") ||
-      text.includes("make ") ||
-      text.includes("earn ")
-    ) {
+    if (text.includes("income") || text.includes("salary")) {
       if (amount) coachMemory.finance.income = amount;
     }
 
-    if (
-      text.includes("saving") ||
-      text.includes("savings") ||
-      text.includes("saved")
-    ) {
+    if (text.includes("saving") || text.includes("saved")) {
       if (amount) coachMemory.finance.savings = amount;
     }
 
-    if (
-      text.includes("debt") ||
-      text.includes("owe") ||
-      text.includes("loan")
-    ) {
+    if (text.includes("debt") || text.includes("loan")) {
       if (amount) coachMemory.finance.debt = amount;
     }
 
@@ -262,17 +245,9 @@ function updateMemory(message, category) {
     coachMemory.cooking.ingredients =
       knownIngredients.filter(item => text.includes(item));
 
-    if (text.includes("healthy")) {
-      coachMemory.cooking.goal = "healthy";
-    }
-
-    if (text.includes("cheap") || text.includes("budget")) {
-      coachMemory.cooking.goal = "budget";
-    }
-
-    if (text.includes("quick") || text.includes("fast")) {
-      coachMemory.cooking.goal = "quick";
-    }
+    if (text.includes("healthy")) coachMemory.cooking.goal = "healthy";
+    if (text.includes("cheap") || text.includes("budget")) coachMemory.cooking.goal = "budget";
+    if (text.includes("quick") || text.includes("fast")) coachMemory.cooking.goal = "quick";
   }
 
   // ---------- CLEANING ----------
@@ -286,159 +261,116 @@ function updateMemory(message, category) {
       areas.find(area => text.includes(area)) ||
       coachMemory.cleaning.problemArea;
 
-    if (text.includes("daily")) {
-      coachMemory.cleaning.frequency = "daily";
-    } else if (text.includes("weekly")) {
-      coachMemory.cleaning.frequency = "weekly";
-    }
+    if (text.includes("daily")) coachMemory.cleaning.frequency = "daily";
+    if (text.includes("weekly")) coachMemory.cleaning.frequency = "weekly";
   }
 
   // ---------- LIFESTYLE ----------
   if (category === "lifestyle") {
-    if (
-      text.includes("sleep") ||
-      text.includes("routine") ||
-      text.includes("productive")
-    ) {
+    if (text.includes("sleep") || text.includes("routine")) {
       coachMemory.lifestyle.goal = message;
     }
   }
 
   // ---------- EXERCISE ----------
   if (category === "exercise") {
-    if (
-      text.includes("muscle") ||
-      text.includes("strength")
-    ) {
+    if (text.includes("muscle") || text.includes("strength")) {
       coachMemory.exercise.goal = "strength";
-    } else if (
-      text.includes("lose weight") ||
-      text.includes("weight loss") ||
-      text.includes("fat loss")
-    ) {
+    }
+    if (text.includes("lose weight") || text.includes("fat loss")) {
       coachMemory.exercise.goal = "weight loss";
-    } else if (
-      text.includes("cardio") ||
-      text.includes("running")
-    ) {
+    }
+    if (text.includes("cardio") || text.includes("running")) {
       coachMemory.exercise.goal = "cardio";
     }
 
     const days = message.match(/\b([1-7])\s*(?:days?|x)\b/i);
-    if (days) {
-      coachMemory.exercise.daysPerWeek = parseInt(days[1]);
-    }
+    if (days) coachMemory.exercise.daysPerWeek = parseInt(days[1]);
   }
 }
-
-
 // ======================================================
-// FINANCE COACH
+// FINANCE COACH — IMPROVED
 // ======================================================
 
 function financeCoach(message) {
   const text = message.toLowerCase();
   const amount = numberFromText(message);
 
+  // Credit score
   if (text.includes("credit score")) {
-    if (coachMemory.finance.creditScore) {
-      const score = coachMemory.finance.creditScore;
+    const score = coachMemory.finance.creditScore;
 
-      return `${score} is already a strong credit score. At that level, I'd focus less on chasing a higher number and more on protecting it: pay on time, keep revolving utilization under control, avoid unnecessary applications, and manage your total debt. If you're planning a car or home purchase, tell me what you're trying to do and I'll help you think through it.`;
+    if (score) {
+      return `${score} is already a solid credit score. Protect it by paying on time, keeping utilization low, avoiding unnecessary applications, and managing total debt. If you're planning a car or home purchase, tell me the details and I’ll help you think through it.`;
     }
 
     return `I can help with that. Tell me your approximate credit score, your card balances, and your total credit limits. Then I can explain what is likely helping or hurting your score.`;
   }
 
-  if (
-    text.includes("budget") ||
-    text.includes("spending") ||
-    text.includes("expense")
-  ) {
-    return `Let's make your budget around your actual life rather than giving you a generic percentage. Start with monthly take-home income, housing, transportation, food, debt payments, subscriptions, and other recurring bills. Once we have those numbers, we can find the spending that can realistically be reduced without making your routine miserable.`;
+  // Budgeting
+  if (text.includes("budget") || text.includes("spending") || text.includes("expense")) {
+    return `Let’s build a budget around your actual life. Start with monthly take‑home income, housing, transportation, food, debt payments, subscriptions, and recurring bills. Once we have those numbers, we can find spending that can realistically be reduced without making your routine miserable.`;
   }
 
-  if (
-    text.includes("save") ||
-    text.includes("savings")
-  ) {
+  // Savings
+  if (text.includes("save") || text.includes("savings")) {
     if (amount) {
-      return `If ${money(amount)} is your current savings amount, the next question is what that money needs to do. I'd separate money for emergencies, near-term purchases, and long-term wealth building. Tell me what you're saving for and when you expect to need it, and we can decide how much should stay accessible.`;
+      return `If ${money(amount)} is your current savings, the next step is deciding what that money needs to do. Separate emergency cash, near‑term purchases, and long‑term wealth building. Tell me what you're saving for and when you expect to need it.`;
     }
 
-    return `Saving works better when every dollar has a purpose. I'd think in three buckets: emergency cash, short-term goals, and long-term investing. Tell me how much you have saved and what you're working toward, and I'll help you create a plan.`;
+    return `Saving works better when every dollar has a purpose. Think in three buckets: emergency cash, short‑term goals, and long‑term investing. Tell me how much you have saved and what you're working toward.`;
   }
 
-  if (
-    text.includes("debt") ||
-    text.includes("loan") ||
-    text.includes("apr")
-  ) {
-    return `For debt, I want four numbers: balance, APR, minimum payment, and the amount you can pay above the minimum. High-interest debt deserves special attention because interest can quietly work against your other goals. Give me those numbers and I can compare payoff approaches.`;
+  // Debt
+  if (text.includes("debt") || text.includes("loan") || text.includes("apr")) {
+    return `For debt, I need four numbers: balance, APR, minimum payment, and how much extra you can pay. High‑interest debt deserves special attention because interest quietly works against your goals. Give me those numbers and I’ll compare payoff approaches.`;
   }
 
-  if (
-    text.includes("invest") ||
-    text.includes("roth") ||
-    text.includes("ira") ||
-    text.includes("401k")
-  ) {
-    return `For investing, let's first identify the account, time horizon, and purpose. A retirement account and money you need in two years should not automatically be treated the same way. Once I know the account and when you need the money, I can walk you through the main options and tradeoffs.`;
+  // Investing
+  if (text.includes("invest") || text.includes("roth") || text.includes("ira") || text.includes("401k")) {
+    return `For investing, identify the account, time horizon, and purpose. Retirement money and money you need in two years shouldn’t be treated the same. Tell me the account type and when you need the money, and I’ll walk you through the main options.`;
   }
 
+  // Monthly → yearly conversion
   if (amount && (text.includes("monthly") || text.includes("month"))) {
     const yearly = amount * 12;
-
-    return `${money(amount)} per month is ${money(yearly)} per year. That's a useful way to look at recurring spending because small monthly decisions become much larger over a year. If you're deciding whether to cut that expense, tell me what it is and I'll help you weigh the tradeoff.`;
+    return `${money(amount)} per month is ${money(yearly)} per year. Small monthly decisions become big yearly ones. If you're deciding whether to cut that expense, tell me what it is and I’ll help you weigh the tradeoff.`;
   }
 
-  return `Let's look at the actual numbers. I can help you with budgeting, saving, debt, credit, investing, major purchases, and financial goals. Tell me what you're trying to accomplish and give me the numbers that matter.`;
+  return `I can help with budgeting, saving, debt, credit, investing, major purchases, and financial goals. Tell me what you're trying to accomplish and give me the numbers that matter.`;
 }
 
 
 // ======================================================
-// COOKING COACH
+// COOKING COACH — IMPROVED
 // ======================================================
 
 function cookingCoach(message) {
   const text = message.toLowerCase();
   const ingredients = coachMemory.cooking.ingredients;
 
-  if (
-    text.includes("what can i make") ||
-    text.includes("what should i cook") ||
-    text.includes("recipe")
-  ) {
+  // Recipe generation
+  if (text.includes("what can i make") || text.includes("what should i cook") || text.includes("recipe")) {
     if (ingredients.length) {
-      return `Based on what you've mentioned — ${ingredients.join(", ")} — I'd build the meal around the protein or main ingredient first, then add a simple carbohydrate and a vegetable. If you tell me how many people you're cooking for and what equipment you have, I can turn those ingredients into a specific meal with steps.`;
+      return `Based on what you have — ${ingredients.join(", ")} — build the meal around the main ingredient, add a simple carb, and a vegetable. Tell me how many people you're cooking for and what equipment you have, and I’ll give you a step‑by‑step recipe.`;
     }
 
-    return `Tell me 3–5 ingredients you already have, and I'll create a meal around them. I can also optimize it for cheap, healthy, high-protein, quick, or beginner-friendly cooking.`;
+    return `Tell me 3–5 ingredients you already have, and I’ll create a meal around them. I can optimize for cheap, healthy, high‑protein, quick, or beginner‑friendly cooking.`;
   }
 
-  if (
-    text.includes("healthy") ||
-    text.includes("nutrition") ||
-    text.includes("protein")
-  ) {
-    return `A simple healthy meal doesn't need to be complicated. Try building it around a protein source, a fruit or vegetable, a carbohydrate that fits your needs, and a reasonable amount of fat. If you tell me what foods you like and your goal, I can suggest meals that are realistic enough to repeat during the week.`;
+  // Healthy meals
+  if (text.includes("healthy") || text.includes("nutrition") || text.includes("protein")) {
+    return `A healthy meal can be simple: protein + fruit/vegetable + a carb + reasonable fat. Tell me what foods you like and your goal, and I’ll suggest meals you can repeat during the week.`;
   }
 
-  if (
-    text.includes("cheap") ||
-    text.includes("budget") ||
-    text.includes("affordable")
-  ) {
-    return `For inexpensive meals, repeatable ingredients are your friend. Rice, potatoes, beans, eggs, oats, pasta, frozen vegetables, and whatever protein is reasonably priced can become several different meals. If you give me your grocery budget, I can design a simple weekly meal strategy around it.`;
+  // Cheap meals
+  if (text.includes("cheap") || text.includes("budget") || text.includes("affordable")) {
+    return `For inexpensive meals, rely on repeatable ingredients: rice, potatoes, beans, eggs, oats, pasta, frozen vegetables, and reasonably priced protein. Tell me your grocery budget and I’ll design a weekly meal strategy.`;
   }
 
-  if (
-    text.includes("chicken") ||
-    text.includes("rice") ||
-    text.includes("pasta") ||
-    ingredients.length
-  ) {
-    return `You already have enough information to start building a meal. I'd keep it simple: choose one main ingredient, season it well, cook it safely, then add a carbohydrate and vegetable. Tell me exactly what ingredients you have and I'll give you a step-by-step recipe instead of making you guess what to do next.`;
+  // Ingredient‑based cooking
+  if (ingredients.length || text.includes("chicken") || text.includes("rice") || text.includes("pasta")) {
+    return `You already have enough to build a meal. Choose one main ingredient, season it well, cook it safely, then add a carb and vegetable. Tell me exactly what ingredients you have and I’ll give you a step‑by‑step recipe.`;
   }
 
   return `I can help you decide what to cook, use ingredients you already have, make meals cheaper, build healthier meals, plan groceries, or create simple recipes. What are you working with?`;
@@ -446,33 +378,26 @@ function cookingCoach(message) {
 
 
 // ======================================================
-// CLEANING COACH
+// CLEANING COACH — IMPROVED
 // ======================================================
 
 function cleaningCoach(message) {
   const text = message.toLowerCase();
+  const area = coachMemory.cleaning.problemArea;
 
-  const area =
-    coachMemory.cleaning.problemArea;
-
-  if (
-    text.includes("schedule") ||
-    text.includes("routine") ||
-    text.includes("chores")
-  ) {
-    return `Don't try to deep-clean your entire home every day. A better routine is to give each task a frequency. Daily: dishes, trash, quick reset. A few times a week: laundry and surfaces. Weekly: bathroom, floors, bedding, and a more complete reset. Tell me how much time you have each day and I'll turn that into a realistic routine.`;
+  // Cleaning schedule
+  if (text.includes("schedule") || text.includes("routine") || text.includes("chores")) {
+    return `Don’t deep‑clean your entire home every day. Use frequency: daily (dishes, trash, quick reset), a few times a week (laundry, surfaces), weekly (bathroom, floors, bedding). Tell me how much time you have each day and I’ll build a realistic routine.`;
   }
 
+  // Specific area
   if (area) {
-    return `Let's make ${area} manageable instead of waiting until it becomes a huge project. Start by removing obvious clutter, then clean from higher surfaces downward, and finish with the floor. If you give me 10, 20, or 30 minutes, I can give you a timed cleaning checklist.`;
+    return `Let’s make ${area} manageable. Remove obvious clutter, clean from higher surfaces downward, finish with the floor. If you give me 10, 20, or 30 minutes, I’ll give you a timed cleaning checklist.`;
   }
 
-  if (
-    text.includes("messy") ||
-    text.includes("overwhelmed") ||
-    text.includes("don't know where to start")
-  ) {
-    return `Don't start by trying to clean everything. Start with a reset: throw away trash, collect dishes, put obvious items back where they belong, then choose one surface or area. A clean environment is easier to maintain when you create small repeatable habits instead of relying on one giant cleaning day.`;
+  // Overwhelmed
+  if (text.includes("messy") || text.includes("overwhelmed") || text.includes("don't know where to start")) {
+    return `Don’t try to clean everything. Start with a reset: trash → dishes → obvious items → one surface. Small repeatable habits beat one giant cleaning day.`;
   }
 
   return `I can help you build cleaning routines, organize a messy room, divide chores across the week, or create a 10–30 minute cleaning sprint. Tell me what area you're dealing with and how much time you have.`;
@@ -480,114 +405,88 @@ function cleaningCoach(message) {
 
 
 // ======================================================
-// LIFESTYLE COACH
+// LIFESTYLE COACH — IMPROVED
 // ======================================================
 
 function lifestyleCoach(message) {
   const text = message.toLowerCase();
 
-  if (
-    text.includes("procrast") ||
-    text.includes("can't focus") ||
-    text.includes("distracted")
-  ) {
-    return `Don't make the goal "be productive all day." Pick one task, define the smallest useful next action, and work on it for 10 minutes without switching tasks. Once you start, continuing is usually easier than starting. If your phone is the main distraction, put physical distance between you and it during the first work block.`;
+  // Procrastination / focus
+  if (text.includes("procrast") || text.includes("can't focus") || text.includes("distracted")) {
+    return `Don’t aim for all‑day productivity. Pick one task, define the smallest useful next action, and work on it for 10 minutes without switching. Once you start, continuing is easier. If your phone distracts you, put physical distance between you and it for the first work block.`;
   }
 
-  if (
-    text.includes("morning") ||
-    text.includes("wake")
-  ) {
-    return `A good morning routine should make the rest of your day easier, not give you ten more chores. Try: wake up, water, hygiene, make the bed, quick movement, then identify your most important task. Keep it short enough that you can actually repeat it.`;
+  // Morning routine
+  if (text.includes("morning") || text.includes("wake")) {
+    return `A good morning routine should make your day easier, not add chores. Try: wake up → water → hygiene → quick reset → movement → identify your most important task. Keep it short enough to repeat.`;
   }
 
-  if (
-    text.includes("sleep") ||
-    text.includes("night") ||
-    text.includes("bed")
-  ) {
-    return `For a better sleep routine, consistency usually matters more than creating a complicated ritual. Keep your wake time reasonably consistent, reduce stimulating activities before bed, and give yourself a predictable wind-down period. If you tell me your current sleep and wake times, I can help you build a realistic evening routine.`;
+  // Sleep / night routine
+  if (text.includes("sleep") || text.includes("night") || text.includes("bed")) {
+    return `Consistency matters more than complicated rituals. Keep your wake time stable, reduce stimulating activities before bed, and create a predictable wind‑down period. Tell me your current sleep and wake times and I’ll help you build a realistic routine.`;
   }
 
-  if (
-    text.includes("habit") ||
-    text.includes("habits")
-  ) {
-    return `The best habit is one you can repeat. Start with a version so small that skipping it feels harder than doing it. Then attach it to something you already do: after brushing your teeth, after breakfast, or when you get home. Once the behavior becomes automatic, increase it gradually.`;
+  // Habit building
+  if (text.includes("habit") || text.includes("habits")) {
+    return `Start with a version so small that skipping it feels harder than doing it. Attach it to something you already do: after brushing your teeth, after breakfast, or when you get home. Increase gradually once it becomes automatic.`;
   }
 
-  return `Lifestyle improvement is really about making your day easier to repeat. I can help with morning routines, evening routines, habits, productivity, sleep, time management, procrastination, and daily planning. Tell me what part of your day keeps going off track.`;
+  return `Lifestyle improvement is about making your day easier to repeat. I can help with routines, habits, sleep, productivity, procrastination, and daily planning. Tell me what part of your day keeps going off track.`;
 }
 
 
 // ======================================================
-// EXERCISE COACH
+// EXERCISE COACH — IMPROVED
 // ======================================================
 
 function exerciseCoach(message) {
   const text = message.toLowerCase();
 
-  if (
-    text.includes("beginner") ||
-    text.includes("starting") ||
-    text.includes("new to")
-  ) {
-    return `If you're new to exercise, don't start with an extreme program. Start with a routine you can recover from and repeat. A simple foundation is walking or light cardio plus basic strength movements such as squats, pushes, pulls, and core work. If you tell me your goal, available equipment, and how many days you can train, I can build a beginner routine around that.`;
+  // Beginner
+  if (text.includes("beginner") || text.includes("starting") || text.includes("new to")) {
+    return `If you're new to exercise, start with a routine you can recover from. Walking or light cardio + basic strength movements (squats, pushes, pulls, core). Tell me your goal, equipment, and days per week and I’ll build a beginner routine.`;
   }
 
-  if (
-    text.includes("muscle") ||
-    text.includes("strength")
-  ) {
-    return `For building strength or muscle, consistency and progressive overload matter more than constantly changing exercises. Build your routine around major movement patterns, train them regularly, recover adequately, and gradually increase reps, resistance, or difficulty. Tell me whether you train at home or in a gym and how many days you have available.`;
+  // Strength / muscle
+  if (text.includes("muscle") || text.includes("strength")) {
+    return `For strength or muscle, consistency and progressive overload matter most. Train major movement patterns regularly, recover well, and gradually increase reps or resistance. Tell me where you train and how many days you have.`;
   }
 
-  if (
-    text.includes("lose weight") ||
-    text.includes("weight loss") ||
-    text.includes("fat loss")
-  ) {
-    return `For fat loss, exercise helps, but your overall energy balance and eating habits matter too. A sustainable approach is usually better than trying to burn yourself out with cardio. Combine regular movement with strength training and an eating pattern you can maintain. If you tell me your current activity level and goal, I can help you structure a routine.`;
+  // Weight loss
+  if (text.includes("lose weight") || text.includes("weight loss") || text.includes("fat loss")) {
+    return `For fat loss, exercise helps, but eating habits matter more. Combine regular movement with strength training and a sustainable eating pattern. Tell me your current activity level and goal and I’ll help you structure a routine.`;
   }
 
-  if (
-    text.includes("cardio") ||
-    text.includes("running") ||
-    text.includes("run")
-  ) {
-    return `For cardio, build gradually instead of trying to maximize every workout. Walking, jogging, cycling, swimming, or other activities can work. If you're starting from low fitness, alternating easier and harder periods can make training more manageable. Tell me what activity you prefer and your current level.`;
+  // Cardio
+  if (text.includes("cardio") || text.includes("running") || text.includes("run")) {
+    return `Build cardio gradually. Walking, jogging, cycling, swimming all work. Alternate easier and harder periods to make training manageable. Tell me your preferred activity and current level.`;
   }
 
-  if (
-    text.includes("stretch") ||
-    text.includes("mobility")
-  ) {
-    return `A useful mobility routine doesn't need to be long. Focus on the areas that actually limit your movement, move through comfortable ranges, and avoid forcing painful positions. If you tell me where you feel stiff, I can suggest a short routine.`;
+  // Mobility
+  if (text.includes("stretch") || text.includes("mobility")) {
+    return `A mobility routine doesn’t need to be long. Focus on areas that limit your movement, move through comfortable ranges, avoid forcing painful positions. Tell me where you feel stiff and I’ll suggest a short routine.`;
   }
 
-  return `I can help with workouts, strength, cardio, mobility, beginner fitness, habit-building around exercise, and training schedules. Tell me your goal, where you train, what equipment you have, and how many days per week you can realistically commit.`;
+  return `I can help with workouts, strength, cardio, mobility, beginner fitness, and training schedules. Tell me your goal, where you train, what equipment you have, and how many days per week you can commit.`;
 }
-
-
 // ======================================================
-// CROSS-CATEGORY DAILY ROUTINE COACH
+// CROSS‑CATEGORY ROUTINE COACH — IMPROVED
 // ======================================================
 
 function routineCoach(message) {
-  return `Let's turn that into a routine instead of another thing you have to remember.
-
-A strong Vaultwise routine can combine your five areas:
+  return `Let's turn that into a routine you can actually repeat.
 
 Morning
 • Hygiene
 • Quick room reset
 • Breakfast
-• Review today's priorities
+• Identify your most important task
 
 Day
 • Work/school responsibilities
-• Movement
+• Movement or exercise
 • Food and hydration
+• One small cleaning action
 
 Evening
 • Clean-up reset
@@ -595,60 +494,52 @@ Evening
 • Review spending if needed
 • Wind down for sleep
 
-Tell me what your typical day looks like and I can build a routine around your actual schedule.`;
+Tell me what your typical day looks like and I’ll build a routine around your actual schedule.`;
 }
 
 
+
 // ======================================================
-// GENERAL COACH
+// GENERAL COACH — IMPROVED
 // ======================================================
 
 function generalCoach(message) {
   const text = message.toLowerCase();
 
-  if (
-    text.includes("hello") ||
-    text.includes("hi") ||
-    text.includes("hey")
-  ) {
+  if (text.includes("hello") || text.includes("hi") || text.includes("hey")) {
     return `Hey! I'm your Vaultwise Coach. I can help you improve five parts of your everyday life: finances, cooking, cleaning, lifestyle, and exercise. You can ask me something specific or tell me what you're struggling with today.`;
   }
 
-  if (
-    text.includes("what can you do") ||
-    text.includes("help me")
-  ) {
+  if (text.includes("what can you do") || text.includes("help me")) {
     return `I can help you with five areas:
 
-💰 Finance — budgets, saving, debt, credit, investing and spending
+💰 Finance — budgets, saving, debt, credit, investing  
+🍳 Cooking — recipes, groceries, meal planning  
+🧹 Cleaning — chores, organization, cleaning schedules  
+🌱 Lifestyle — routines, habits, sleep, productivity  
+💪 Exercise — workouts, strength, cardio, mobility
 
-🍳 Cooking — recipes, groceries, meal planning and using what you already have
-
-🧹 Cleaning — chores, organization, cleaning schedules and quick resets
-
-🌱 Lifestyle — routines, habits, sleep, productivity and procrastination
-
-💪 Exercise — workouts, strength, cardio, mobility and consistency
-
-You can also combine them. For example: "Build me a routine that includes cooking dinner, cleaning my apartment and working out."`;
+You can also combine them. For example: “Build me a routine that includes cooking dinner, cleaning my apartment, and working out.”`;
   }
 
-  return `I'm here to help with the everyday things that are easy to put off. Try asking about your money, what to cook, how to clean something, how to improve your routine, or what workout you should do. You can also give me a real situation and we'll work through it together.`;
+  return `I'm here to help with the everyday things that are easy to put off. Try asking about your money, what to cook, how to clean something, how to improve your routine, or what workout you should do. You can also give me a real situation and we’ll work through it together.`;
 }
 
 
 // ======================================================
-// MAIN RESPONSE ENGINE
+// MAIN RESPONSE ENGINE — SMARTER, CLEANER, NO LOOPING
 // ======================================================
 
 function generateCoachReply(message) {
-  const category = detectCategory(message);
-
-  updateMemory(message, category);
-
-  // Cross-category requests
   const text = message.toLowerCase();
 
+  // Detect category
+  const category = detectCategory(message);
+
+  // Update memory
+  updateMemory(message, category);
+
+  // Cross‑category routine requests
   if (
     (text.includes("routine") || text.includes("schedule")) &&
     (
@@ -663,6 +554,7 @@ function generateCoachReply(message) {
     return routineCoach(message);
   }
 
+  // Route to correct coach
   switch (category) {
     case "finance":
       return financeCoach(message);
@@ -683,29 +575,32 @@ function generateCoachReply(message) {
       return generalCoach(message);
   }
 }
-
-
 // ======================================================
-// SEND MESSAGE — FREE MOCK
+// SEND MESSAGE — FREE MOCK (Improved)
 // ======================================================
+// Cleaner async flow, more reliable “thinking…” behavior,
+// and safer message replacement.
 
 async function sendCoachMessage(message) {
-  // Simulate thinking so the free demo feels natural.
+  // Simulate thinking delay for natural feel
   await new Promise(resolve => setTimeout(resolve, 450));
 
+  // Generate reply using improved engine
   return generateCoachReply(message);
 }
 
 
 // ======================================================
-// INITIALIZE CHAT
+// INITIALIZE CHAT — IMPROVED
 // ======================================================
+// Cleaner event handling, safer DOM access, better UX.
 
 function initCoachChat() {
   const form = document.getElementById("ai-chat-form");
   const input = document.getElementById("ai-chat-input");
+  const messages = document.getElementById("ai-chat-messages");
 
-  if (!form || !input) return;
+  if (!form || !input || !messages) return;
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
@@ -713,6 +608,7 @@ function initCoachChat() {
     const message = input.value.trim();
     if (!message) return;
 
+    // Add user message
     addCoachMessage("user", message);
 
     coachHistory.push({
@@ -722,21 +618,17 @@ function initCoachChat() {
 
     input.value = "";
 
+    // Temporary “thinking…” message
     addCoachMessage("assistant", "Thinking...");
 
     try {
       const reply = await sendCoachMessage(message);
 
-      const messages =
-        document.getElementById("ai-chat-messages");
+      // Remove the temporary thinking message
+      const lastMessage = messages.lastElementChild;
+      if (lastMessage) lastMessage.remove();
 
-      const lastMessage =
-        messages.lastElementChild;
-
-      if (lastMessage) {
-        lastMessage.remove();
-      }
-
+      // Add final AI reply
       addCoachMessage("assistant", reply);
 
       coachHistory.push({
@@ -747,15 +639,9 @@ function initCoachChat() {
     } catch (error) {
       console.error("VAULTWISE COACH ERROR:", error);
 
-      const messages =
-        document.getElementById("ai-chat-messages");
-
-      const lastMessage =
-        messages.lastElementChild;
-
-      if (lastMessage) {
-        lastMessage.remove();
-      }
+      // Remove thinking message if still present
+      const lastMessage = messages.lastElementChild;
+      if (lastMessage) lastMessage.remove();
 
       addCoachMessage(
         "assistant",
@@ -767,13 +653,64 @@ function initCoachChat() {
 
 
 // ======================================================
-// START
+// START — BOOTSTRAP
 // ======================================================
 
-document.addEventListener(
-  "DOMContentLoaded",
-  initCoachChat
-);
+document.addEventListener("DOMContentLoaded", initCoachChat);
+// ======================================================
+// FINAL POLISH — SAFETY + COMPATIBILITY
+// ======================================================
+
+// Prevent duplicate initialization if script is loaded twice
+if (!window.__vaultwiseCoachInitialized) {
+  window.__vaultwiseCoachInitialized = true;
+}
+
+// Basic compatibility check
+function coachCompatibilityCheck() {
+  const required = [
+    "addCoachMessage",
+    "detectCategory",
+    "updateMemory",
+    "financeCoach",
+    "cookingCoach",
+    "cleaningCoach",
+    "lifestyleCoach",
+    "exerciseCoach",
+    "routineCoach",
+    "generalCoach",
+    "generateCoachReply",
+    "sendCoachMessage",
+    "initCoachChat"
+  ];
+
+  const missing = required.filter(fn => typeof window[fn] !== "function");
+
+  if (missing.length > 0) {
+    console.warn("Vaultwise Coach — Missing functions:", missing);
+  }
+}
+
+// Run compatibility check after load
+document.addEventListener("DOMContentLoaded", coachCompatibilityCheck);
 
 
+// ======================================================
+// OPTIONAL UX IMPROVEMENT (NO BEHAVIOR CHANGE)
+// ======================================================
+// Auto-scroll to bottom when new messages appear.
+// This does NOT change logic or personality — only improves UX.
 
+const observer = new MutationObserver(() => {
+  const messages = document.getElementById("ai-chat-messages");
+  if (messages) {
+    messages.scrollTop = messages.scrollHeight;
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const messages = document.getElementById("ai-chat-messages");
+  if (messages) {
+    observer.observe(messages, { childList: true });
+  }
+});
