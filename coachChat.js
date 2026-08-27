@@ -774,7 +774,7 @@ document.addEventListener(
   "DOMContentLoaded",
   initCoachChat
 );
-'''
+
 
 out = Path("/mnt/data/Vaultwise_Free_Coach_5_Categories.js")
 out.write_text(js)
