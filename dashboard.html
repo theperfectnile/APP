@@ -7,6 +7,7 @@
 </head>
 
 <body id="dashboard" class="mood-dark">
+
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
@@ -20,90 +21,114 @@
 
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </aside>
-<div id="xp-level-up">Level Up!</div>
+
+  <!-- Level Up Popup -->
+  <div id="xp-level-up">Level Up!</div>
+
   <!-- Main Content -->
- <main class="main-content horizontal-layout">
+  <main class="main-content">
 
-  <!-- LEFT COLUMN -->
-  <div class="left-column">
-    <header class="page-header fade-in">
-      <h1>Habit Dashboard</h1>
-      <span>Improve your money, body, home, and daily life—one habit at a time.</span>
+    <!-- LEFT COLUMN -->
+    <div class="left-column">
 
-      <div id="personalGreeting" class="personal-greeting"></div>
-      <div id="streakBadge" class="streak-badge"></div>
-      <div id="xpBadge" class="xp-badge"></div>
+      <!-- Header -->
+      <header class="page-header fade-in">
+        <h1>Habit Dashboard</h1>
+        <span>Improve your money, body, home, and daily life—one habit at a time.</span>
 
-      <div class="xp-container">
-        <div class="xp-label">
-          <span id="xpLevelLabel">Level 1</span> •
-          <span id="xpValueLabel">0 XP</span>
-        </div>
-        <div class="xp-bar">
-          <div id="xpFill"></div>
-        </div>
-        <span id="xpNextLabel">Next level in 100 XP</span>
-      </div>
-    </header>
+        <div id="personalGreeting" class="personal-greeting"></div>
+        <div id="streakBadge" class="streak-badge"></div>
+        <div id="xpBadge" class="xp-badge"></div>
 
-    <section class="dashboard-card fade-in">
-      <h2>Today's Habit Rings</h2>
-      <p class="section-subtitle">
-        Track your progress across finance, exercise, cleaning, cooking, and lifestyle.
-      </p>
-      <div id="habit-rings" class="habit-rings-grid"></div>
-    </section>
-  </div>
-
-  <!-- RIGHT COLUMN -->
-  <div class="right-column">
-
-    <section class="dashboard-card fade-in">
-      <h2>Daily Missions</h2>
-      <p class="section-subtitle">Small, doable actions that move your life forward today.</p>
-      <div id="habit-cards" class="habit-cards-grid"></div>
-    </section>
-
-    <section class="dashboard-card fade-in">
-      <h2>Daily Check‑In</h2>
-      <p class="section-subtitle">A quick 3‑question pulse on how you're doing right now.</p>
-      <div id="survey-container"></div>
-    </section>
-
-    <section class="dashboard-card fade-in">
-      <h2>Vaultwise Coach</h2>
-      <p class="section-subtitle">Personalized nudges based on your habits, mood, and progress.</p>
-      <div id="coach"></div>
-    </section>
-
-    <!-- AI CHAT -->
-    <section class="dashboard-card fade-in">
-      <h2>💬 Talk to Vaultwise Coach</h2>
-      <p class="section-subtitle">Ask your AI coach about your habits, motivation, finances, or goals.</p>
-
-      <div id="ai-chat">
-        <div id="ai-chat-messages">
-          <div class="ai-message">
-            <strong>Vaultwise Coach:</strong>
-            <p>Hey! I'm your AI coach. What are you working on today?</p>
+        <!-- XP Section -->
+        <div class="xp-container">
+          <div class="xp-label">
+            <span id="xpLevelLabel">Level 1</span> •
+            <span id="xpValueLabel">0 XP</span>
           </div>
+
+          <div class="xp-bar">
+            <div id="xpFill"></div>
+          </div>
+
+          <span id="xpNextLabel">Next level in 100 XP</span>
         </div>
+      </header>
 
-        <form id="ai-chat-form">
-          <input id="ai-chat-input" type="text" placeholder="Ask your coach something..." maxlength="2000" autocomplete="off" />
-          <button type="submit">Send</button>
-        </form>
-      </div>
-    </section>
+      <!-- Habit Rings -->
+      <section class="dashboard-card fade-in">
+        <h2>Today's Habit Rings</h2>
+        <p class="section-subtitle">
+          Track your progress across finance, exercise, cleaning, cooking, and lifestyle.
+        </p>
 
-  </div>
+        <div id="habit-rings" class="habit-rings-grid"></div>
+      </section>
 
-</main>
+    </div>
 
+    <!-- RIGHT COLUMN -->
+    <div class="right-column">
 
+      <!-- Daily Missions -->
+      <section class="dashboard-card fade-in">
+        <h2>Daily Missions</h2>
+        <p class="section-subtitle">Small, doable actions that move your life forward today.</p>
+
+        <div id="habit-cards" class="habit-cards-grid"></div>
+      </section>
+
+      <!-- Daily Check-In -->
+      <section class="dashboard-card fade-in">
+        <h2>Daily Check‑In</h2>
+        <p class="section-subtitle">A quick 3‑question pulse on how you're doing right now.</p>
+
+        <div id="survey-container"></div>
+      </section>
+
+      <!-- Vaultwise Coach -->
+      <section class="dashboard-card fade-in">
+        <h2>Vaultwise Coach</h2>
+        <p class="section-subtitle">Personalized nudges based on your habits, mood, and progress.</p>
+
+        <div id="coach"></div>
+      </section>
+
+      <!-- AI Chat -->
+      <section class="dashboard-card fade-in">
+        <h2>💬 Talk to Vaultwise Coach</h2>
+        <p class="section-subtitle">Ask your AI coach about your habits, motivation, finances, or goals.</p>
+
+        <div id="ai-chat">
+          <div id="ai-chat-messages">
+            <div class="ai-message">
+              <strong>Vaultwise Coach:</strong>
+              <p>Hey! I'm your AI coach. What are you working on today?</p>
+            </div>
+          </div>
+
+          <form id="ai-chat-form">
+            <input
+              id="ai-chat-input"
+              type="text"
+              placeholder="Ask your coach something..."
+              maxlength="2000"
+              autocomplete="off"
+            />
+            <button type="submit">Send</button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
   <script src="premium.js"></script>
- <script src="dashboard.js?v=4"></script>
+  <script src="dashboard.js?v=4"></script>
   <script src="app.js"></script>
   <script src="coachChat.js?v=1"></script>
+
 </body>
 </html>
