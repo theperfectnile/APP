@@ -976,3 +976,113 @@ body {
   color: var(--text);
   border: 1px solid #2a3038;
 }
+/* =========================================
+   CANVA-STYLE GRID LAYOUT (SAFE EXTENSION)
+   ========================================= */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+/* Responsive fallback */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Header badges row */
+.header-badges {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+/* Full-width cards (Check-in + Chat) */
+.dashboard-card.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Chat section polish */
+#ai-chat {
+  margin-top: var(--space-md);
+}
+
+#ai-chat-form button {
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-weight: 600;
+}
+
+/* Habit Rings polish */
+.habit-rings-grid {
+  margin-top: var(--space-md);
+}
+
+/* Missions polish */
+.habit-cards-grid {
+  margin-top: var(--space-md);
+}
+
+/* Coach polish */
+#coach {
+  margin-top: var(--space-md);
+}
+
+/* Canva-style spacing for all cards */
+.dashboard-card {
+  padding: var(--space-xl);
+}
+
+/* Canva-style typography */
+.dashboard-card h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: var(--space-md);
+}
+
+/* Canva-style hover elevation */
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Canva-style hero header */
+.page-header {
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
+  box-shadow: var(--shadow-soft);
+}
+
+/* Make header feel premium */
+.page-header h1 {
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+}
+
+.page-header span {
+  opacity: 0.85;
+  font-size: 1rem;
+}
+
+/* XP section spacing */
+.xp-container {
+  margin-top: var(--space-md);
+}
