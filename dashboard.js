@@ -568,7 +568,27 @@ async function completeHabit(category) {
 
     };
 
+    // ----------------------------------------
+// Auto-reset habit rings at 100%
+// ----------------------------------------
+if (habitProgress[category] >= 100) {
+  habitProgress[category] = 0; // reset ring
 
+  // Re-enable mission button
+  const missionCard = document.querySelector(
+    `.habit-card h3:nth-child(1)`
+  );
+
+  const cards = document.querySelectorAll(".habit-card");
+  cards.forEach(card => {
+    const title = card.querySelector("h3")?.textContent?.trim().toLowerCase();
+    if (title === category) {
+      const btn = card.querySelector("button");
+      if (btn) btn.disabled = false;
+      card.classList.remove("completed");
+    }
+  });
+}
     // ----------------------------------------
     // Animation
     // ----------------------------------------
