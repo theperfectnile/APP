@@ -1086,17 +1086,22 @@ body {
 .xp-container {
   margin-top: var(--space-md);
 }
-/* Horizontal row under header */
+/* =========================================
+   HORIZONTAL ROW UNDER HEADER
+   ========================================= */
+
 .dashboard-row {
   display: flex;
   flex-direction: row;
   gap: var(--space-xl);
   margin-top: var(--space-xl);
+  align-items: flex-start;
 }
 
 /* Make each card equal width */
 .dashboard-row .dashboard-card {
   flex: 1;
+  min-width: 0; /* prevents overflow */
 }
 
 /* Responsive fallback */
@@ -1105,3 +1110,4 @@ body {
     flex-direction: column;
   }
 }
+
