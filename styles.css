@@ -1086,3 +1086,22 @@ body {
 .xp-container {
   margin-top: var(--space-md);
 }
+/* Horizontal row under header */
+.dashboard-row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+/* Make each card equal width */
+.dashboard-row .dashboard-card {
+  flex: 1;
+}
+
+/* Responsive fallback */
+@media (max-width: 1100px) {
+  .dashboard-row {
+    flex-direction: column;
+  }
+}
