@@ -61,39 +61,34 @@
          CANVA-STYLE GRID LAYOUT
          3 columns: Rings / Missions / Coach
     ============================= -->
-    <section class="dashboard-grid">
+   <section class="dashboard-row">
 
-      <!-- COLUMN 1 — HABIT RINGS -->
-      <div class="dashboard-card fade-in">
-        <h2>Today's Habit Rings</h2>
-        <p class="section-subtitle">
-          Your daily progress visualized. Each ring fills as you complete habits, giving you a clear snapshot of how your day is shaping up.
-        </p>
+  <div class="dashboard-card fade-in rings-card">
+    <h2>Today's Habit Rings</h2>
+    <p class="section-subtitle">
+      Your daily progress visualized.
+    </p>
+    <div id="habit-rings" class="habit-rings-grid"></div>
+  </div>
 
-        <div id="habit-rings" class="habit-rings-grid"></div>
-      </div>
+  <div class="dashboard-card fade-in missions-card">
+    <h2>Daily Missions</h2>
+    <p class="section-subtitle">
+      Personalized tasks chosen to help you build momentum.
+    </p>
+    <div id="habit-cards" class="habit-cards-grid"></div>
+  </div>
 
-      <!-- COLUMN 2 — DAILY MISSIONS -->
-      <div class="dashboard-card fade-in">
-        <h2>Daily Missions</h2>
-        <p class="section-subtitle">
-          Personalized tasks chosen to help you build momentum. As you complete missions, Vaultwise adjusts your XP and streak to reflect your progress.
-        </p>
+  <div class="dashboard-card fade-in coach-card">
+    <h2>Vaultwise Coach</h2>
+    <p class="section-subtitle">
+      Your coach reacts to your progress, mood, and streak.
+    </p>
+    <div id="coach"></div>
+  </div>
 
-        <div id="habit-cards" class="habit-cards-grid"></div>
-      </div>
+</section>
 
-      <!-- COLUMN 3 — COACH -->
-      <div class="dashboard-card fade-in">
-        <h2>Vaultwise Coach</h2>
-        <p class="section-subtitle">
-          Your coach reacts to your progress, mood, and streak. Whether you're crushing habits or bouncing back from a slow day, your coach adapts to support you.
-        </p>
-
-        <div id="coach"></div>
-      </div>
-
-    </section>
 
     <!-- ============================
          FULL-WIDTH CHECK-IN
