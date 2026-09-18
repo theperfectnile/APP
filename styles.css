@@ -40,15 +40,21 @@
    GLOBAL DARK THEME BASE
    ========================================= */
 
-body,
-body.mood-dark,
-body.dark-mode {
+html,
+body {
   margin: 0;
   padding: 0;
+  min-height: 100%;
   background: var(--bg);
   color: var(--text);
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   transition: background var(--anim-medium), color var(--anim-medium);
+}
+
+body.mood-dark,
+body.dark-mode {
+  background: var(--bg);
+  color: var(--text);
 }
 
 h1, h2, h3 {
@@ -138,6 +144,9 @@ h1, h2, h3 {
   padding: 2rem;
   width: calc(100% - 240px);
   box-sizing: border-box;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .horizontal-layout {
@@ -145,13 +154,14 @@ h1, h2, h3 {
   flex-direction: row;
   gap: var(--space-lg);
   padding: 0 var(--space-lg);
-  /* Visible by default so a failed/blocked animation cannot hide the dashboard */
   opacity: 1;
   animation: layoutFadeIn var(--anim-medium) forwards;
   max-width: 100%;
   box-sizing: border-box;
   min-height: 100vh;
+  visibility: visible;
 }
+
 @keyframes layoutFadeIn {
   to { opacity: 1; }
 }
@@ -178,13 +188,13 @@ h1, h2, h3 {
 .page-header {
   margin-bottom: 2rem;
   background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
-  padding: var(--space-lg);
-  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
-  /* Visible by default; animation only enhances the entrance */
   opacity: 1;
   transform: translateY(0);
   animation: headerFadeIn var(--anim-medium) forwards;
+  color: var(--text);
 }
 
 @keyframes headerFadeIn {
@@ -194,6 +204,16 @@ h1, h2, h3 {
   }
 }
 
+.page-header h1 {
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+}
+
+.page-header span {
+  opacity: 0.85;
+  font-size: 1rem;
+}
+
 .personal-greeting {
   margin-top: 0.5rem;
   font-size: 1rem;
@@ -201,6 +221,12 @@ h1, h2, h3 {
 }
 
 /* XP + STREAK BADGES */
+
+.header-badges {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
 
 .streak-badge,
 .xp-badge {
@@ -216,7 +242,7 @@ h1, h2, h3 {
 /* XP BAR */
 
 .xp-container {
-  margin-top: 1rem;
+  margin-top: var(--space-md);
 }
 
 .xp-label {
@@ -251,23 +277,23 @@ h1, h2, h3 {
    ========================================= */
 
 .dashboard-card {
-  background: var(--bg-card);
-  padding: var(--space-lg);
+  background: var(--bg-card) !important;
+  padding: var(--space-xl);
   border-radius: var(--radius-md);
   margin-bottom: 2rem;
-  border: 1px solid #1c1f24;
+  border: 1px solid #2a3038 !important;
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(12px);
-  /* Visible by default so cards never disappear if animation is unavailable */
   opacity: 1;
   transform: translateY(0);
   animation: cardFadeIn var(--anim-medium) forwards;
   transition: transform var(--anim-medium), box-shadow var(--anim-medium);
   will-change: transform, box-shadow;
+  color: var(--text);
 }
 
 .dashboard-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-glow);
 }
 
@@ -340,14 +366,15 @@ input:focus {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1.5rem;
+  margin-top: var(--space-md);
 }
 
 .habit-ring {
   text-align: center;
-  /* Visible by default; keep the entrance animation as an enhancement */
   opacity: 1;
   transform: scale(1);
   animation: habitRingIn var(--anim-medium) forwards;
+  visibility: visible;
 }
 
 @keyframes habitRingIn {
@@ -396,14 +423,16 @@ input:focus {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
+  margin-top: var(--space-md);
 }
 
 .habit-card {
   background: #151922;
   padding: 1.2rem;
   border-radius: 10px;
-  border: 1px solid #24272d;
+  border: 1px solid #2a3038;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  color: var(--text);
 }
 
 .habit-card:hover {
@@ -440,6 +469,8 @@ input:focus {
 }
 
 .habit-card.completed {
+  position: relative;
+  overflow: hidden;
   animation: flashComplete 0.6s ease;
 }
 
@@ -485,12 +516,13 @@ input:focus {
    ========================================= */
 
 #coach {
-  margin-top: 1rem;
+  margin-top: var(--space-md);
   font-size: 1rem;
   line-height: 1.5rem;
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.4s ease;
+  color: var(--text);
 }
 
 #coach.loaded {
@@ -527,7 +559,7 @@ input:focus {
    ========================================= */
 
 #ai-chat {
-  margin-top: 20px;
+  margin-top: var(--space-md);
 }
 
 #ai-chat-messages {
@@ -913,69 +945,6 @@ body.pro-mode #ai-chat-messages {
   box-shadow: inset 0 0 12px rgba(74,108,255,0.3);
 }
 
-
-/* ======================================================
-   DASHBOARD VISIBILITY FIX
-   ======================================================
-   Dark mode remains unchanged. These rules make sure the
-   dashboard content stays visible even if CSS animations
-   are blocked, interrupted, or fail to start.
-*/
-
-html,
-body {
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--text);
-}
-
-.main-content {
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-}
-
-.horizontal-layout {
-  opacity: 1;
-  visibility: visible;
-  display: flex;
-}
-
-.horizontal-layout *,
-.page-header,
-.dashboard-card,
-.habit-ring {
-  visibility: visible;
-}
-
-.page-header,
-.dashboard-card {
-  color: var(--text);
-}
-
-.page-header h1,
-.page-header h2,
-.page-header h3,
-.dashboard-card h1,
-.dashboard-card h2,
-.dashboard-card h3,
-.dashboard-card p,
-.dashboard-card label,
-.dashboard-card span {
-  color: inherit;
-}
-
-/* Keep dark cards distinct from the black page background */
-.dashboard-card {
-  background: var(--bg-card) !important;
-  border: 1px solid #2a3038 !important;
-}
-
-.habit-card {
-  background: #151922;
-  color: var(--text);
-  border: 1px solid #2a3038;
-}
 /* =========================================
    CANVA-STYLE GRID LAYOUT (SAFE EXTENSION)
    ========================================= */
@@ -1000,23 +969,12 @@ body {
   }
 }
 
-/* Header badges row */
-.header-badges {
-  display: flex;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-}
-
 /* Full-width cards (Check-in + Chat) */
 .dashboard-card.full-width {
   grid-column: 1 / -1;
 }
 
 /* Chat section polish */
-#ai-chat {
-  margin-top: var(--space-md);
-}
-
 #ai-chat-form button {
   background: var(--accent);
   border-radius: var(--radius-sm);
@@ -1024,24 +982,9 @@ body {
   font-weight: 600;
 }
 
-/* Habit Rings polish */
-.habit-rings-grid {
-  margin-top: var(--space-md);
-}
-
-/* Missions polish */
-.habit-cards-grid {
-  margin-top: var(--space-md);
-}
-
 /* Coach polish */
 #coach {
   margin-top: var(--space-md);
-}
-
-/* Canva-style spacing for all cards */
-.dashboard-card {
-  padding: var(--space-xl);
 }
 
 /* Canva-style typography */
@@ -1063,29 +1006,11 @@ body {
   box-shadow: var(--shadow-glow);
 }
 
-/* Canva-style hero header */
-.page-header {
-  padding: var(--space-xl);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
-  box-shadow: var(--shadow-soft);
-}
-
-/* Make header feel premium */
-.page-header h1 {
-  font-size: 2rem;
-  margin-bottom: var(--space-sm);
-}
-
-.page-header span {
-  opacity: 0.85;
-  font-size: 1rem;
-}
-
 /* XP section spacing */
 .xp-container {
   margin-top: var(--space-md);
 }
+
 /* =========================================
    HORIZONTAL ROW UNDER HEADER
    ========================================= */
@@ -1101,7 +1026,7 @@ body {
 /* Make each card equal width */
 .dashboard-row .dashboard-card {
   flex: 1;
-  min-width: 0; /* prevents overflow */
+  min-width: 0;
 }
 
 /* Responsive fallback */
@@ -1110,109 +1035,3 @@ body {
     flex-direction: column;
   }
 }
-body {
-  background: #F5F7FB;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-/* Card container */
-.card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  margin-bottom: 24px;
-  transition: 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-}
-
-/* Grids */
-.habit-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
-}
-
-.missions-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.coach-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-/* Habit item */
-.habit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.habit .icon {
-  font-size: 24px;
-}
-
-.habit .label {
-  font-weight: 600;
-}
-
-.habit .percent {
-  font-size: 14px;
-  color: #555;
-}
-
-/* Typography */
-h1 {
-  font-size: 32px;
-  font-weight: 700;
-}
-
-h2 {
-  font-size: 22px;
-  font-weight: 600;
-}
-
-p {
-  font-size: 16px;
-  color: #555;
-}
-
-/* Buttons */
-button {
-  background: #4A6CF7;
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  padding: 10px 18px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #3a56d4;
-}
-
-/* Progress bar example */
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  border-radius: 999px;
-  background: #E0E4F2;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: #4A6CF7;
-  width: 0;
-  transition: width 0.6s ease;
-}
-
