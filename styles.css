@@ -1,1037 +1,144 @@
-/* =========================================
-   VAULTWISE DESIGN SYSTEM — GLOBAL TOKENS
-   ========================================= */
-
-:root {
-  /* Colors – DARK, BUT HIGH-CONTRAST FOR READABILITY */
-  --bg: #050608;
-  --bg-soft: #0c0f13;
-  --bg-card: #10141b;
-  --bg-glass: rgba(255, 255, 255, 0.06);
-  --text: #f5f7fa;
-  --text-muted: #9aa3b5;
-  --accent: #4a6cff;
-  --accent-soft: #6f8cff;
-  --accent-success: #35c46b;
-
-  /* Shadows */
-  --shadow-soft: 0 4px 16px rgba(0,0,0,0.35);
-  --shadow-glow: 0 0 22px rgba(74,108,255,0.45);
-
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-
-  /* Spacing */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-
-  /* Animation */
-  --anim-fast: 150ms ease;
-  --anim-medium: 300ms ease;
-  --anim-slow: 600ms ease;
-}
-
-/* =========================================
-   GLOBAL DARK THEME BASE
-   ========================================= */
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  transition: background var(--anim-medium), color var(--anim-medium);
-}
-
-body.mood-dark,
-body.dark-mode {
-  background: var(--bg);
-  color: var(--text);
-}
-
-h1, h2, h3 {
-  margin: 0;
-  font-weight: 600;
-}
-
-.section-subtitle {
-  opacity: 0.8;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-}
-
-/* =========================================
-   PREMIUM SIDEBAR
-   ========================================= */
-
-.sidebar {
-  width: 240px;
-  background: var(--bg-soft);
-  height: 100vh;
-  padding: 2rem 1.5rem;
-  box-sizing: border-box;
-  border-right: 1px solid #1c1f24;
-  position: fixed;
-  box-shadow: var(--shadow-soft);
-}
-
-.logo {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-}
-
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.nav-links a {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  color: #bfc4cc;
-  text-decoration: none;
-  padding: 0.6rem 0.8rem;
-  border-radius: var(--radius-sm);
-  transition: background var(--anim-fast), color var(--anim-fast), transform var(--anim-fast);
-}
-
-.nav-links a:hover {
-  background: var(--bg-glass);
-  color: var(--text);
-  transform: translateX(4px);
-}
-
-.nav-links a.active {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: var(--shadow-glow);
-}
-
-.logout-btn {
-  margin-top: 2rem;
-  width: 100%;
-  padding: 0.7rem;
-  background: #d9534f;
-  border: none;
-  border-radius: var(--radius-sm);
-  color: white;
-  cursor: pointer;
-  transition: background var(--anim-fast), transform var(--anim-fast);
-}
-
-.logout-btn:hover {
-  background: #c64541;
-  transform: translateY(-2px);
-}
-
-/* =========================================
-   MAIN CONTENT & LAYOUT
-   ========================================= */
-
-.main-content {
-  margin-left: 240px;
-  padding: 2rem;
-  width: calc(100% - 240px);
-  box-sizing: border-box;
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-}
-
-.horizontal-layout {
-  display: flex;
-  flex-direction: row;
-  gap: var(--space-lg);
-  padding: 0 var(--space-lg);
-  opacity: 1;
-  animation: layoutFadeIn var(--anim-medium) forwards;
-  max-width: 100%;
-  box-sizing: border-box;
-  min-height: 100vh;
-  visibility: visible;
-}
-
-@keyframes layoutFadeIn {
-  to { opacity: 1; }
-}
-
-.left-column,
-.right-column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-}
-
-.left-column {
-  width: 36%;
-}
-
-.right-column {
-  width: 64%;
-}
-
-/* =========================================
-   PREMIUM HEADER
-   ========================================= */
-
-.page-header {
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
-  padding: var(--space-xl);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  opacity: 1;
-  transform: translateY(0);
-  animation: headerFadeIn var(--anim-medium) forwards;
-  color: var(--text);
-}
-
-@keyframes headerFadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.page-header h1 {
-  font-size: 2rem;
-  margin-bottom: var(--space-sm);
-}
-
-.page-header span {
-  opacity: 0.85;
-  font-size: 1rem;
-}
-
-.personal-greeting {
-  margin-top: 0.5rem;
-  font-size: 1rem;
-  opacity: 0.85;
-}
-
-/* XP + STREAK BADGES */
-
-.header-badges {
-  display: flex;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-}
-
-.streak-badge,
-.xp-badge {
-  margin-top: 0.5rem;
-  background: #151922;
-  padding: 0.4rem 0.7rem;
-  border-radius: var(--radius-sm);
-  display: inline-block;
-  font-size: 0.85rem;
-  margin-right: 0.5rem;
-}
-
-/* XP BAR */
-
-.xp-container {
-  margin-top: var(--space-md);
-}
-
-.xp-label {
-  font-size: 0.9rem;
-  margin-bottom: 0.3rem;
-}
-
-.xp-bar {
-  width: 100%;
-  height: 10px;
-  background: #151922;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-#xpFill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--accent-success), #7bff8a);
-  transition: width var(--anim-medium), background var(--anim-medium);
-}
-
-#xpNextLabel {
-  font-size: 0.8rem;
-  opacity: 0.75;
-  margin-top: 0.3rem;
-  display: block;
-}
-
-/* =========================================
-   PREMIUM DASHBOARD CARDS + ANIMATION
-   ========================================= */
-
-.dashboard-card {
-  background: var(--bg-card) !important;
-  padding: var(--space-xl);
-  border-radius: var(--radius-md);
-  margin-bottom: 2rem;
-  border: 1px solid #2a3038 !important;
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(12px);
-  opacity: 1;
-  transform: translateY(0);
-  animation: cardFadeIn var(--anim-medium) forwards;
-  transition: transform var(--anim-medium), box-shadow var(--anim-medium);
-  will-change: transform, box-shadow;
-  color: var(--text);
-}
-
-.dashboard-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-glow);
-}
-
-@keyframes cardFadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Legacy fade-in class still supported */
-
-.fade-in {
-  animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* =========================================
-   PREMIUM BUTTONS
-   ========================================= */
-
-button {
-  background: var(--accent);
-  color: #fff;
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-sm);
-  border: none;
-  cursor: pointer;
-  transition: background var(--anim-fast), transform var(--anim-fast);
-  will-change: transform, box-shadow;
-}
-
-button:hover {
-  background: var(--accent-soft);
-  transform: translateY(-2px);
-}
-
-button:active {
-  transform: scale(0.95);
-}
-
-/* =========================================
-   PREMIUM INPUTS
-   ========================================= */
-
-input {
-  background: var(--bg-soft);
-  color: var(--text);
-  border: 1px solid #333;
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-sm);
-  transition: border var(--anim-fast), background var(--anim-fast), box-shadow var(--anim-fast);
-}
-
-input:focus {
-  border-color: var(--accent);
-  background: #171b22;
-  box-shadow: 0 0 0 2px var(--accent);
-}
-
-/* =========================================
-   HABIT RINGS
-   ========================================= */
-
-.habit-rings-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.5rem;
-  margin-top: var(--space-md);
-}
-
-.habit-ring {
-  text-align: center;
-  opacity: 1;
-  transform: scale(1);
-  animation: habitRingIn var(--anim-medium) forwards;
-  visibility: visible;
-}
-
-@keyframes habitRingIn {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.habit-ring svg {
-  transform: rotate(-90deg);
-}
-
-.habit-ring .bg {
-  fill: none;
-  stroke: #1c1f24;
-  stroke-width: 10;
-}
-
-.habit-ring .progress {
-  fill: none;
-  stroke: var(--accent-success);
-  stroke-width: 10;
-  stroke-linecap: round;
-  stroke-dasharray: 314;
-  transition: stroke-dashoffset 0.8s ease-in-out;
-}
-
-.habit-label {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  opacity: 0.85;
-}
-
-.habit-percent {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-top: 0.2rem;
-}
-
-/* =========================================
-   HABIT CARDS
-   ========================================= */
-
-.habit-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-top: var(--space-md);
-}
-
-.habit-card {
-  background: #151922;
-  padding: 1.2rem;
-  border-radius: 10px;
-  border: 1px solid #2a3038;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  color: var(--text);
-}
-
-.habit-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-  border-color: var(--accent-success);
-}
-
-.habit-card h3 {
-  margin-bottom: 0.5rem;
-}
-
-.habit-card .mission {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  margin-bottom: 0.8rem;
-}
-
-.habit-card button {
-  width: 100%;
-  padding: 0.6rem;
-  background: var(--accent-success);
-  border: none;
-  border-radius: 6px;
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background var(--anim-fast), transform var(--anim-fast);
-}
-
-.habit-card button:hover {
-  background: #6dfc7a;
-  transform: translateY(-2px);
-}
-
-.habit-card.completed {
-  position: relative;
-  overflow: hidden;
-  animation: flashComplete 0.6s ease;
-}
-
-@keyframes flashComplete {
-  0% { background:#151922; }
-  50% { background:#2d3f2d; }
-  100% { background:#151922; }
-}
-
-/* =========================================
-   SURVEY
-   ========================================= */
-
-#survey-container {
-  margin-top: 1rem;
-}
-
-.survey-question {
-  margin-bottom: 1.2rem;
-}
-
-.survey-question p {
-  margin-bottom: 0.4rem;
-}
-
-.survey-question input[type="range"] {
-  width: 100%;
-}
-
-#survey-container button {
-  padding: 0.7rem 1rem;
-  background: var(--accent-success);
-  border: none;
-  border-radius: 6px;
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 1rem;
-}
-
-/* =========================================
-   COACH
-   ========================================= */
-
-#coach {
-  margin-top: var(--space-md);
-  font-size: 1rem;
-  line-height: 1.5rem;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.4s ease;
-  color: var(--text);
-}
-
-#coach.loaded {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* =========================================
-   XP LEVEL-UP POPUP
-   ========================================= */
-
-#xp-level-up {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: var(--accent-success);
-  padding: 12px 18px;
-  border-radius: 8px;
-  color: #000;
-  font-weight: bold;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.4s ease;
-  box-shadow: var(--shadow-soft);
-}
-
-#xp-level-up.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* =========================================
-   AI CHAT COACH
-   ========================================= */
-
-#ai-chat {
-  margin-top: var(--space-md);
-}
-
-#ai-chat-messages {
-  height: 350px;
-  overflow-y: auto;
-  padding: 15px;
-  border: 1px solid #252a30;
-  border-radius: 12px;
-  background: #0d0f12;
-  margin-bottom: 15px;
-}
-
-.ai-message,
-.user-message {
-  max-width: 80%;
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  line-height: 1.5;
-  opacity: 0;
-  transform: translateY(6px);
-  animation: chatBubbleIn var(--anim-medium) forwards;
-}
-
-@keyframes chatBubbleIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.ai-message {
-  background: #191d22;
-  margin-right: auto;
-}
-
-.user-message {
-  background: #252a30;
-  margin-left: auto;
-}
-
-.ai-message p,
-.user-message p {
-  margin: 6px 0 0;
-}
-
-#ai-chat-form {
-  display: flex;
-  gap: 10px;
-}
-
-#ai-chat-input {
-  flex: 1;
-  padding: 13px;
-  border-radius: 10px;
-  border: 1px solid #30353c;
-  background: #111318;
-  color: white;
-  font-size: 16px;
-}
-
-#ai-chat-input:focus {
-  outline: none;
-  border-color: #555d68;
-}
-
-/* =========================================
-   DARK MODE OVERRIDES (SAFE, GLOBAL)
-   ========================================= */
-
-body.dark-mode .horizontal-layout,
-body.mood-dark .horizontal-layout {
-  background: var(--bg);
-}
-
-body.dark-mode .left-column,
-body.dark-mode .right-column,
-body.mood-dark .left-column,
-body.mood-dark .right-column {
-  background: transparent;
-  color: var(--text);
-}
-
-body.dark-mode .dashboard-card,
-body.mood-dark .dashboard-card {
-  background: var(--bg-card) !important;
-  color: var(--text) !important;
-  border-color: #333 !important;
-}
-
-body.dark-mode input,
-body.dark-mode button,
-body.mood-dark input,
-body.mood-dark button {
-  background: #222 !important;
-  color: #fff !important;
-  border: 1px solid #444 !important;
-}
-
-/* ======================================================
-   STEP 3 — EMOTIONAL STICKINESS UPGRADE
-   ====================================================== */
-
-@keyframes vaultwiseConfetti {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(120px) rotate(360deg); opacity: 0; }
-}
-
-.confetti-piece {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  background: var(--accent);
-  top: -20px;
-  left: calc(50% - 5px);
-  border-radius: 2px;
-  animation: vaultwiseConfetti 1.2s ease forwards;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* HABIT RING COMPLETION GLOW */
-
-.habit-ring.completed .progress {
-  stroke: var(--accent-success);
-  filter: drop-shadow(0 0 8px #4caf50);
-  transition: filter 0.4s ease;
-}
-
-.habit-ring.completed {
-  animation: habitGlow 0.8s ease;
-}
-
-@keyframes habitGlow {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-  100% { transform: scale(1); }
-}
-
-/* DAILY MISSION CHECKMARK ANIMATION */
-
-.habit-card.completed {
-  position: relative;
-  overflow: hidden;
-}
-
-.habit-card.completed::after {
-  content: "✓";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  font-size: 3rem;
-  color: var(--accent-success);
-  opacity: 0.8;
-  animation: checkmarkPop 0.5s ease forwards;
-}
-
-@keyframes checkmarkPop {
-  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-  60% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-}
-
-/* MOOD CHECK-IN EMOJI ANIMATION */
-
-.mood-emoji {
-  display: inline-block;
-  font-size: 2rem;
-  transition: transform var(--anim-medium);
-}
-
-.mood-emoji:hover {
-  transform: scale(1.25) rotate(6deg);
-}
-
-/* COACH PERSONALITY MICRO-ANIMATIONS */
-
-#coach.personality-motivational {
-  border-left: 4px solid var(--accent);
-  padding-left: 12px;
-}
-
-#coach.personality-calm {
-  opacity: 0.9;
-}
-
-#coach.personality-tough {
-  border-left: 4px solid #ff4444;
-  padding-left: 12px;
-}
-
-#coach.personality-funny {
-  transform-origin: left;
-  animation: coachWiggle 1.2s ease-in-out;
-}
-
-@keyframes coachWiggle {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(1deg); }
-  50% { transform: rotate(-1deg); }
-  100% { transform: rotate(0deg); }
-}
-
-/* STREAK BADGE PULSE */
-
-.streak-badge {
-  animation: streakPulse 2s infinite ease-in-out;
-}
-
-@keyframes streakPulse {
-  0% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.08); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.9; }
-}
-
-/* XP BAR GLOW WHEN NEAR LEVEL-UP */
-
-.xp-bar.near-level-up #xpFill {
-  box-shadow: 0 0 12px #7bff8a;
-}
-
-/* COACH TYPING INDICATOR */
-
-.coach-typing {
-  display: flex;
-  gap: 6px;
-  padding: 10px;
-  width: 60px;
-}
-
-.coach-typing div {
-  width: 10px;
-  height: 10px;
-  background: #555;
-  border-radius: 50%;
-  animation: typingBounce 0.6s infinite alternate;
-}
-
-.coach-typing div:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.coach-typing div:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes typingBounce {
-  from { transform: translateY(0); opacity: 0.5; }
-  to { transform: translateY(-6px); opacity: 1; }
-}
-
-/* ======================================================
-   STEP 4 — SUBSCRIPTION JUSTIFICATION (PRO vs FREE UI)
-   ====================================================== */
-
-.pro-badge {
-  display: inline-block;
-  padding: 6px 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-glow);
-  margin-left: 8px;
-}
-
-.locked {
-  position: relative;
-  opacity: 0.55;
-  filter: grayscale(40%);
-}
-
-.locked::after {
-  content: "🔒 Pro Only";
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(0,0,0,0.6);
-  padding: 6px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  color: #fff;
-}
-
-.pro-feature {
-  border: 1px solid var(--accent);
-  box-shadow: 0 0 12px rgba(74,108,255,0.4);
-  position: relative;
-}
-
-.pro-feature::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(74,108,255,0.15), rgba(74,108,255,0.05));
-  pointer-events: none;
-}
-
-.upgrade-cta {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 14px;
-  margin-top: 20px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-  color: #fff;
-  font-weight: 700;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: transform var(--anim-fast), box-shadow var(--anim-fast);
-}
-
-.upgrade-cta:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-glow);
-}
-
-.feature-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.feature-table th,
-.feature-table td {
-  padding: 12px;
-  border-bottom: 1px solid #222;
-  text-align: left;
-}
-
-.feature-table th {
-  color: var(--accent);
-  font-size: 0.9rem;
-}
-
-.feature-table .pro {
-  color: var(--accent-success);
-  font-weight: 600;
-}
-
-.feature-table .free {
-  color: var(--text-muted);
-}
-
-/* PAYWALL HEADER */
-
-.paywall-header {
-  text-align: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, var(--bg-soft), var(--bg-card));
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  margin-bottom: 30px;
-}
-
-.paywall-header h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.paywall-header p {
-  opacity: 0.85;
-  font-size: 1rem;
-}
-
-/* PRO THEME (OPTIONAL) */
-
-body.pro-mode .dashboard-card {
-  border: 1px solid var(--accent);
-  box-shadow: var(--shadow-glow);
-}
-
-body.pro-mode .habit-card {
-  border-color: var(--accent);
-  box-shadow: 0 0 12px rgba(74,108,255,0.4);
-}
-
-body.pro-mode #ai-chat-messages {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 12px rgba(74,108,255,0.3);
-}
-
-/* =========================================
-   CANVA-STYLE GRID LAYOUT (SAFE EXTENSION)
-   ========================================= */
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xl);
-  margin-top: var(--space-xl);
-}
-
-/* Responsive fallback */
-@media (max-width: 1200px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 900px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Full-width cards (Check-in + Chat) */
-.dashboard-card.full-width {
-  grid-column: 1 / -1;
-}
-
-/* Chat section polish */
-#ai-chat-form button {
-  background: var(--accent);
-  border-radius: var(--radius-sm);
-  padding: var(--space-sm) var(--space-md);
-  font-weight: 600;
-}
-
-/* Coach polish */
-#coach {
-  margin-top: var(--space-md);
-}
-
-/* Canva-style typography */
-.dashboard-card h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: var(--space-sm);
-}
-
-.section-subtitle {
-  font-size: 0.95rem;
-  opacity: 0.85;
-  margin-bottom: var(--space-md);
-}
-
-/* Canva-style hover elevation */
-.dashboard-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-glow);
-}
-
-/* XP section spacing */
-.xp-container {
-  margin-top: var(--space-md);
-}
-
-/* =========================================
-   HORIZONTAL ROW UNDER HEADER
-   ========================================= */
-
-.dashboard-row {
-  display: flex;
-  flex-direction: row;
-  gap: var(--space-xl);
-  margin-top: var(--space-xl);
-  align-items: flex-start;
-}
-
-/* Make each card equal width */
-.dashboard-row .dashboard-card {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Responsive fallback */
-@media (max-width: 1100px) {
-  .dashboard-row {
-    flex-direction: column;
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vaultwise • Habit Dashboard</title>
+  <link rel="stylesheet" href="styles.css?v=3" />
+</head>
+
+<body id="dashboard" class="mood-dark">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">Vaultwise</h2>
+
+    <nav class="nav-links">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="reports.html">Reports</a>
+      <a href="accounts.html">Accounts</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </aside>
+
+  <!-- LEVEL UP POPUP -->
+  <div id="xp-level-up">Level Up!</div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ============================
+         TOP HEADER (FULL-WIDTH)
+    ============================= -->
+    <header class="page-header fade-in">
+      <h1>Habit Dashboard</h1>
+      <span>Improve your money, body, home, and daily life—one habit at a time.</span>
+
+      <div id="personalGreeting" class="personal-greeting"></div>
+
+      <div class="header-badges">
+        <div id="streakBadge" class="streak-badge"></div>
+        <div id="xpBadge" class="xp-badge"></div>
+      </div>
+
+      <!-- XP -->
+      <div class="xp-container">
+        <div class="xp-label">
+          <span id="xpLevelLabel">Level 1</span> •
+          <span id="xpValueLabel">0 XP</span>
+        </div>
+
+        <div class="xp-bar">
+          <div id="xpFill"></div>
+        </div>
+
+        <span id="xpNextLabel">Next level in 100 XP</span>
+      </div>
+    </header>
+
+    <!-- ============================
+         CANVA-STYLE GRID LAYOUT
+         3 columns: Rings / Missions / Coach
+    ============================= -->
+   <section class="dashboard-row">
+
+  <div class="dashboard-card fade-in rings-card">
+    <h2>Today's Habit Rings</h2>
+    <p class="section-subtitle">
+      Your daily progress visualized.
+    </p>
+    <div id="habit-rings" class="habit-rings-grid"></div>
+  </div>
+
+  <div class="dashboard-card fade-in missions-card">
+    <h2>Daily Missions</h2>
+    <p class="section-subtitle">
+      Personalized tasks chosen to help you build momentum.
+    </p>
+    <div id="habit-cards" class="habit-cards-grid"></div>
+  </div>
+
+  <div class="dashboard-card fade-in coach-card">
+    <h2>Vaultwise Coach</h2>
+    <p class="section-subtitle">
+      Your coach reacts to your progress, mood, and streak.
+    </p>
+    <div id="coach"></div>
+  </div>
+
+</section>
+
+
+    <!-- ============================
+         FULL-WIDTH CHECK-IN
+    ============================= -->
+    <section class="dashboard-card fade-in">
+      <h2>Daily Check‑In</h2>
+      <p class="section-subtitle">
+        Your mood, energy, and stress levels help Vaultwise understand how you're feeling today. This data shapes your coach’s tone and your recommended missions.
+      </p>
+
+      <div id="survey-container"></div>
+    </section>
+
+    <!-- ============================
+         FULL-WIDTH AI CHAT
+    ============================= -->
+    <section class="dashboard-card fade-in">
+      <h2>💬 Talk to Vaultwise Coach</h2>
+      <p class="section-subtitle">
+        Ask anything — habits, motivation, finances, routines, or life questions. Your coach uses your streak, XP, and recent habits to personalize every response.
+      </p>
+
+      <div id="ai-chat">
+        <div id="ai-chat-messages">
+          <div class="ai-message">
+            <strong>Vaultwise Coach:</strong>
+            <p>Hey! I'm your AI coach. What are you working on today?</p>
+          </div>
+        </div>
+
+        <form id="ai-chat-form">
+          <input
+            id="ai-chat-input"
+            type="text"
+            placeholder="Ask your coach something..."
+            maxlength="2000"
+            autocomplete="off"
+          />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="premium.js"></script>
+  <script src="dashboard.js?v=4"></script>
+  <script src="app.js"></script>
+  <script src="coachChat.js?v=1"></script>
+
+</body>
+</html>
