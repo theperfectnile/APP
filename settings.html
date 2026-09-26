@@ -97,5 +97,10 @@
       alert("Dark mode toggled");
     }
   </script>
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/APP/service-worker.js");
+  }
+</script>
 </body>
 </html>
