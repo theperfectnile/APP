@@ -1,10 +1,12 @@
 const CACHE_NAME = "vaultwise-v1";
 const urlsToCache = [
-  "/",
-  "/dashboard.html",
-  "/styles.css",
-  "/dashboard.js",
-  "/app.js"
+  "/APP/",
+  "/APP/dashboard.html",
+  "/APP/styles.css",
+  "/APP/dashboard.js",
+  "/APP/app.js",
+  "/APP/icon-192.png",
+  "/APP/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
