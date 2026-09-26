@@ -3,24 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <title>Vaultwise • Habit Dashboard</title>
-  <link rel="stylesheet" href="styles.css?v=4" />
-   <link rel="manifest" href="manifest.json">
-  <!-- iOS App Icons -->
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 
-<!-- iOS Display Settings -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Vaultwise">
-  <!-- Chrome + Android + Cross‑platform -->
-<meta name="mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="styles.css?v=4" />
+
+  <!-- REQUIRED FOR iOS PWA -->
+  <link rel="manifest" href="/APP/manifest.json">
+
+  <!-- iOS App Icons -->
+  <link rel="apple-touch-icon" href="/APP/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/APP/icon-180.png">
+
+  <!-- iOS Display Settings -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vaultwise">
+
+  <!-- Chrome + Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- REQUIRED FOR iOS PWA -->
   <script>
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
+      navigator.serviceWorker.register("/APP/service-worker.js");
     }
   </script>
 </head>
+
 
 <body id="dashboard" class="mood-dark">
 
