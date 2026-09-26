@@ -82,6 +82,11 @@
   <script src="app.js"></script>
   <script src="premium.js"></script>
 
-  <!-- Removed bottom-nav script because register page has no bottom nav -->
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/APP/service-worker.js");
+  }
+</script>
+
 </body>
 </html>
