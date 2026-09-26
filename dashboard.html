@@ -164,5 +164,10 @@
   <script src="app.js"></script>
   <script src="coachChat.js?v=1"></script>
 
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/APP/service-worker.js");
+  }
+</script>
 </body>
 </html>
