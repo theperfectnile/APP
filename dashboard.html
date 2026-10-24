@@ -37,6 +37,10 @@
   <aside class="sidebar">
     <h2 class="logo">Vaultwise</h2>
 
+    <p class="logo-tagline">
+  Build Better Habits
+</p>
+
     <nav class="nav-links">
       <a href="dashboard.html" class="active">Dashboard</a>
       <a href="reports.html">Reports</a>
@@ -56,31 +60,122 @@
     <!-- ============================
          TOP HEADER (FULL-WIDTH)
     ============================= -->
-    <header class="page-header fade-in">
-      <h1>Habit Dashboard</h1>
-      <span>Improve your money, body, home, and daily life—one habit at a time.</span>
+   <header class="page-header fade-in">
 
-      <div id="personalGreeting" class="personal-greeting"></div>
+  <div class="hero-top">
 
-      <div class="header-badges">
-        <div id="streakBadge" class="streak-badge"></div>
-        <div id="xpBadge" class="xp-badge"></div>
+    <div>
+
+      <h1>
+        Welcome Back
+      </h1>
+
+      <p class="hero-description">
+        Track habits, build momentum, improve your finances,
+        and level up your life every day.
+      </p>
+
+      <div id="personalGreeting"
+           class="personal-greeting">
       </div>
 
-      <!-- XP -->
-      <div class="xp-container">
-        <div class="xp-label">
-          <span id="xpLevelLabel">Level 1</span> •
-          <span id="xpValueLabel">0 XP</span>
-        </div>
+    </div>
 
-        <div class="xp-bar">
-          <div id="xpFill"></div>
-        </div>
+    <div class="header-badges">
 
-        <span id="xpNextLabel">Next level in 100 XP</span>
+      <div id="streakBadge"
+           class="streak-badge">
       </div>
-    </header>
+
+      <div id="xpBadge"
+           class="xp-badge">
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="xp-container">
+
+    <div class="xp-label">
+
+      <span id="xpLevelLabel">
+        Level 1
+      </span>
+
+      •
+
+      <span id="xpValueLabel">
+        0 XP
+      </span>
+
+    </div>
+
+    <div class="xp-bar">
+
+      <div id="xpFill">
+      </div>
+
+    </div>
+
+    <span id="xpNextLabel">
+      Next level in 100 XP
+    </span>
+
+  </div>
+
+</header>
+    <section class="dashboard-card fade-in">
+
+  <h2>
+    Quick Overview
+  </h2>
+
+  <div class="quick-stats">
+
+    <div class="stat-box">
+      <span class="stat-title">
+        XP
+      </span>
+
+      <span id="xpSummary">
+        0
+      </span>
+    </div>
+
+    <div class="stat-box">
+      <span class="stat-title">
+        Level
+      </span>
+
+      <span id="levelSummary">
+        1
+      </span>
+    </div>
+
+    <div class="stat-box">
+      <span class="stat-title">
+        Streak
+      </span>
+
+      <span id="streakSummary">
+        0
+      </span>
+    </div>
+
+    <div class="stat-box">
+      <span class="stat-title">
+        Active Habits
+      </span>
+
+      <span>
+        5
+      </span>
+    </div>
+
+  </div>
+
+</section>
 
     <!-- ============================
          CANVA-STYLE GRID LAYOUT
@@ -98,17 +193,19 @@
 
   <div class="dashboard-card fade-in missions-card">
     <h2>Daily Missions</h2>
-    <p class="section-subtitle">
-      Personalized tasks chosen to help you build momentum.
-    </p>
+   <p class="section-subtitle">
+  Complete missions, earn XP, build streaks,
+  and improve across every life category.
+</p>
     <div id="habit-cards" class="habit-cards-grid"></div>
   </div>
 
   <div class="dashboard-card fade-in coach-card">
     <h2>Vaultwise Coach</h2>
     <p class="section-subtitle">
-      Your coach reacts to your progress, mood, and streak.
-    </p>
+  Personalized guidance based on habits,
+  mission progress, finances, and experience.
+</p>
     <div id="coach"></div>
   </div>
 
@@ -133,7 +230,9 @@
     <section class="dashboard-card fade-in">
       <h2>💬 Talk to Vaultwise Coach</h2>
       <p class="section-subtitle">
-        Ask anything — habits, motivation, finances, routines, or life questions. Your coach uses your streak, XP, and recent habits to personalize every response.
+        Get coaching on habits, routines, finances,
+productivity, motivation, and daily progress.
+Your coach adapts based on your dashboard activity.
       </p>
 
       <div id="ai-chat">
