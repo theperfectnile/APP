@@ -1,22 +1,19 @@
-const CACHE_NAME = "vaultwise-v1";
-const urlsToCache = [
-  "/APP/",
-  "/APP/dashboard.html",
-  "/APP/styles.css",
-  "/APP/dashboard.js",
-  "/APP/app.js",
-  "/APP/icon-192.png",
-  "/APP/icon-512.png"
-];
+const CACHE_NAME = "vaultwise-v2";
 
-self.addEventListener("install", event => {
+self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
+    )
   );
 });
 
 self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
+  event.respondWith(fetch(event.request));
 });
